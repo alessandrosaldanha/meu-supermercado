@@ -1,0 +1,43 @@
+/* Estilo base do botão */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  gap: 8px;
+}
+
+/* Variante Verde (Principal) */
+.btn-primary {
+  background-color: var(--primary);
+  color: white;
+  padding: 10px 20px;
+}
+
+.btn-primary:hover {
+  filter: brightness(1.1);
+}
+
+/* Variante de Ícone (Círculo verde da Home) */
+.btn-icon {
+  background-color: var(--primary);
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  padding: 0;
+}
+
+.btn-icon:hover {
+  transform: scale(1.1);
+}
+
+/* Variante de Erro (Lixeira do Carrinho) */
+.btn-danger {
+  background: none;
+  color: var(--error);
+}

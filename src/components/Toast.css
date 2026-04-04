@@ -1,0 +1,62 @@
+.toast-container {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background-color: #2ecc71; /* Verde sucesso */
+  color: white;
+  padding: 12px 20px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  animation: slideUp 0.3s ease-out;
+  font-weight: 500;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.toast-close {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  opacity: 0.7;
+}
+
+.toast-close:hover {
+  opacity: 1;
+}
+
+.toast-container {
+  /* ... suas outras propriedades (position: fixed, etc) ... */
+
+  /* Mudamos a animação para algo mais 'elástico' */
+  animation: toastPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes toastPop {
+  0% {
+    transform: translateY(100px) scale(0.8);
+    opacity: 0;
+  }
+  70% {
+    /* O 1.05 faz ele dar aquela 'inchada' antes de voltar ao normal */
+    transform: translateY(-10px) scale(1.05);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}

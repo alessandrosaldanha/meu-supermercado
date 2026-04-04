@@ -1,0 +1,35 @@
+:root {
+  /* Cores do Sistema (Paleta de Supermercado) */
+  --primary: #2ecc71; /* Verde Sucesso/Dinheiro */
+  --primary-hover: #27ae60;
+  --secondary: #2c3e50; /* Azul Escuro/Texto Principal */
+  --background: #f4f7f6; /* Cinza bem clarinho */
+  --white: #ffffff;
+  --error: #e74c3c;
+
+  /* Tipografia */
+  --font-main: "Inter", system-ui, sans-serif;
+  --text-base: 16px;
+  --text-sm: 14px;
+  --text-lg: 18px;
+  --text-xl: 24px;
+
+  /* Espaçamentos e Bordas */
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--background);
+  color: var(--secondary);
+  font-size: var(--text-base);
+  -webkit-font-smoothing: antialiased;
+}
