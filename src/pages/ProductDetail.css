@@ -1,11 +1,13 @@
 .product-detail-container {
   max-width: 1200px;
   margin: 40px auto;
-  padding: 0 20px;
+  padding: 40px 20px;
   background: #fff;
   border-radius: 12px;
 }
-
+.description-text {
+  margin-bottom: 12px;
+}
 .product-main-section {
   display: grid;
   grid-template-columns: 1.2fr 0.8fr; /* Galeria maior que a barra lateral */
@@ -134,5 +136,104 @@
   .thumbnails {
     flex-direction: row;
     overflow-x: auto;
+  }
+}
+/* Seção de Comentários */
+.reviews-section {
+  margin-top: 40px;
+  padding-top: 40px;
+  border-top: 1px solid #eee;
+}
+
+.comment-form {
+  background: #f8f8f8;
+  padding: 25px;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+.star-rating-input {
+  margin-top: 8px;
+  display: flex;
+  gap: 5px;
+  margin-bottom: 15px;
+}
+
+.comment-textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.btn-send-review {
+  background: var(--primary);
+  color: white;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-send-review:hover {
+  filter: brightness(0.9);
+}
+
+.login-notice-card {
+  margin-top: 16px;
+  text-align: center;
+  padding: 40px;
+  border: 2px dashed #eee;
+  border-radius: 12px;
+}
+
+.btn-login-redirect {
+  background: #3483fa;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.btn-back {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  color: #666;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 10px 0;
+  margin-bottom: 20px;
+  transition: all 0.2s ease;
+  width: fit-content;
+}
+
+.btn-back:hover {
+  color: var(--primary); /* Muda para o seu verde ao passar o mouse */
+  transform: translateX(-5px); /* Pequeno movimento para a esquerda */
+}
+
+.btn-back span {
+  font-size: 14px;
+}
+
+/* No mobile, podemos deixar ele fixo ou mais destacado */
+@media (max-width: 768px) {
+  .btn-back {
+    margin-left: 10px;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 8px 15px;
+    border-radius: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
 }

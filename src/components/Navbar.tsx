@@ -8,9 +8,10 @@ import {
   Package,
   Home,
   LogOut,
+  ShieldCheck,
 } from "lucide-react";
 import { useCart } from "../context/CartContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./Navbar.css";
 
 export function Navbar() {
@@ -18,13 +19,50 @@ export function Navbar() {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const token = localStorage.getItem("token");
-  const userName = localStorage.getItem("userName");
+  // ESTADOS PARA REATIVIDADE (O segredo para o nome aparecer)
+  const [displayName, setDisplayName] = useState("Usuário");
+  const [userRole, setUserRole] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(null);
+
+  // EFEITO DE SINCRONIZAÇÃO COM LOCALSTORAGE
+  useEffect(() => {
+    const updateNavbar = () => {
+      const savedToken = localStorage.getItem("token");
+      const savedName = localStorage.getItem("userName");
+      const savedUser = localStorage.getItem("user");
+      const savedRole = localStorage.getItem("userRole");
+
+      setToken(savedToken);
+      setUserRole(savedRole);
+
+      if (savedName && savedName !== "undefined" && savedName !== "null") {
+        setDisplayName(savedName);
+      } else if (savedUser) {
+        try {
+          const userObj = JSON.parse(savedUser);
+          // Tenta 'name' ou 'nome' caso o userName falhe
+          const nameToSplit = userObj.name || userObj.nome || "Usuário";
+          setDisplayName(nameToSplit.split(" ")[0]);
+        } catch (e) {
+          setDisplayName("Usuário");
+        }
+      } else {
+        setDisplayName("Usuário");
+      }
+    };
+
+    updateNavbar();
+  }, [navigate]); // Re-executa sempre que mudar de página
+
   const isLoggedIn = !!token;
+  const isMaster = userRole === "master";
+  const isPrivileged = userRole === "master" || userRole === "admin";
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userName");
+    localStorage.clear();
+    setToken(null);
+    setDisplayName("Usuário");
+    setUserRole(null);
     alert("Você saiu da plataforma. Até logo!");
     navigate("/login");
     setIsMenuOpen(false);
@@ -53,7 +91,7 @@ export function Navbar() {
           </span>
         </Link>
 
-        {/* MENU LATERAL (DESLIZANTE NO MOBILE) */}
+        {/* MENU LATERAL / MOBILE */}
         <ul className={isMenuOpen ? "nav-menu active" : "nav-menu"}>
           <li onClick={closeMenu}>
             <Link to="/">
@@ -71,11 +109,23 @@ export function Navbar() {
             </Link>
           </li>
 
-          {/* ÁREA DE AUTH DENTRO DO MENU MOBILE */}
+          {/* MENU ADMIN */}
+          {isPrivileged && (
+            <li onClick={closeMenu} className="admin-menu-item">
+              <Link
+                to="/admin/users"
+                style={{ color: "var(--primary)", fontWeight: "bold" }}
+              >
+                <ShieldCheck size={18} />{" "}
+                {isMaster ? "Gestão Master" : "Painel Admin"}
+              </Link>
+            </li>
+          )}
+
+          {/* ÁREA DE AUTH NO MOBILE */}
           {!isLoggedIn ? (
             <div className="mobile-auth-container">
               <button
-                type="button"
                 className="login-btn-mobile"
                 onClick={() => {
                   navigate("/login");
@@ -85,7 +135,6 @@ export function Navbar() {
                 Entrar
               </button>
               <button
-                type="button"
                 className="signup-btn-mobile"
                 onClick={() => {
                   navigate("/signup");
@@ -99,7 +148,7 @@ export function Navbar() {
             <div className="mobile-auth-container">
               <div className="user-info-mobile">
                 <User size={20} />
-                <span>Olá, {userName?.split(" ")[0]}</span>
+                <span>Olá, {displayName}</span>
               </div>
               <button
                 type="button"
@@ -112,7 +161,7 @@ export function Navbar() {
           )}
         </ul>
 
-        {/* AÇÕES DA DIREITA (CARRINHO E AUTH DESKTOP) */}
+        {/* AÇÕES DA DIREITA (DESKTOP) */}
         <div className="nav-actions">
           <div
             className="nav-cart-wrapper"
@@ -120,7 +169,6 @@ export function Navbar() {
               navigate("/cart");
               closeMenu();
             }}
-            title="Ver carrinho"
           >
             <ShoppingCart size={24} />
             {cartCount > 0 && (
@@ -133,7 +181,7 @@ export function Navbar() {
               <div className="user-logged-area">
                 <User size={20} />
                 <span className="user-name-text">
-                  Olá, <strong>{userName?.split(" ")[0]}</strong>
+                  Olá, <strong>{displayName}</strong>
                 </span>
                 <button
                   type="button"

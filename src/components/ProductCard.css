@@ -1,4 +1,4 @@
-/* Tudo o que pertence exclusivamente ao CARD */
+/* CONTAINER PRINCIPAL DO CARD */
 .product-card {
   background-color: var(--white);
   border-radius: var(--radius-lg);
@@ -6,13 +6,14 @@
   box-shadow: var(--shadow);
   transition:
     transform 0.2s,
-    box-shadow 0.2s;
+    box-shadow 0.2s,
+    border-color 0.2s;
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: none;
   min-height: 400px;
   cursor: pointer;
+  border: 1px solid transparent; /* Para o hover não deslocar o layout */
 }
 
 .product-card:hover {
@@ -21,22 +22,72 @@
   border-color: var(--primary);
 }
 
-.product-image-container img {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  padding: 20px;
+/* LINKS (REMOÇÃO DE ESTILOS PADRÃO DO BROWSER) */
+.product-image-link,
+.product-title-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
 }
 
+/* ÁREA DA IMAGEM E OVERLAY */
+.product-image-container {
+  position: relative;
+  overflow: hidden;
+  background-color: #f9f9f9; /* Fundo leve para imagens com transparência */
+}
+
+.product-image-container img {
+  width: 100%;
+  height: 220px; /* Aumentei um pouco para destaque estilo e-commerce */
+  object-fit: contain; /* 'contain' é melhor para produtos não cortarem as bordas */
+  padding: 20px;
+  transition: transform 0.5s ease;
+}
+
+.product-card:hover .product-image-container img {
+  transform: scale(1.05); /* Leve zoom na imagem ao passar o mouse */
+}
+
+/* OVERLAY "VER DETALHES" */
+.view-details-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  color: white;
+  display: flex;
+  flex-direction: column; /* Ícone em cima do texto */
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(2px); /* Efeito de vidro fosco moderno */
+  z-index: 2;
+}
+
+.product-image-container:hover .view-details-overlay {
+  opacity: 1;
+}
+
+/* INFORMAÇÕES DO PRODUTO */
 .product-info {
   padding: 16px;
   flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .product-info h3 {
   font-size: 1.1rem;
   margin-bottom: 8px;
   color: var(--secondary);
+  font-weight: 600;
+  line-height: 1.4;
 }
 
 .product-desc {
@@ -45,21 +96,26 @@
   height: 40px;
   overflow: hidden;
   margin-bottom: 16px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Limita a 2 linhas com reticências */
+  -webkit-box-orient: vertical;
 }
 
+/* RODAPÉ DO CARD */
 .product-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: auto; /* Garante que o preço fique sempre no final */
 }
 
 .product-price {
-  font-weight: bold;
+  font-weight: 800;
   color: var(--primary);
-  font-size: 1.25rem;
+  font-size: 1.3rem;
 }
 
-/* A animação também deve morar aqui */
+/* ANIMAÇÃO DE CLIQUE (POP) */
 .pop-animation {
   animation: popEffect 0.3s ease-in-out;
   z-index: 10;
@@ -78,5 +134,15 @@
   }
   100% {
     transform: scale(1);
+  }
+}
+
+/* RESPONSIVIDADE RÁPIDA */
+@media (max-width: 480px) {
+  .product-image-container img {
+    height: 160px;
+  }
+  .product-price {
+    font-size: 1.1rem;
   }
 }

@@ -1,33 +1,51 @@
 import { useState } from "react";
 import { Mail, Lock, LogIn } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import "./Login.css"; // Importando o CSS específico
+import { loginUser } from "../services/api";
+import "./Login.css";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post(
-        "https://x8ki-letl-twmt.n7.xano.io/api:28B-MVDq/auth/login",
-        {
-          email,
-          password,
-        },
-      );
+      const data = await loginUser(email, password);
 
-      if (response.data.authToken) {
-        localStorage.setItem("token", response.data.authToken);
-        navigate("/");
+      if (data.authToken) {
+        // 1. Salva o Token
+        localStorage.setItem("token", data.authToken);
+
+        // 2. Busca o objeto do usuário (O Pente Fino)
+        // Tentamos todas as formas que o Xano costuma enviar
+        const userToSave =
+          data.user || data.result?.user || data.result || data;
+
+        // 3. Salva o objeto completo (crucial para o ID do comentário)
+        localStorage.setItem("user", JSON.stringify(userToSave));
+
+        // 4. Tenta pegar o nome (tenta 'name' ou 'nome')
+        const rawName =
+          userToSave.name ||
+          userToSave.nome ||
+          userToSave.first_name ||
+          "Vital";
+        const firstName = rawName.split(" ")[0];
+
+        localStorage.setItem("userName", firstName);
+        localStorage.setItem(
+          "userRole",
+          data.user_role || userToSave.role || "user",
+        );
+
+        // 5. O SEGREDO: Redireciona e recarrega
+        // Isso força a Navbar a ler os dados novos do localStorage
+        window.location.href = "/";
       }
     } catch (error) {
-      alert("Erro ao logar!");
+      alert("Erro ao logar! Verifique suas credenciais.");
     } finally {
       setLoading(false);
     }
@@ -45,6 +63,7 @@ export default function Login() {
             placeholder="E-mail"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
           />
         </div>
 
@@ -55,6 +74,7 @@ export default function Login() {
             placeholder="Senha"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
           />
         </div>
 

@@ -1,6 +1,5 @@
 import axios from "axios";
 
-// Sua URL real do Xano
 const API_URL = "https://x8ki-letl-twmt.n7.xano.io/api:jB1XPgef";
 
 export interface Product {
@@ -24,46 +23,30 @@ const api = axios.create({
 });
 
 export const getProducts = async (page: number = 1): Promise<Product[]> => {
-  // Se no Xano o input chama "page", aqui tem que ser ?page=
   const response = await fetch(`${API_URL}/products?page=${page}`);
   const data = await response.json();
-
-  // Lembre-se: como ativamos Metadata, use data.items
   return data.items || [];
 };
 
-// Função de Login
 export const loginUser = async (email: string, password: string) => {
   try {
-    // Usamos a URL completa do seu endpoint de auth
     const response = await axios.post(
       "https://x8ki-letl-twmt.n7.xano.io/api:28B-MVDq/auth/login",
-      {
-        email,
-        password,
-      },
+      { email, password },
     );
-
-    // O Xano costuma retornar { authToken: "..." }
     return response.data;
   } catch (error) {
     console.error("Erro na autenticação:", error);
-    throw error; // Repassamos o erro para a tela de Login tratar
+    throw error;
   }
 };
+
 export const getFeaturedProducts = async (): Promise<Product[]> => {
   try {
-    // Chamando o endpoint que você acabou de filtrar no Xano
     const response = await fetch(`${API_URL}/featured`);
     const data = await response.json();
-
-    // Como você ativou 'Include Metadata', os produtos estão em data.items
     const productsList = data.items || data;
-
-    if (!Array.isArray(productsList)) return [];
-
-    // Retorna a lista para o FeaturedSlider.tsx
-    return productsList;
+    return Array.isArray(productsList) ? productsList : [];
   } catch (error) {
     console.error("Erro ao buscar destaques:", error);
     return [];
@@ -81,5 +64,39 @@ export const getProductById = async (
     return null;
   }
 };
+
+export async function postReview(
+  productId: string,
+  rating: number,
+  comment: string,
+) {
+  const token = localStorage.getItem("token");
+  const userData = localStorage.getItem("user");
+
+  let userId = null;
+  if (userData) {
+    try {
+      const user = JSON.parse(userData);
+      userId = user.id || user.uuid;
+    } catch (e) {
+      console.error("Erro ao ler dados do usuário", e);
+    }
+  }
+
+  const response = await axios.post(
+    `${API_URL}/reviews`,
+    {
+      products_id: productId,
+      user_id: userId,
+      rating: rating,
+      comment: comment,
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    },
+  );
+
+  return response.data;
+}
 
 export default api;
