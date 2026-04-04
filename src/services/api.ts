@@ -53,7 +53,7 @@ export const loginUser = async (email: string, password: string) => {
 export const getFeaturedProducts = async (): Promise<Product[]> => {
   try {
     // Chamando o endpoint que você acabou de filtrar no Xano
-    const response = await fetch(`${API_URL}/products`);
+    const response = await fetch(`${API_URL}/featured`);
     const data = await response.json();
 
     // Como você ativou 'Include Metadata', os produtos estão em data.items
