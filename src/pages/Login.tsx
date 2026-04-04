@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { Mail, Lock, LogIn } from "lucide-react";
 import { loginUser } from "../services/api";
+import { useNavigate } from "react-router-dom";
 import "./Login.css";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const navigate = useNavigate();
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -40,9 +41,8 @@ export default function Login() {
           data.user_role || userToSave.role || "user",
         );
 
-        // 5. O SEGREDO: Redireciona e recarrega
-        // Isso força a Navbar a ler os dados novos do localStorage
-        window.location.href = "/";
+        window.dispatchEvent(new Event("storage"));
+        navigate("/");
       }
     } catch (error) {
       alert("Erro ao logar! Verifique suas credenciais.");

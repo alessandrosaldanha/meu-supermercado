@@ -92,6 +92,7 @@ export function Navbar() {
         </Link>
 
         {/* MENU LATERAL / MOBILE */}
+        {/* MENU LATERAL / MOBILE */}
         <ul className={isMenuOpen ? "nav-menu active" : "nav-menu"}>
           <li onClick={closeMenu}>
             <Link to="/">
@@ -122,43 +123,45 @@ export function Navbar() {
             </li>
           )}
 
-          {/* ÁREA DE AUTH NO MOBILE */}
-          {!isLoggedIn ? (
-            <div className="mobile-auth-container">
-              <button
-                className="login-btn-mobile"
-                onClick={() => {
-                  navigate("/login");
-                  closeMenu();
-                }}
-              >
-                Entrar
-              </button>
-              <button
-                className="signup-btn-mobile"
-                onClick={() => {
-                  navigate("/signup");
-                  closeMenu();
-                }}
-              >
-                Criar Conta
-              </button>
-            </div>
-          ) : (
-            <div className="mobile-auth-container">
-              <div className="user-info-mobile">
-                <User size={20} />
-                <span>Olá, {displayName}</span>
+          {/* SOLUÇÃO: Envolver o container de autenticação em um <li> */}
+          <li className="mobile-auth-wrapper">
+            {!isLoggedIn ? (
+              <div className="mobile-auth-container">
+                <button
+                  className="login-btn-mobile"
+                  onClick={() => {
+                    navigate("/login");
+                    closeMenu();
+                  }}
+                >
+                  Entrar
+                </button>
+                <button
+                  className="signup-btn-mobile"
+                  onClick={() => {
+                    navigate("/signup");
+                    closeMenu();
+                  }}
+                >
+                  Criar Conta
+                </button>
               </div>
-              <button
-                type="button"
-                className="logout-btn-mobile"
-                onClick={handleLogout}
-              >
-                <LogOut size={18} /> Sair da conta
-              </button>
-            </div>
-          )}
+            ) : (
+              <div className="mobile-auth-container">
+                <div className="user-info-mobile">
+                  <User size={20} />
+                  <span>Olá, {displayName}</span>
+                </div>
+                <button
+                  type="button"
+                  className="logout-btn-mobile"
+                  onClick={handleLogout}
+                >
+                  <LogOut size={18} /> Sair da conta
+                </button>
+              </div>
+            )}
+          </li>
         </ul>
 
         {/* AÇÕES DA DIREITA (DESKTOP) */}
