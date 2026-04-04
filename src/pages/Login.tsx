@@ -40,7 +40,6 @@ export default function Login() {
           "userRole",
           data.user_role || userToSave.role || "user",
         );
-
         window.dispatchEvent(new Event("storage"));
         navigate("/");
       }
