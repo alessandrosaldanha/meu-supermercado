@@ -152,3 +152,186 @@
   transform: scale(1.05);
   filter: brightness(1.1);
 }
+
+/* Configurações Gerais da Navbar */
+.navbar {
+  background-color: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  height: 70px;
+  display: flex;
+  align-items: center;
+}
+
+.nav-container {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Logo */
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.logo-bold {
+  font-weight: 800;
+  color: var(--primary);
+}
+
+/* Menu de Links (Desktop) */
+.nav-menu {
+  display: flex;
+  list-style: none;
+  gap: 30px;
+}
+
+.nav-menu li a {
+  text-decoration: none;
+  color: #555;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.3s;
+}
+
+.nav-menu li a:hover {
+  color: var(--primary);
+}
+
+/* Ações (Carrinho, User, Botões) */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.nav-cart-wrapper {
+  position: relative;
+  cursor: pointer;
+}
+
+.nav-cart-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: var(--primary);
+  color: white;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 50%;
+}
+
+/* Área do Usuário Logado */
+.user-logged-area {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Botões de Auth */
+.nav-auth-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.login-btn,
+.signup-btn-nav,
+.logout-btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.login-btn {
+  background: transparent;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+}
+
+.signup-btn-nav {
+  background: var(--primary);
+  color: white;
+}
+
+.mobile-menu-icon {
+  display: none; /* Escondido no Desktop */
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #333;
+}
+
+/* ==========================================
+   RESPONSIVIDADE (TABLET E MOBILE)
+   ========================================== */
+
+@media (max-width: 768px) {
+  .mobile-menu-icon {
+    display: block; /* Aparece o Hambúrguer */
+    order: 1;
+  }
+
+  .nav-logo {
+    order: 2;
+  }
+
+  .nav-actions {
+    order: 3;
+    gap: 10px;
+  }
+
+  /* Transforma o menu em uma barra lateral */
+  .nav-menu {
+    position: fixed;
+    left: -100%; /* Escondido fora da tela */
+    top: 70px;
+    flex-direction: column;
+    background-color: #fff;
+    width: 80%;
+    height: calc(100vh - 70px);
+    padding: 40px;
+    gap: 20px;
+    transition: 0.4s ease-in-out;
+    box-shadow: 10px 0 15px rgba(0, 0, 0, 0.05);
+  }
+
+  .nav-menu.active {
+    left: 0; /* Desliza para dentro ao clicar */
+  }
+
+  /* Esconde o nome do usuário e botões de auth no topo para não apertar */
+  .user-name-desktop,
+  .nav-auth-buttons {
+    display: none;
+  }
+
+  /* Mostra opção de login apenas dentro do menu hambúrguer */
+  .mobile-only-auth {
+    display: block;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+  }
+}
