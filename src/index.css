@@ -33,3 +33,30 @@ body {
   font-size: var(--text-base);
   -webkit-font-smoothing: antialiased;
 }
+
+/* Ajuste para o Footer ficar sempre no final (Sticky Footer) */
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ocupa 100% da altura da tela */
+}
+
+/* Isso faz o conteúdo principal "empurrar" o footer para baixo */
+main,
+.home-container,
+.cart-container,
+.signup-container {
+  flex: 1;
+}
+
+/* Ajuste Global para Links (UX: remove o sublinhado padrão) */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Garante que imagens não quebrem o layout */
+img {
+  max-width: 100%;
+  display: block;
+}
