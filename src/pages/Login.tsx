@@ -9,6 +9,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -16,34 +17,19 @@ export default function Login() {
       const data = await loginUser(email, password);
 
       if (data.authToken) {
-        // 1. Salva o Token
         localStorage.setItem("token", data.authToken);
-
-        // 2. Busca o objeto do usuário (O Pente Fino)
-        // Tentamos todas as formas que o Xano costuma enviar
-        const userToSave =
-          data.user || data.result?.user || data.result || data;
-
-        // 3. Salva o objeto completo (crucial para o ID do comentário)
-        localStorage.setItem("user", JSON.stringify(userToSave));
-
-        // 4. Tenta pegar o nome (tenta 'name' ou 'nome')
-        const rawName =
-          userToSave.name ||
-          userToSave.nome ||
-          userToSave.first_name ||
-          "Vital";
-        const firstName = rawName.split(" ")[0];
+        const nomeVindoDaAPI =
+          data.userName || data.user?.name || data.result?.name || "Usuário";
+        const firstName = String(nomeVindoDaAPI).trim().split(" ")[0];
 
         localStorage.setItem("userName", firstName);
-        localStorage.setItem(
-          "userRole",
-          data.user_role || userToSave.role || "user",
-        );
+        localStorage.setItem("userRole", data.user_role || "member");
+
         window.dispatchEvent(new Event("storage"));
         navigate("/");
       }
     } catch (error) {
+      console.error("Erro no login:", error);
       alert("Erro ao logar! Verifique suas credenciais.");
     } finally {
       setLoading(false);

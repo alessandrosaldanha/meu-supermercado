@@ -19,40 +19,38 @@ export function Navbar() {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // ESTADOS PARA REATIVIDADE (O segredo para o nome aparecer)
+  // ESTADOS PARA REATIVIDADE
   const [displayName, setDisplayName] = useState("Usuário");
   const [userRole, setUserRole] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
 
-  // EFEITO DE SINCRONIZAÇÃO COM LOCALSTORAGE
+  // FUNÇÃO DE ATUALIZAÇÃO (Centralizada para ser chamada em vários lugares)
+  const updateNavbar = () => {
+    const savedToken = localStorage.getItem("token");
+    const savedName = localStorage.getItem("userName");
+    const savedRole = localStorage.getItem("userRole");
+
+    setToken(savedToken);
+    setUserRole(savedRole);
+
+    // Se houver um nome salvo e não for a string "undefined" ou "null"
+    if (savedName && savedName !== "undefined" && savedName !== "null") {
+      setDisplayName(savedName);
+    } else {
+      setDisplayName("Usuário");
+    }
+  };
+
   useEffect(() => {
-    const updateNavbar = () => {
-      const savedToken = localStorage.getItem("token");
-      const savedName = localStorage.getItem("userName");
-      const savedUser = localStorage.getItem("user");
-      const savedRole = localStorage.getItem("userRole");
-
-      setToken(savedToken);
-      setUserRole(savedRole);
-
-      if (savedName && savedName !== "undefined" && savedName !== "null") {
-        setDisplayName(savedName);
-      } else if (savedUser) {
-        try {
-          const userObj = JSON.parse(savedUser);
-          // Tenta 'name' ou 'nome' caso o userName falhe
-          const nameToSplit = userObj.name || userObj.nome || "Usuário";
-          setDisplayName(nameToSplit.split(" ")[0]);
-        } catch (e) {
-          setDisplayName("Usuário");
-        }
-      } else {
-        setDisplayName("Usuário");
-      }
-    };
-
+    // 1. Atualiza ao carregar o componente
     updateNavbar();
-  }, [navigate]); // Re-executa sempre que mudar de página
+
+    // 2. ESCUTA O EVENTO 'storage' (O segredo para atualizar no momento do login)
+    window.addEventListener("storage", updateNavbar);
+
+    // Limpeza ao desmontar
+    return () => window.removeEventListener("storage", updateNavbar);
+  }, [navigate]); // Também re-executa ao navegar entre páginas
 
   const isLoggedIn = !!token;
   const isMaster = userRole === "master";
@@ -92,7 +90,6 @@ export function Navbar() {
         </Link>
 
         {/* MENU LATERAL / MOBILE */}
-        {/* MENU LATERAL / MOBILE */}
         <ul className={isMenuOpen ? "nav-menu active" : "nav-menu"}>
           <li onClick={closeMenu}>
             <Link to="/">
@@ -123,7 +120,7 @@ export function Navbar() {
             </li>
           )}
 
-          {/* SOLUÇÃO: Envolver o container de autenticação em um <li> */}
+          {/* AREA DE AUTH NO MOBILE (Dentro de um <li> para evitar erro de HTML) */}
           <li className="mobile-auth-wrapper">
             {!isLoggedIn ? (
               <div className="mobile-auth-container">
@@ -198,14 +195,12 @@ export function Navbar() {
             ) : (
               <div className="nav-auth-buttons">
                 <button
-                  type="button"
                   className="login-btn-nav"
                   onClick={() => navigate("/login")}
                 >
                   Entrar
                 </button>
                 <button
-                  type="button"
                   className="signup-btn-nav"
                   onClick={() => navigate("/signup")}
                 >
