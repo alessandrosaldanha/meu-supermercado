@@ -8,6 +8,7 @@ import "./Home.css";
 
 export default function Home() {
   const { addToCart } = useCart();
+  const [page, setPage] = useState(1);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [showToast, setShowToast] = useState(false);
@@ -15,12 +16,19 @@ export default function Home() {
 
   useEffect(() => {
     const load = async () => {
-      const data = await getProducts();
-      setProducts(data);
-      setLoading(false);
+      setLoading(true); // Começa a carregar
+      const data = await getProducts(page);
+
+      // Se o Xano devolver dados, a gente atualiza
+      if (data && data.length > 0) {
+        setProducts(data);
+      }
+
+      setLoading(false); // Para de carregar
+      window.scrollTo({ top: 0, behavior: "smooth" });
     };
     load();
-  }, []);
+  }, [page]);
 
   const handleAddProduct = (product: Product) => {
     addToCart(product);
@@ -56,6 +64,30 @@ export default function Home() {
             ))}
           </div>
         )}
+        <div className="pagination-controls">
+          <button
+            type="button"
+            className="page-btn"
+            disabled={page === 1}
+            onClick={() => setPage((prev) => prev - 1)}
+          >
+            Anterior
+          </button>
+
+          <span className="page-indicator">
+            Página <strong>{page}</strong>
+          </span>
+
+          <button
+            type="button"
+            className="page-btn"
+            /* Se vieram menos de 12 itens, o botão Próxima trava */
+            disabled={products.length < 12}
+            onClick={() => setPage((prev) => prev + 1)}
+          >
+            Próxima
+          </button>
+        </div>
       </main>
 
       {showToast && (

@@ -22,15 +22,13 @@ const api = axios.create({
   },
 });
 
-export const getProducts = async (): Promise<Product[]> => {
-  try {
-    // Note que aqui chamamos o endpoint /products que está no seu grupo Event Logs
-    const response = await api.get<Product[]>("/products");
-    return response.data;
-  } catch (error) {
-    console.error("Erro ao buscar produtos:", error);
-    return [];
-  }
+export const getProducts = async (page: number = 1): Promise<Product[]> => {
+  // Se no Xano o input chama "page", aqui tem que ser ?page=
+  const response = await fetch(`${API_URL}/products?page=${page}`);
+  const data = await response.json();
+
+  // Lembre-se: como ativamos Metadata, use data.items
+  return data.items || [];
 };
 
 // Função de Login
@@ -55,8 +53,15 @@ export const loginUser = async (email: string, password: string) => {
 export const getFeaturedProducts = async (): Promise<Product[]> => {
   try {
     const response = await fetch(`${API_URL}/products`);
-    const data: Product[] = await response.json();
-    return data.filter((product) => product.is_featured === true);
+    const data = await response.json();
+
+    // Acessa a lista dentro de .items por causa da paginação
+    const productsList = data.items || data;
+
+    if (!Array.isArray(productsList)) return [];
+
+    // Filtra os destaques (check azul no Xano)
+    return productsList.filter((p: any) => p.is_featured === true);
   } catch (error) {
     console.error("Erro ao buscar destaques:", error);
     return [];
