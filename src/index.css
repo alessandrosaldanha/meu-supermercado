@@ -60,3 +60,7 @@ img {
   max-width: 100%;
   display: block;
 }
+.main-content {
+  flex: 1; /* Faz o conteúdo ocupar o espaço entre a Navbar e o Footer */
+  padding-top: 20px; /* Evita que a Navbar cubra o início da página */
+}

@@ -1,5 +1,6 @@
 import { ProductCard } from "../components/ProductCard";
 import { useEffect, useState } from "react";
+import { FeaturedSlider } from "../components/FeaturedSlider";
 import { Toast } from "../components/Toast";
 import { getProducts, type Product } from "../services/api";
 import { useCart } from "../context/CartContext";
@@ -37,9 +38,8 @@ export default function Home() {
 
   return (
     <div className="home-container">
-      {/* O BLOCO <header> FOI REMOVIDO DAQUI PORQUE A NAVBAR JÁ ESTÁ NO APP.TSX */}
-
       <main className="product-section">
+        <FeaturedSlider />
         <h2 className="section-title">Ofertas em Destaque</h2>
 
         {loading ? (

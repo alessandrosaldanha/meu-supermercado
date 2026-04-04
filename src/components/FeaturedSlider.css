@@ -1,0 +1,94 @@
+/* FeaturedSlider.css - COMPLETO */
+
+.featured-section {
+  width: 100%;
+  min-height: 400px;
+  background-color: #fff;
+  margin: 20px 0;
+  padding: 30px 20px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  position: relative; /* Necessário para posicionar as setas */
+}
+
+.section-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #333;
+  padding-left: 10px;
+}
+
+.featured-swiper {
+  padding: 10px 0 50px 0; /* Espaço embaixo para os pontinhos */
+}
+.swiper-navigation-icon {
+  width: 20px !important;
+  height: 20px !important;
+  object-fit: contain;
+  transform-origin: center;
+  fill: currentColor;
+  pointer-events: none;
+}
+/* --- ESTILO DAS SETAS (ARROWS) --- */
+
+/* Estiliza o botão redondo */
+.swiper-button-next,
+.swiper-button-prev {
+  background-color: white;
+  width: 50px !important;
+  height: 50px !important;
+  border-radius: 50% !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  color: var(--primary) !important; /* Seu verde Vital */
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+/* Estiliza o ícone < e > dentro do botão */
+.swiper-button-next:after,
+.swiper-button-prev:after {
+  font-size: 18px !important;
+  font-weight: bold;
+}
+
+/* Efeito de destaque no hover */
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  background-color: var(--primary);
+  color: white !important;
+  transform: scale(1.1);
+}
+
+/* Ajuste de posição para não ficar em cima do produto */
+.swiper-button-prev {
+  left: 0px !important;
+}
+
+.swiper-button-next {
+  right: 0px !important;
+}
+
+/* --- ESTILO DOS PONTINHOS (PAGINATION) --- */
+
+.swiper-pagination-bullet {
+  background: #ccc;
+  opacity: 1;
+}
+
+.swiper-pagination-bullet-active {
+  background: var(--primary) !important;
+  width: 20px; /* Deixa o pontinho ativo mais comprido (estilo moderno) */
+  border-radius: 4px;
+}
+
+/* Esconder setas no celular para melhor UX (uso do dedo) */
+@media (max-width: 768px) {
+  .swiper-button-next,
+  .swiper-button-prev {
+    display: none !important;
+  }
+  .featured-section {
+    padding: 20px 10px;
+  }
+}

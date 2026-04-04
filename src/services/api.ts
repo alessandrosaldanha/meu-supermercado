@@ -11,6 +11,8 @@ export interface Product {
   image: {
     url: string;
   };
+  category: string;
+  is_featured: boolean;
 }
 
 const api = axios.create({
@@ -48,6 +50,16 @@ export const loginUser = async (email: string, password: string) => {
   } catch (error) {
     console.error("Erro na autenticação:", error);
     throw error; // Repassamos o erro para a tela de Login tratar
+  }
+};
+export const getFeaturedProducts = async (): Promise<Product[]> => {
+  try {
+    const response = await fetch(`${API_URL}/products`);
+    const data: Product[] = await response.json();
+    return data.filter((product) => product.is_featured === true);
+  } catch (error) {
+    console.error("Erro ao buscar destaques:", error);
+    return [];
   }
 };
 
