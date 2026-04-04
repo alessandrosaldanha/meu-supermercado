@@ -1,58 +1,76 @@
-/* FeaturedSlider.css - COMPLETO */
+/* FeaturedSlider.css - ATUALIZADO PARA CARDS MAIORES */
 
 .featured-section {
   width: 100%;
-  min-height: 400px;
+  min-height: 450px; /* Aumentado para acomodar cards maiores */
   background-color: #fff;
-  margin: 20px 0;
-  padding: 30px 20px;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  position: relative; /* Necessário para posicionar as setas */
+  margin: 30px 0;
+  padding: 40px 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow: hidden; /* Garante que o efeito de 'subir' não quebre o layout */
+}
+
+.swiper-navigation-icon {
+  width: 16px !important;
+  height: 16px !important;
+  align-items: center;
+  justify-content: center;
 }
 
 .section-title {
-  font-size: 22px;
-  font-weight: 600;
-  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 30px;
   color: #333;
-  padding-left: 10px;
+  padding-left: 15px;
+  border-left: 5px solid var(--primary);
 }
 
 .featured-swiper {
-  padding: 10px 0 50px 0; /* Espaço embaixo para os pontinhos */
+  padding: 20px 0 60px 0;
 }
-.swiper-navigation-icon {
-  width: 20px !important;
-  height: 20px !important;
-  object-fit: contain;
-  transform-origin: center;
-  fill: currentColor;
-  pointer-events: none;
-}
-/* --- ESTILO DAS SETAS (ARROWS) --- */
 
-/* Estiliza o botão redondo */
+/* --- ESTILO DOS SLIDES (Aumentando os cards) --- */
+
+.swiper-slide {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 0;
+  /* Garante que o card tenha uma largura mínima robusta */
+  min-width: 280px;
+}
+
+/* O ITEM EM DESTAQUE (Agora maior e mais alto) */
+.swiper-slide-active {
+  transform: translateY(-25px) scale(1.15); /* Sobe mais e cresce 15% */
+  z-index: 10;
+  opacity: 1 !important;
+}
+
+/* ITENS VIZINHOS (Menos apagados para não sumirem) */
+.swiper-slide:not(.swiper-slide-active) {
+  opacity: 0.7;
+  transform: scale(0.95); /* Quase o tamanho normal, para parecerem maiores */
+}
+
+/* --- NAVEGAÇÃO E PONTINHOS --- */
+
 .swiper-button-next,
 .swiper-button-prev {
   background-color: white;
-  width: 50px !important;
-  height: 50px !important;
+  width: 55px !important;
+  height: 55px !important;
   border-radius: 50% !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  color: var(--primary) !important; /* Seu verde Vital */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  color: var(--primary) !important;
   transition: all 0.3s ease;
-  z-index: 10;
+  z-index: 20;
 }
 
-/* Estiliza o ícone < e > dentro do botão */
-.swiper-button-next:after,
-.swiper-button-prev:after {
-  font-size: 18px !important;
-  font-weight: bold;
-}
-
-/* Efeito de destaque no hover */
 .swiper-button-next:hover,
 .swiper-button-prev:hover {
   background-color: var(--primary);
@@ -60,35 +78,29 @@
   transform: scale(1.1);
 }
 
-/* Ajuste de posição para não ficar em cima do produto */
-.swiper-button-prev {
-  left: 0px !important;
-}
-
-.swiper-button-next {
-  right: 0px !important;
-}
-
-/* --- ESTILO DOS PONTINHOS (PAGINATION) --- */
-
-.swiper-pagination-bullet {
-  background: #ccc;
-  opacity: 1;
-}
-
 .swiper-pagination-bullet-active {
   background: var(--primary) !important;
-  width: 20px; /* Deixa o pontinho ativo mais comprido (estilo moderno) */
-  border-radius: 4px;
+  width: 25px; /* Pontinho um pouco mais longo */
+  border-radius: 5px;
 }
 
-/* Esconder setas no celular para melhor UX (uso do dedo) */
+/* --- AJUSTES PARA CELULAR --- */
 @media (max-width: 768px) {
+  .swiper-slide {
+    min-width: 240px; /* Um pouco menor no celular para caber na tela */
+  }
+
+  .swiper-slide-active {
+    transform: translateY(-15px) scale(1.08); /* Efeito suave no mobile */
+  }
+
   .swiper-button-next,
   .swiper-button-prev {
     display: none !important;
   }
+
   .featured-section {
     padding: 20px 10px;
+    min-height: 380px;
   }
 }

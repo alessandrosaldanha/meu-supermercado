@@ -23,16 +23,18 @@ export function FeaturedSlider() {
     <section className="featured-section">
       <h2 className="section-title">🔥 Ofertas Imperdíveis</h2>
       <Swiper
+        centeredSlides={true}
+        watchSlidesProgress={true}
         modules={[Navigation, Pagination, Autoplay]}
-        spaceBetween={20}
+        spaceBetween={30}
         slidesPerView={1} // Mobile
         navigation
         loop={true}
         pagination={{ clickable: true }}
         autoplay={{ delay: 3000 }}
         breakpoints={{
-          640: { slidesPerView: 2.5 },
-          1024: { slidesPerView: 4.5 }, // Desktop mostra mais igual ao ML
+          768: { slidesPerView: 2.2 },
+          1024: { slidesPerView: 3.6 }, // Desktop mostra mais igual ao ML
         }}
         className="featured-swiper"
       >

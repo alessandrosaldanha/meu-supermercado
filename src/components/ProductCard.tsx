@@ -1,6 +1,7 @@
 import { Plus } from "lucide-react";
 import { type Product } from "../services/api";
 import { Button } from "./Button";
+import "./ProductCard.css";
 
 interface ProductCardProps {
   product: Product;
@@ -12,7 +13,7 @@ export function ProductCard({ product, onAdd, isAnimating }: ProductCardProps) {
   return (
     <div className={`product-card ${isAnimating ? "pop-animation" : ""}`}>
       <div className="product-image-container">
-        <img src={product.image?.url} alt={product.name} />
+        <img src={product.image?.[0]?.url} alt={product.name} />
       </div>
       <div className="product-info">
         <h3>{product.name}</h3>

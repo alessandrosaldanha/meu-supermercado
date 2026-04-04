@@ -1,0 +1,138 @@
+.product-detail-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+  background: #fff;
+  border-radius: 12px;
+}
+
+.product-main-section {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr; /* Galeria maior que a barra lateral */
+  gap: 40px;
+}
+
+/* Galeria e Miniaturas */
+.product-gallery {
+  display: flex;
+  gap: 20px;
+}
+
+.thumbnails {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.thumb-img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.thumb-img.active-thumb {
+  border-color: #2ecc71; /* Verde do Mercado Vital */
+}
+
+.main-image-wrapper {
+  flex: 1;
+  border: 1px solid #f0f0f0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.featured-image {
+  width: 100%;
+  height: 500px;
+  object-fit: contain;
+}
+
+/* Informações e Preço */
+.product-info-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.badge-new {
+  color: #666;
+  font-size: 14px;
+}
+
+.product-title {
+  font-size: 26px;
+  color: #333;
+}
+
+/* Estrelas */
+.star-icon {
+  width: 18px;
+  height: 18px;
+  color: #ddd; /* Estrela vazia */
+}
+
+.star-icon.filled {
+  color: #facc15; /* Amarelo */
+  fill: #facc15;
+}
+
+.price-container {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  color: #2ecc71;
+  font-weight: bold;
+}
+
+.price-value {
+  font-size: 32px;
+}
+
+/* Botões */
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn-buy {
+  background: #2ecc71;
+  color: white;
+  border: none;
+  padding: 15px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-add-cart {
+  background: white;
+  color: #2ecc71;
+  border: 1px solid #2ecc71;
+  padding: 15px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+/* Responsivo para Celular */
+@media (max-width: 768px) {
+  .product-main-section {
+    grid-template-columns: 1fr;
+  }
+  .product-gallery {
+    flex-direction: column-reverse;
+  }
+  .thumbnails {
+    flex-direction: row;
+    overflow-x: auto;
+  }
+}

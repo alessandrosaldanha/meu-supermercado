@@ -8,9 +8,10 @@ export interface Product {
   name: string;
   price: number;
   description: string;
+  rating: number;
   image: {
     url: string;
-  };
+  }[];
   category: string;
   is_featured: boolean;
 }
@@ -66,6 +67,18 @@ export const getFeaturedProducts = async (): Promise<Product[]> => {
   } catch (error) {
     console.error("Erro ao buscar destaques:", error);
     return [];
+  }
+};
+
+export const getProductById = async (
+  id: string | undefined,
+): Promise<Product | null> => {
+  try {
+    const response = await api.get<Product>(`/products/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Erro ao buscar detalhes do produto", error);
+    return null;
   }
 };
 

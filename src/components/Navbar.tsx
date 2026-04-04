@@ -16,7 +16,7 @@ import "./Navbar.css";
 export function Navbar() {
   const { cartCount } = useCart();
   const navigate = useNavigate();
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // Estado para abrir/fechar o menu mobile
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const token = localStorage.getItem("token");
   const userName = localStorage.getItem("userName");
@@ -27,18 +27,20 @@ export function Navbar() {
     localStorage.removeItem("userName");
     alert("Você saiu da plataforma. Até logo!");
     navigate("/login");
+    setIsMenuOpen(false);
   };
 
-  // Função para fechar o menu ao clicar em um link
   const closeMenu = () => setIsMenuOpen(false);
 
   return (
     <nav className="navbar">
       <div className="nav-container">
-        {/* BOTÃO HAMBÚRGUER (Aparece só no mobile via CSS) */}
+        {/* ÍCONE MENU MOBILE */}
         <button
+          type="button"
           className="mobile-menu-icon"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
+          aria-label="Abrir menu"
         >
           {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
         </button>
@@ -51,7 +53,7 @@ export function Navbar() {
           </span>
         </Link>
 
-        {/* LINKS DE NAVEGAÇÃO - Classe dinâmica para abrir no mobile */}
+        {/* MENU LATERAL (DESLIZANTE NO MOBILE) */}
         <ul className={isMenuOpen ? "nav-menu active" : "nav-menu"}>
           <li onClick={closeMenu}>
             <Link to="/">
@@ -69,15 +71,48 @@ export function Navbar() {
             </Link>
           </li>
 
-          {/* Opções de Login dentro do menu mobile (para facilitar a UX) */}
-          {!isLoggedIn && (
-            <li className="mobile-only-auth" onClick={closeMenu}>
-              <Link to="/login">Entrar / Criar Conta</Link>
-            </li>
+          {/* ÁREA DE AUTH DENTRO DO MENU MOBILE */}
+          {!isLoggedIn ? (
+            <div className="mobile-auth-container">
+              <button
+                type="button"
+                className="login-btn-mobile"
+                onClick={() => {
+                  navigate("/login");
+                  closeMenu();
+                }}
+              >
+                Entrar
+              </button>
+              <button
+                type="button"
+                className="signup-btn-mobile"
+                onClick={() => {
+                  navigate("/signup");
+                  closeMenu();
+                }}
+              >
+                Criar Conta
+              </button>
+            </div>
+          ) : (
+            <div className="mobile-auth-container">
+              <div className="user-info-mobile">
+                <User size={20} />
+                <span>Olá, {userName?.split(" ")[0]}</span>
+              </div>
+              <button
+                type="button"
+                className="logout-btn-mobile"
+                onClick={handleLogout}
+              >
+                <LogOut size={18} /> Sair da conta
+              </button>
+            </div>
           )}
         </ul>
 
-        {/* AÇÕES (CARRINHO E USUÁRIO) */}
+        {/* AÇÕES DA DIREITA (CARRINHO E AUTH DESKTOP) */}
         <div className="nav-actions">
           <div
             className="nav-cart-wrapper"
@@ -93,40 +128,41 @@ export function Navbar() {
             )}
           </div>
 
-          {isLoggedIn ? (
-            <div className="user-logged-area">
-              <div className="user-info">
+          <div className="desktop-auth-area">
+            {isLoggedIn ? (
+              <div className="user-logged-area">
                 <User size={20} />
-                <span className="user-name-desktop">
+                <span className="user-name-text">
                   Olá, <strong>{userName?.split(" ")[0]}</strong>
                 </span>
+                <button
+                  type="button"
+                  className="logout-btn-icon"
+                  onClick={handleLogout}
+                  title="Sair"
+                >
+                  <LogOut size={18} />
+                </button>
               </div>
-              <button
-                className="logout-btn"
-                onClick={handleLogout}
-                title="Sair"
-              >
-                <LogOut size={18} />
-              </button>
-            </div>
-          ) : (
-            <div className="nav-auth-buttons">
-              <button
-                type="button"
-                className="login-btn"
-                onClick={() => navigate("/login")}
-              >
-                <span>Entrar</span>
-              </button>
-              <button
-                type="button"
-                className="signup-btn-nav"
-                onClick={() => navigate("/signup")}
-              >
-                <span>Criar Conta</span>
-              </button>
-            </div>
-          )}
+            ) : (
+              <div className="nav-auth-buttons">
+                <button
+                  type="button"
+                  className="login-btn-nav"
+                  onClick={() => navigate("/login")}
+                >
+                  Entrar
+                </button>
+                <button
+                  type="button"
+                  className="signup-btn-nav"
+                  onClick={() => navigate("/signup")}
+                >
+                  Criar Conta
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </nav>
