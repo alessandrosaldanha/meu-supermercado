@@ -52,16 +52,17 @@ export const loginUser = async (email: string, password: string) => {
 };
 export const getFeaturedProducts = async (): Promise<Product[]> => {
   try {
+    // Chamando o endpoint que você acabou de filtrar no Xano
     const response = await fetch(`${API_URL}/products`);
     const data = await response.json();
 
-    // Acessa a lista dentro de .items por causa da paginação
+    // Como você ativou 'Include Metadata', os produtos estão em data.items
     const productsList = data.items || data;
 
     if (!Array.isArray(productsList)) return [];
 
-    // Filtra os destaques (check azul no Xano)
-    return productsList.filter((p: any) => p.is_featured === true);
+    // Retorna a lista para o FeaturedSlider.tsx
+    return productsList;
   } catch (error) {
     console.error("Erro ao buscar destaques:", error);
     return [];
