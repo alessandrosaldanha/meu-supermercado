@@ -11,57 +11,62 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { useCart } from "../context/CartContext";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import "./Navbar.css";
 
 export function Navbar() {
   const { cartCount } = useCart();
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  // ESTADOS PARA REATIVIDADE
   const [displayName, setDisplayName] = useState("Usuário");
   const [userRole, setUserRole] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
 
-  // FUNÇÃO DE ATUALIZAÇÃO (Centralizada para ser chamada em vários lugares)
-  const updateNavbar = () => {
+  const updateNavbar = useCallback(() => {
     const savedToken = localStorage.getItem("token");
     const savedName = localStorage.getItem("userName");
     const savedRole = localStorage.getItem("userRole");
+    const savedUser = localStorage.getItem("user");
 
     setToken(savedToken);
     setUserRole(savedRole);
 
-    // Se houver um nome salvo e não for a string "undefined" ou "null"
-    if (savedName && savedName !== "undefined" && savedName !== "null") {
+    if (
+      savedToken &&
+      savedName &&
+      savedName !== "undefined" &&
+      savedName !== "null" &&
+      savedName !== "Usuário"
+    ) {
       setDisplayName(savedName);
+    } else if (savedToken && savedUser) {
+      try {
+        const userObj = JSON.parse(savedUser);
+        setDisplayName(userObj.name || "Usuário");
+      } catch {
+        setDisplayName("Usuário");
+      }
     } else {
       setDisplayName("Usuário");
     }
-  };
+  }, []);
 
   useEffect(() => {
-    // 1. Atualiza ao carregar o componente
     updateNavbar();
-
-    // 2. ESCUTA O EVENTO 'storage' (O segredo para atualizar no momento do login)
     window.addEventListener("storage", updateNavbar);
-
-    // Limpeza ao desmontar
-    return () => window.removeEventListener("storage", updateNavbar);
-  }, [navigate]); // Também re-executa ao navegar entre páginas
+    window.addEventListener("focus", updateNavbar);
+    return () => {
+      window.removeEventListener("storage", updateNavbar);
+      window.removeEventListener("focus", updateNavbar);
+    };
+  }, [updateNavbar]);
 
   const isLoggedIn = !!token;
-  const isMaster = userRole === "master";
   const isPrivileged = userRole === "master" || userRole === "admin";
 
   const handleLogout = () => {
     localStorage.clear();
-    setToken(null);
-    setDisplayName("Usuário");
-    setUserRole(null);
-    alert("Você saiu da plataforma. Até logo!");
+    updateNavbar();
     navigate("/login");
     setIsMenuOpen(false);
   };
@@ -71,17 +76,14 @@ export function Navbar() {
   return (
     <nav className="navbar">
       <div className="nav-container">
-        {/* ÍCONE MENU MOBILE */}
         <button
           type="button"
           className="mobile-menu-icon"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
-          aria-label="Abrir menu"
         >
           {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
         </button>
 
-        {/* LOGO */}
         <Link to="/" className="nav-logo" onClick={closeMenu}>
           <Store size={28} color="var(--primary)" />
           <span>
@@ -89,7 +91,6 @@ export function Navbar() {
           </span>
         </Link>
 
-        {/* MENU LATERAL / MOBILE */}
         <ul className={isMenuOpen ? "nav-menu active" : "nav-menu"}>
           <li onClick={closeMenu}>
             <Link to="/">
@@ -106,21 +107,16 @@ export function Navbar() {
               <Package size={18} /> Meus Pedidos
             </Link>
           </li>
-
-          {/* MENU ADMIN */}
           {isPrivileged && (
             <li onClick={closeMenu} className="admin-menu-item">
               <Link
                 to="/admin/users"
                 style={{ color: "var(--primary)", fontWeight: "bold" }}
               >
-                <ShieldCheck size={18} />{" "}
-                {isMaster ? "Gestão Master" : "Painel Admin"}
+                <ShieldCheck size={18} /> Painel Admin
               </Link>
             </li>
           )}
-
-          {/* AREA DE AUTH NO MOBILE (Dentro de um <li> para evitar erro de HTML) */}
           <li className="mobile-auth-wrapper">
             {!isLoggedIn ? (
               <div className="mobile-auth-container">
@@ -147,21 +143,16 @@ export function Navbar() {
               <div className="mobile-auth-container">
                 <div className="user-info-mobile">
                   <User size={20} />
-                  <span>Olá, {displayName}</span>
+                  <span>{displayName}</span>
                 </div>
-                <button
-                  type="button"
-                  className="logout-btn-mobile"
-                  onClick={handleLogout}
-                >
-                  <LogOut size={18} /> Sair da conta
+                <button className="logout-btn-mobile" onClick={handleLogout}>
+                  <LogOut size={18} /> Sair
                 </button>
               </div>
             )}
           </li>
         </ul>
 
-        {/* AÇÕES DA DIREITA (DESKTOP) */}
         <div className="nav-actions">
           <div
             className="nav-cart-wrapper"
@@ -175,7 +166,6 @@ export function Navbar() {
               <span className="nav-cart-badge">{cartCount}</span>
             )}
           </div>
-
           <div className="desktop-auth-area">
             {isLoggedIn ? (
               <div className="user-logged-area">
@@ -187,7 +177,8 @@ export function Navbar() {
                   type="button"
                   className="logout-btn-icon"
                   onClick={handleLogout}
-                  title="Sair"
+                  title="Sair da conta"
+                  aria-label="Sair da conta"
                 >
                   <LogOut size={18} />
                 </button>

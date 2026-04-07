@@ -2,47 +2,121 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { Toast } from "../components/Toast";
-import { ShoppingCart, Star, CheckCircle, ChevronLeft } from "lucide-react";
+import {
+  ShoppingCart,
+  Star,
+  CheckCircle,
+  ChevronLeft,
+  CornerDownRight,
+  MessageCircle,
+} from "lucide-react";
 import { getProductById, postReview, type Product } from "../services/api";
 import "./ProductDetail.css";
+import "../components/CommentItem.css";
+interface Review {
+  id: string;
+  user_name: string;
+  comment: string;
+  rating: number;
+  parent_id?: string | null;
+  replies?: Review[];
+}
 
+// 2. Sub-componente CommentItem (O Filho)
+interface CommentItemProps {
+  review: Review;
+  onReply: (parentId: string, text: string) => void;
+}
+
+function CommentItem({ review, onReply }: CommentItemProps) {
+  const [isReplying, setIsReplying] = useState(false);
+  const [replyText, setReplyText] = useState("");
+
+  const handleSendReply = () => {
+    if (!replyText.trim()) return;
+    onReply(review.id, replyText);
+    setReplyText("");
+    setIsReplying(false);
+  };
+
+  return (
+    <div
+      className={`comment-node ${review.parent_id ? "is-reply" : "is-main"}`}
+    >
+      <div className="comment-header">
+        {review.parent_id && <CornerDownRight size={14} color="#3483fa" />}
+        <div className="stars-mini" style={{ display: "flex" }}>
+          {[...Array(5)].map((_, i) => (
+            <Star
+              key={i}
+              size={12}
+              fill={i < (review.rating || 0) ? "#3483fa" : "none"}
+              color="#3483fa"
+            />
+          ))}
+        </div>
+        <strong className="user-name">
+          {review.user_name || "Cliente Vital"}
+        </strong>
+      </div>
+
+      <p className="comment-text">{review.comment}</p>
+
+      <button
+        className="btn-reply-action"
+        onClick={() => setIsReplying(!isReplying)}
+      >
+        <MessageCircle size={14} />
+        {isReplying ? "Cancelar" : "Responder"}
+      </button>
+
+      {isReplying && (
+        <div className="reply-form-container">
+          <textarea
+            className="reply-textarea"
+            rows={2}
+            placeholder="Escreva sua resposta..."
+            value={replyText}
+            onChange={(e) => setReplyText(e.target.value)}
+          />
+          <button className="btn-submit-reply" onClick={handleSendReply}>
+            Enviar Resposta
+          </button>
+        </div>
+      )}
+
+      {review.replies && review.replies.length > 0 && (
+        <div className="replies-wrapper">
+          {review.replies.map((reply) => (
+            <CommentItem key={reply.id} review={reply} onReply={onReply} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// 3. Componente Principal (O Pai)
 export function ProductDetail() {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { addToCart } = useCart();
 
-  const [product, setProduct] = useState<Product | null>(null);
+  const [product, setProduct] = useState<any | null>(null); // Usamos any temporário se a interface Product do api.ts for restrita
   const [mainImage, setMainImage] = useState("");
   const [loading, setLoading] = useState(true);
   const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [comment, setComment] = useState("");
   const [userRating, setUserRating] = useState(5);
-  const [toastMessage, setToastMessage] = useState("");
   const isLoggedIn = !!localStorage.getItem("token");
+
   const handleBuyNow = () => {
     if (product) {
       addToCart(product);
-      navigate("/cart"); // Ou "/checkout" se você já tiver essa rota
-    }
-  };
-
-  const handleSendReview = async () => {
-    if (!comment.trim()) {
-      // Se você não tiver a biblioteca toast instalada, use alert:
-      alert("Escreva um comentário antes de enviar!");
-      return;
-    }
-
-    try {
-      await postReview(id as string, userRating, comment);
-      alert("Avaliação enviada com sucesso!");
-      setComment("");
-      setUserRating(5);
-      window.location.reload();
-    } catch (err) {
-      console.error(err);
-      alert("Erro ao enviar avaliação. Verifique se você está logado.");
+      navigate("/cart");
     }
   };
 
@@ -51,9 +125,33 @@ export function ProductDetail() {
       addToCart(product);
       setToastMessage(`${product.name} adicionado ao carrinho!`);
       setShowToast(false);
-      setTimeout(() => {
-        setShowToast(true);
-      }, 10);
+      setTimeout(() => setShowToast(true), 10);
+    }
+  };
+
+  // Função para enviar avaliação principal ou RESPOSTA
+  const handleSendReview = async (parentId?: string, replyText?: string) => {
+    const finalComment = replyText || comment;
+    const finalRating = parentId ? 5 : userRating; // Respostas geralmente não precisam de nota, usamos 5 fixo
+
+    if (!finalComment.trim()) {
+      alert("Escreva algo antes de enviar!");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      // Passamos o id do produto e o parentId (se houver) para o Xano
+      await postReview(id!, finalRating, finalComment, parentId);
+
+      alert(parentId ? "Resposta enviada!" : "Avaliação enviada!");
+      setComment("");
+      window.location.reload();
+    } catch (err) {
+      console.error(err);
+      alert("Erro ao enviar. Verifique se você está logado.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -66,11 +164,10 @@ export function ProductDetail() {
         const data = await getProductById(id);
         if (data && isMounted) {
           setProduct(data);
-          // BUG FIX: Verifica se existe imagem antes de setar a principal
           setMainImage(data.image?.[0]?.url || "");
         }
       } catch (err) {
-        console.error("Erro ao carregar produto:", err);
+        console.error(err);
       } finally {
         if (isMounted) setLoading(false);
       }
@@ -82,24 +179,20 @@ export function ProductDetail() {
   }, [id]);
 
   if (loading)
-    return <div className="loading-screen">Carregando detalhes...</div>;
-
+    return <div className="loading-screen">Carregando Mercado Vital...</div>;
   if (!product)
     return (
       <div className="error-container">
         <h2>Produto não encontrado</h2>
-        <button onClick={() => navigate("/")}>Voltar para o início</button>
       </div>
     );
 
   return (
     <div className="product-detail-container">
-      {/* Toast flutuante */}
       {showToast && (
         <Toast message={toastMessage} onClose={() => setShowToast(false)} />
       )}
 
-      {/* Botão de Voltar (UX Melhorada) */}
       <button className="btn-back" onClick={() => navigate(-1)}>
         <ChevronLeft size={20} /> Voltar
       </button>
@@ -107,13 +200,13 @@ export function ProductDetail() {
       <div className="product-main-section">
         <div className="product-gallery">
           <div className="thumbnails">
-            {product.image?.map((img, index) => (
+            {product.image?.map((img: any, index: number) => (
               <img
                 key={index}
                 src={img.url}
                 onMouseEnter={() => setMainImage(img.url)}
-                alt=""
                 className={`thumb-img ${mainImage === img.url ? "active-thumb" : ""}`}
+                alt=""
               />
             ))}
           </div>
@@ -130,42 +223,17 @@ export function ProductDetail() {
           <span className="badge-new">Novo | +100 vendidos</span>
           <h1 className="product-title">{product.name}</h1>
 
-          <div className="rating-summary">
-            <div className="stars-container">
-              {[...Array(5)].map((_, i) => (
-                <Star
-                  key={i}
-                  size={18}
-                  fill={i < (product.rating || 0) ? "#3483fa" : "none"}
-                  color="#3483fa"
-                />
-              ))}
-            </div>
-            <span className="rating-text">({product.rating || 0}/5)</span>
-          </div>
-
           <div className="price-container">
             <span className="currency">R$</span>
             <span className="price-value">{product.price.toFixed(2)}</span>
           </div>
 
-          <div className="benefits">
-            <p>
-              <CheckCircle size={16} color="#00a650" />{" "}
-              <span>Frete grátis</span> em Maceió
-            </p>
-          </div>
-
           <div className="action-buttons">
-            <button type="button" className="btn-buy" onClick={handleBuyNow}>
+            <button className="btn-buy" onClick={handleBuyNow}>
               Comprar agora
             </button>
-            <button
-              type="button"
-              className="btn-add-cart"
-              onClick={handleAddToCart}
-            >
-              <ShoppingCart size={20} /> Adicionar ao carrinho
+            <button className="btn-add-cart" onClick={handleAddToCart}>
+              <ShoppingCart size={20} /> Carrinho
             </button>
           </div>
         </div>
@@ -176,45 +244,55 @@ export function ProductDetail() {
         <p className="description-text">{product.description}</p>
       </section>
 
-      {/* Seção de Comentários */}
+      {/* Seção de Comentários Integrada */}
       <section className="reviews-section">
         <h2>Opiniões sobre o produto</h2>
+
         {isLoggedIn ? (
           <div className="comment-form">
-            <h3>Deixe sua avaliação</h3>
+            <h3>O que você achou do produto?</h3>
             <div className="star-rating-input">
               {[1, 2, 3, 4, 5].map((s) => (
                 <Star
                   key={s}
                   size={24}
-                  style={{ cursor: "pointer" }}
                   fill={s <= userRating ? "#3483fa" : "none"}
                   color="#3483fa"
                   onClick={() => setUserRating(s)}
+                  style={{ cursor: "pointer" }}
                 />
               ))}
             </div>
             <textarea
-              placeholder="O que você achou deste produto?"
+              className="comment-textarea"
               value={comment}
               onChange={(e) => setComment(e.target.value)}
-              className="comment-textarea"
+              placeholder="Conte sua experiência..."
             />
-            <button className="btn-send-review" onClick={handleSendReview}>
-              Enviar Avaliação
+            <button
+              className="btn-send-review"
+              onClick={() => handleSendReview()}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Enviando..." : "Enviar Avaliação"}
             </button>
           </div>
         ) : (
-          <div className="login-notice-card">
-            <p>Para avaliar, você precisa estar conectado.</p>
-            <button
-              className="btn-login-redirect"
-              onClick={() => navigate("/login")}
-            >
-              Fazer Login
-            </button>
-          </div>
+          <p>Faça login para avaliar.</p>
         )}
+
+        <div className="comments-list">
+          {product.reviews?.map(
+            (rev: Review) =>
+              !rev.parent_id && (
+                <CommentItem
+                  key={rev.id}
+                  review={rev}
+                  onReply={(parentId, text) => handleSendReview(parentId, text)}
+                />
+              ),
+          )}
+        </div>
       </section>
     </div>
   );

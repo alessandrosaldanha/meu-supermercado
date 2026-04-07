@@ -13,6 +13,7 @@ export interface Product {
   }[];
   category: string;
   is_featured: boolean;
+  parentId?: string;
 }
 
 const api = axios.create({
@@ -65,31 +66,25 @@ export const getProductById = async (
   }
 };
 
-export async function postReview(
-  productId: string,
+export const postReview = async (
+  productId: string | number,
   rating: number,
   comment: string,
-) {
+  parentId?: string,
+) => {
   const token = localStorage.getItem("token");
-  const userData = localStorage.getItem("user");
+  const userName = localStorage.getItem("userName"); // Mudamos de 'user' para 'userName'
 
-  let userId = null;
-  if (userData) {
-    try {
-      const user = JSON.parse(userData);
-      userId = user.id || user.uuid;
-    } catch (e) {
-      console.error("Erro ao ler dados do usuário", e);
-    }
-  }
+  if (!token) throw new Error("Usuário não autenticado");
 
   const response = await axios.post(
     `${API_URL}/reviews`,
     {
       products_id: productId,
-      user_id: userId,
+      user_name: userName || "Anônimo",
       rating: rating,
       comment: comment,
+      parent_id: parentId || null,
     },
     {
       headers: { Authorization: `Bearer ${token}` },
@@ -97,6 +92,6 @@ export async function postReview(
   );
 
   return response.data;
-}
+};
 
 export default api;
