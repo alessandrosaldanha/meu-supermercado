@@ -2,6 +2,19 @@ import axios from "axios";
 
 const API_URL = "https://x8ki-letl-twmt.n7.xano.io/api:jB1XPgef";
 
+export interface Review {
+  id: string | number;
+  products_id: string | number;
+  user_id: number;
+  rating: number;
+  parent_id?: string | null;
+  replies?: Review[];
+  comment: string;
+  created_at: number;
+  user?: {
+    name: string;
+  };
+}
 export interface Product {
   id: number;
   name: string;
@@ -15,6 +28,7 @@ export interface Product {
   is_featured: boolean;
   parentId?: string;
   userId: number;
+  reviews: Review[];
 }
 
 const api = axios.create({
@@ -25,9 +39,15 @@ const api = axios.create({
 });
 
 export const getProducts = async (page: number = 1): Promise<Product[]> => {
-  const response = await fetch(`${API_URL}/products?page=${page}`);
-  const data = await response.json();
-  return data.items || [];
+  const response = await api.get(
+    `https://x8ki-letl-twmt.n7.xano.io/api:jB1XPgef/products`,
+    {
+      params: {
+        page: page,
+      },
+    },
+  );
+  return response.data.items || response.data || [];
 };
 
 export const loginUser = async (email: string, password: string) => {
@@ -45,7 +65,9 @@ export const loginUser = async (email: string, password: string) => {
 
 export const getFeaturedProducts = async (): Promise<Product[]> => {
   try {
-    const response = await fetch(`${API_URL}/featured`);
+    const response = await fetch(
+      `https://x8ki-letl-twmt.n7.xano.io/api:jB1XPgef/featured`,
+    );
     const data = await response.json();
     const productsList = data.items || data;
     return Array.isArray(productsList) ? productsList : [];
@@ -59,7 +81,9 @@ export const getProductById = async (
   id: string | undefined,
 ): Promise<Product | null> => {
   try {
-    const response = await api.get<Product>(`/products/${id}`);
+    const response = await api.get<Product>(
+      `https://x8ki-letl-twmt.n7.xano.io/api:jB1XPgef/products/${id}`,
+    );
     return response.data;
   } catch (error) {
     console.error("Erro ao buscar detalhes do produto", error);
@@ -68,29 +92,24 @@ export const getProductById = async (
 };
 
 export const postReview = async (
-  productId: string | number,
+  productId: string,
   rating: number,
   comment: string,
-  parentId?: string | null,
-  userId?: number,
+  parentId: string | null = null,
+  userId: number,
 ) => {
-  const token = localStorage.getItem("token");
+  const savedUser = localStorage.getItem("user");
+  const parsedUser = savedUser ? JSON.parse(savedUser) : null;
+  const userName = parsedUser?.name || "Cliente Vital";
 
-  if (!token) throw new Error("Usuário não autenticado");
-
-  const response = await axios.post(
-    `https://x8ki-letl-twmt.n7.xano.io/api:jB1XPgef/reviews`,
-    {
-      products_id: productId,
-      user_id: userId, // Usando a variável correta e o nome da coluna do Xano
-      rating: rating,
-      comment: comment,
-      parent_id: parentId || null,
-    },
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    },
-  );
+  const response = await api.post("/reviews", {
+    products_id: productId,
+    user_id: userId,
+    user_name: userName,
+    rating: rating,
+    comment: comment,
+    parent_id: parentId,
+  });
 
   return response.data;
 };

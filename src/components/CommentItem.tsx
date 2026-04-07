@@ -1,29 +1,20 @@
 import React, { useState } from "react";
 import { Star, CornerDownRight, MessageCircle } from "lucide-react";
-import "./CommentItem.css"; // NÃO ESQUEÇA DE IMPORTAR O CSS AQUI
-
-// Representa a estrutura de um comentário vindo do Xano
-interface Review {
-  id: string;
-  user_name: string;
-  comment: string;
-  rating: number;
-  parent_id?: string | null;
-  replies?: Review[]; // Um comentário pode ter uma lista de outros comentários (recursividade)
-}
+import "./CommentItem.css";
+import type { Review } from "../services/api";
 
 interface CommentItemProps {
-  review: Review; // Agora usamos a interface em vez de 'any'
+  review: Review;
   onReply: (parentId: string, text: string) => void;
 }
 
-function CommentItem({ review, onReply }: CommentItemProps) {
+export function CommentItem({ review, onReply }: CommentItemProps) {
   const [isReplying, setIsReplying] = useState(false);
   const [replyText, setReplyText] = useState("");
 
   const handleSendReply = () => {
     if (!replyText.trim()) return;
-    onReply(review.id, replyText);
+    onReply(String(review.id), replyText);
     setReplyText("");
     setIsReplying(false);
   };
@@ -45,13 +36,14 @@ function CommentItem({ review, onReply }: CommentItemProps) {
           ))}
         </div>
         <strong className="user-name">
-          {review.user_name || "Cliente Vital"}
+          {review.user?.name || "Cliente Vital"}
         </strong>
       </div>
 
       <p className="comment-text">{review.comment}</p>
 
       <button
+        type="button"
         className="btn-reply-action"
         onClick={() => setIsReplying(!isReplying)}
       >
@@ -68,13 +60,15 @@ function CommentItem({ review, onReply }: CommentItemProps) {
             value={replyText}
             onChange={(e) => setReplyText(e.target.value)}
           />
-          <button className="btn-submit-reply" onClick={handleSendReply}>
+          <button
+            type="button"
+            className="btn-submit-reply"
+            onClick={handleSendReply}
+          >
             Enviar Resposta
           </button>
         </div>
       )}
-
-      {/* Renderização das respostas com tipagem correta */}
       {review.replies && review.replies.length > 0 && (
         <div className="replies-wrapper">
           {review.replies.map((reply) => (

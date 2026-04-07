@@ -1,103 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { Toast } from "../components/Toast";
-import {
-  ShoppingCart,
-  Star,
-  CheckCircle,
-  ChevronLeft,
-  CornerDownRight,
-  MessageCircle,
-} from "lucide-react";
-import { getProductById, postReview, type Product } from "../services/api";
+import { ShoppingCart, Star, ChevronLeft } from "lucide-react";
+import { getProductById, postReview } from "../services/api";
+// Importe o componente que criamos fora
+import { CommentItem } from "../components/CommentItem";
+
 import "./ProductDetail.css";
-import "../components/CommentItem.css";
 
-interface Review {
-  id: string;
-  user_name: string;
-  comment: string;
-  rating: number;
-  parent_id?: string | null;
-  replies?: Review[];
-}
-
-// 2. Sub-componente CommentItem
-interface CommentItemProps {
-  review: Review;
-  onReply: (parentId: string, text: string) => void;
-}
-
-function CommentItem({ review, onReply }: CommentItemProps) {
-  const [isReplying, setIsReplying] = useState(false);
-  const [replyText, setReplyText] = useState("");
-
-  const handleSendReply = () => {
-    if (!replyText.trim()) return;
-    onReply(review.id, replyText);
-    setReplyText("");
-    setIsReplying(false);
-  };
-
-  return (
-    <div
-      className={`comment-node ${review.parent_id ? "is-reply" : "is-main"}`}
-    >
-      <div className="comment-header">
-        {review.parent_id && <CornerDownRight size={14} color="#3483fa" />}
-        <div className="stars-mini" style={{ display: "flex" }}>
-          {[...Array(5)].map((_, i) => (
-            <Star
-              key={i}
-              size={12}
-              fill={i < (review.rating || 0) ? "#3483fa" : "none"}
-              color="#3483fa"
-            />
-          ))}
-        </div>
-        <strong className="user-name">
-          {review.user_name || "Cliente Vital"}
-        </strong>
-      </div>
-
-      <p className="comment-text">{review.comment}</p>
-
-      <button
-        className="btn-reply-action"
-        onClick={() => setIsReplying(!isReplying)}
-      >
-        <MessageCircle size={14} />
-        {isReplying ? "Cancelar" : "Responder"}
-      </button>
-
-      {isReplying && (
-        <div className="reply-form-container">
-          <textarea
-            className="reply-textarea"
-            rows={2}
-            placeholder="Escreva sua resposta..."
-            value={replyText}
-            onChange={(e) => setReplyText(e.target.value)}
-          />
-          <button className="btn-submit-reply" onClick={handleSendReply}>
-            Enviar Resposta
-          </button>
-        </div>
-      )}
-
-      {review.replies && review.replies.length > 0 && (
-        <div className="replies-wrapper">
-          {review.replies.map((reply) => (
-            <CommentItem key={reply.id} review={reply} onReply={onReply} />
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
-// 3. Componente Principal
 export function ProductDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -109,10 +20,78 @@ export function ProductDetail() {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-
   const [comment, setComment] = useState("");
   const [userRating, setUserRating] = useState(5);
+
   const isLoggedIn = !!localStorage.getItem("token");
+
+  const loadProductData = useCallback(async () => {
+    if (!id) return;
+    setLoading(true);
+    try {
+      const productData = await getProductById(id);
+      console.log("Dados que chegaram do Xano:", productData);
+
+      if (productData) {
+        setProduct(productData);
+
+        if (!mainImage && productData.image?.[0]?.url) {
+          setMainImage(productData.image[0].url);
+        }
+      }
+    } catch (err) {
+      console.error("Erro ao carregar dados:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, [id, mainImage]);
+
+  useEffect(() => {
+    loadProductData();
+  }, [loadProductData]);
+
+  const handleSendReview = async (parentId?: string, replyText?: string) => {
+    const finalComment = replyText || comment;
+    const finalRating = parentId ? 5 : userRating;
+
+    if (!finalComment.trim()) return;
+
+    setIsSubmitting(true);
+    try {
+      const savedUser = localStorage.getItem("user");
+      const parsedUser = savedUser ? JSON.parse(savedUser) : null;
+      const userId = parsedUser?.id || localStorage.getItem("userId");
+
+      const newReview = await postReview(
+        id!,
+        finalRating,
+        finalComment,
+        parentId || null,
+        Number(userId),
+      );
+
+      if (product) {
+        const reviewParaExibir = {
+          ...newReview,
+          user_name: parsedUser?.name || "Alessandro",
+          replies: [],
+        };
+
+        setProduct({
+          ...product,
+          reviews: [reviewParaExibir, ...(product.reviews || [])],
+        });
+      }
+
+      setComment("");
+      alert(parentId ? "Resposta enviada!" : "Avaliação enviada!");
+    } catch (err) {
+      console.error("Erro ao enviar:", err);
+      alert("Erro ao enviar. Verifique o console.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const handleBuyNow = () => {
     if (product) {
@@ -124,74 +103,10 @@ export function ProductDetail() {
   const handleAddToCart = () => {
     if (product) {
       addToCart(product);
-      setToastMessage(`${product.name} adicionado ao carrinho!`);
-      setShowToast(false);
-      setTimeout(() => setShowToast(true), 10);
+      setToastMessage(`${product.name} adicionado!`);
+      setShowToast(true);
     }
   };
-
-  // Função para enviar avaliação ou RESPOSTA
-  const handleSendReview = async (parentId?: string, replyText?: string) => {
-    const finalComment = replyText || comment;
-    const finalRating = parentId ? 5 : userRating;
-
-    if (!finalComment.trim()) {
-      alert("Escreva algo antes de enviar!");
-      return;
-    }
-
-    setIsSubmitting(true);
-    try {
-      const savedUser = localStorage.getItem("user");
-      const parsedUser = savedUser ? JSON.parse(savedUser) : null;
-      const userId = parsedUser?.id || localStorage.getItem("userId");
-
-      if (!userId) {
-        alert("Você precisa estar logado para enviar uma avaliação.");
-        return;
-      }
-
-      await postReview(
-        id!,
-        finalRating,
-        finalComment,
-        parentId || null,
-        Number(userId),
-      );
-
-      alert(parentId ? "Resposta enviada!" : "Avaliação enviada!");
-      setComment("");
-      window.location.reload();
-    } catch (err) {
-      console.error(err);
-      alert("Erro ao enviar. Verifique se você está logado.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  }; // <--- ESSA CHAVE ESTAVA FALTANDO OU NO LUGAR ERRADO
-
-  useEffect(() => {
-    let isMounted = true;
-    async function loadProduct() {
-      if (!id) return;
-      setLoading(true);
-      try {
-        const data = await getProductById(id);
-        if (data && isMounted) {
-          setProduct(data);
-          setMainImage(data.image?.[0]?.url || "");
-        }
-      } catch (err) {
-        console.error(err);
-      } finally {
-        if (isMounted) setLoading(false);
-      }
-    }
-    loadProduct();
-    return () => {
-      isMounted = false;
-    };
-  }, [id]);
 
   if (loading)
     return <div className="loading-screen">Carregando Mercado Vital...</div>;
@@ -259,9 +174,10 @@ export function ProductDetail() {
 
       <section className="reviews-section">
         <h2>Opiniões sobre o produto</h2>
+
         {isLoggedIn ? (
           <div className="comment-form">
-            <h3>O que você achou do produto?</h3>
+            <h3>Avaliar produto</h3>
             <div className="star-rating-input">
               {[1, 2, 3, 4, 5].map((s) => (
                 <Star
@@ -278,7 +194,7 @@ export function ProductDetail() {
               className="comment-textarea"
               value={comment}
               onChange={(e) => setComment(e.target.value)}
-              placeholder="Conte sua experiência..."
+              placeholder="Escreva sua opinião..."
             />
             <button
               className="btn-send-review"
@@ -289,19 +205,28 @@ export function ProductDetail() {
             </button>
           </div>
         ) : (
-          <p>Faça login para avaliar.</p>
+          <div className="login-notice">
+            Faça login para avaliar este produto.
+          </div>
         )}
 
         <div className="comments-list">
-          {product.reviews?.map(
-            (rev: Review) =>
-              !rev.parent_id && (
+          {product.reviews && product.reviews.length > 0 ? (
+            product.reviews
+              .filter((rev: any) => !rev.parent_id)
+              .map((rev: any) => (
                 <CommentItem
                   key={rev.id}
                   review={rev}
-                  onReply={(parentId, text) => handleSendReview(parentId, text)}
+                  onReply={(parentId: string, text: string) =>
+                    handleSendReview(parentId, text)
+                  }
                 />
-              ),
+              ))
+          ) : (
+            <p className="no-reviews">
+              Ainda não há avaliações para este produto.
+            </p>
           )}
         </div>
       </section>
