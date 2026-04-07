@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Star, CornerDownRight, MessageCircle } from "lucide-react";
 import "./CommentItem.css";
 import type { Review } from "../services/api";
@@ -25,11 +25,13 @@ export function CommentItem({ review, onReply }: CommentItemProps) {
     >
       <div className="comment-header">
         {review.parent_id && <CornerDownRight size={14} color="#3483fa" />}
-        <div className="stars-mini" style={{ display: "flex" }}>
+        <div className="stars-mini">
+          {" "}
           {[...Array(5)].map((_, i) => (
             <Star
               key={i}
               size={12}
+              className="star-icon"
               fill={i < (review.rating || 0) ? "#3483fa" : "none"}
               color="#3483fa"
             />

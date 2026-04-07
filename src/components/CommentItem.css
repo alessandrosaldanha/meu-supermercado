@@ -64,3 +64,12 @@
   border-radius: 4px;
   cursor: pointer;
 }
+
+.stars-mini {
+  display: flex;
+  gap: 2px;
+}
+
+.star-icon {
+  color: #3483fa;
+}
