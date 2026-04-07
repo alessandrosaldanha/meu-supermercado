@@ -14,6 +14,7 @@ export interface Product {
   category: string;
   is_featured: boolean;
   parentId?: string;
+  userId: number;
 }
 
 const api = axios.create({
@@ -70,18 +71,18 @@ export const postReview = async (
   productId: string | number,
   rating: number,
   comment: string,
-  parentId?: string,
+  parentId?: string | null,
+  userId?: number,
 ) => {
   const token = localStorage.getItem("token");
-  const userName = localStorage.getItem("userName"); // Mudamos de 'user' para 'userName'
 
   if (!token) throw new Error("Usuário não autenticado");
 
   const response = await axios.post(
-    `${API_URL}/reviews`,
+    `https://x8ki-letl-twmt.n7.xano.io/api:jB1XPgef/reviews`,
     {
       products_id: productId,
-      user_name: userName || "Anônimo",
+      user_id: userId, // Usando a variável correta e o nome da coluna do Xano
       rating: rating,
       comment: comment,
       parent_id: parentId || null,

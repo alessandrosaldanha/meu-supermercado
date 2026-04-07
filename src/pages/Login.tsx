@@ -18,23 +18,26 @@ export default function Login() {
       if (data.authToken) {
         localStorage.setItem("token", data.authToken);
 
+        // 1. Pegamos o ID que vem do Xano (pode vir como user_id ou id)
+        const userId = data.user_id || data.user?.id || data.id;
+
+        // 2. Pegamos o nome real
         const rawName =
-          data.user?.name ||
-          data.name ||
-          data.userName ||
-          data.result?.name ||
-          "Usuário";
+          data.user?.name || data.name || data.userName || "Usuário";
         const firstName = String(rawName).trim().split(" ")[0];
 
-        localStorage.setItem("userName", firstName);
-        localStorage.setItem("userRole", data.user_role || "admin");
+        // 3. SALVAMOS O OBJETO USER (Isso é o que falta para o comentário funcionar)
         localStorage.setItem(
           "user",
           JSON.stringify({
-            id: data.user_id || data.user?.id,
+            id: userId,
             name: firstName,
           }),
         );
+
+        // 4. Outras chaves para a Navbar
+        localStorage.setItem("userName", firstName);
+        localStorage.setItem("userRole", data.user_role || "member");
 
         window.dispatchEvent(new Event("storage"));
         window.dispatchEvent(new Event("focus"));

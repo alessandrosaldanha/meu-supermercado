@@ -13,6 +13,7 @@ import {
 import { getProductById, postReview, type Product } from "../services/api";
 import "./ProductDetail.css";
 import "../components/CommentItem.css";
+
 interface Review {
   id: string;
   user_name: string;
@@ -22,7 +23,7 @@ interface Review {
   replies?: Review[];
 }
 
-// 2. Sub-componente CommentItem (O Filho)
+// 2. Sub-componente CommentItem
 interface CommentItemProps {
   review: Review;
   onReply: (parentId: string, text: string) => void;
@@ -96,13 +97,13 @@ function CommentItem({ review, onReply }: CommentItemProps) {
   );
 }
 
-// 3. Componente Principal (O Pai)
+// 3. Componente Principal
 export function ProductDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { addToCart } = useCart();
 
-  const [product, setProduct] = useState<any | null>(null); // Usamos any temporário se a interface Product do api.ts for restrita
+  const [product, setProduct] = useState<any | null>(null);
   const [mainImage, setMainImage] = useState("");
   const [loading, setLoading] = useState(true);
   const [showToast, setShowToast] = useState(false);
@@ -129,10 +130,10 @@ export function ProductDetail() {
     }
   };
 
-  // Função para enviar avaliação principal ou RESPOSTA
+  // Função para enviar avaliação ou RESPOSTA
   const handleSendReview = async (parentId?: string, replyText?: string) => {
     const finalComment = replyText || comment;
-    const finalRating = parentId ? 5 : userRating; // Respostas geralmente não precisam de nota, usamos 5 fixo
+    const finalRating = parentId ? 5 : userRating;
 
     if (!finalComment.trim()) {
       alert("Escreva algo antes de enviar!");
@@ -141,8 +142,22 @@ export function ProductDetail() {
 
     setIsSubmitting(true);
     try {
-      // Passamos o id do produto e o parentId (se houver) para o Xano
-      await postReview(id!, finalRating, finalComment, parentId);
+      const savedUser = localStorage.getItem("user");
+      const parsedUser = savedUser ? JSON.parse(savedUser) : null;
+      const userId = parsedUser?.id || localStorage.getItem("userId");
+
+      if (!userId) {
+        alert("Você precisa estar logado para enviar uma avaliação.");
+        return;
+      }
+
+      await postReview(
+        id!,
+        finalRating,
+        finalComment,
+        parentId || null,
+        Number(userId),
+      );
 
       alert(parentId ? "Resposta enviada!" : "Avaliação enviada!");
       setComment("");
@@ -153,7 +168,7 @@ export function ProductDetail() {
     } finally {
       setIsSubmitting(false);
     }
-  };
+  }; // <--- ESSA CHAVE ESTAVA FALTANDO OU NO LUGAR ERRADO
 
   useEffect(() => {
     let isMounted = true;
@@ -222,12 +237,10 @@ export function ProductDetail() {
         <div className="product-info-sidebar">
           <span className="badge-new">Novo | +100 vendidos</span>
           <h1 className="product-title">{product.name}</h1>
-
           <div className="price-container">
             <span className="currency">R$</span>
             <span className="price-value">{product.price.toFixed(2)}</span>
           </div>
-
           <div className="action-buttons">
             <button className="btn-buy" onClick={handleBuyNow}>
               Comprar agora
@@ -244,10 +257,8 @@ export function ProductDetail() {
         <p className="description-text">{product.description}</p>
       </section>
 
-      {/* Seção de Comentários Integrada */}
       <section className="reviews-section">
         <h2>Opiniões sobre o produto</h2>
-
         {isLoggedIn ? (
           <div className="comment-form">
             <h3>O que você achou do produto?</h3>
