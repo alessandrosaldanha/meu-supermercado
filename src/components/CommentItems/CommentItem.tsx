@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Star, CornerDownRight, MessageCircle } from "lucide-react";
 import "./CommentItem.css";
-import type { Review } from "../services/api";
+import type { Review } from "../../services/api";
 
 interface CommentItemProps {
   review: Review;

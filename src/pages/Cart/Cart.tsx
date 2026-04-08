@@ -1,7 +1,8 @@
-import { useCart } from "../context/CartContext";
+import { useCart } from "../../context/CartContext";
 import { Trash2, ShoppingBag } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "../components/Button";
+import { Button } from "../../components/Buttons/Button";
+import api from "../../services/api";
 import "./Cart.css";
 
 export default function Cart() {
@@ -13,23 +14,30 @@ export default function Cart() {
 
   const handleFinishPurchase = async () => {
     const savedUser = JSON.parse(localStorage.getItem("user") || "{}");
-    if (!savedUser.cep) {
-      alert("Precisamos do seu endereço para a entrega em Maceió!");
-      navigate("/perfil");
-      return;
-    }
 
     try {
-      // await api.post("orders", { items: cart, userId: savedUser.id });
+      const pedido = {
+        user_id: savedUser.id,
+        items: cart,
+        total: total,
+        status: "pendente",
+        payment_method: "Pix",
+        address: {
+          logradouro: savedUser.logradouro,
+          numero: savedUser.numero,
+          bairro: savedUser.bairro,
+          cidade: "Maceió",
+        },
+      };
+
+      await api.post("orders", pedido);
+
       clearCart();
       localStorage.removeItem("cart");
-
-      alert(
-        "🚀 Compra finalizada com sucesso! Seu pedido está sendo preparado.",
-      );
+      alert("🚀 Pedido realizado! Verifique no painel do Xano.");
       navigate("/");
     } catch (error) {
-      alert("Erro ao processar a compra.");
+      console.error("Erro ao salvar:", error);
     }
   };
 

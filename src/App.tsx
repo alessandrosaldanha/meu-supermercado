@@ -1,15 +1,16 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { CartProvider } from "./context/CartContext";
 import React from "react";
-import { Navbar } from "./components/Navbar";
-import { Footer } from "./components/Footer";
+import { Navbar } from "./components/Navbar/Navbar";
+import { Footer } from "./components/Footer/Footer";
 
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Cart from "./pages/Cart";
-import Signup from "./pages/Signup";
-import Profile from "./pages/Profile";
-import { ProductDetail } from "./pages/ProductDetail";
+import Home from "./pages/Home/Home";
+import Login from "./pages/Login/Login";
+import Cart from "./pages/Cart/Cart";
+import Signup from "./pages/Signup/Signup";
+import Profile from "./pages/Profile/Profile";
+import { ProductDetail } from "./pages/ProductDetail/ProductDetail";
+import "./App.css";
 
 const ProtectedAdminRoute = ({ children }: { children: React.ReactNode }) => {
   const userRole = localStorage.getItem("userRole");
@@ -35,7 +36,7 @@ function App() {
               path="/admin/users"
               element={
                 <ProtectedAdminRoute>
-                  <div style={{ padding: "20px" }}>
+                  <div className="admin-container">
                     <h1>Gestão de Usuários</h1>
                     <p>
                       Vital, aqui você vai listar os usuários do Xano em breve.

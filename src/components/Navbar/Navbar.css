@@ -270,3 +270,7 @@
 .user-profile-link svg {
   flex-shrink: 0;
 }
+
+.user-info-mobile {
+  cursor: "pointer";
+}

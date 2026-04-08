@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "../components/Button";
+import { Button } from "../../components/Buttons/Button";
 import "./Signup.css";
 
 export default function Signup() {

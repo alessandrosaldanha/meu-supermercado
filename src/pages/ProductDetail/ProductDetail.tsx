@@ -1,11 +1,10 @@
 import { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useCart } from "../context/CartContext";
-import { Toast } from "../components/Toast";
+import { useCart } from "../../context/CartContext";
+import { Toast } from "../../components/Toasts/Toast";
 import { ShoppingCart, Star, ChevronLeft } from "lucide-react";
-import { getProductById, postReview } from "../services/api";
-// Importe o componente que criamos fora
-import { CommentItem } from "../components/CommentItem";
+import { getProductById, postReview } from "../../services/api";
+import { CommentItem } from "../../components/CommentItems/CommentItem";
 
 import "./ProductDetail.css";
 

@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
-import api from "../services/api";
+import api from "../../services/api";
 import { Save, MapPin, Loader2 } from "lucide-react";
 import "./Profile.css";
 import { useNavigate } from "react-router-dom";
-
-// CORREÇÃO 1: Importação de tipo para evitar o erro TS1484
-import type { User } from "../services/api";
+import type { User } from "../../services/api";
 
 export default function Profile() {
   const [loading, setLoading] = useState(false);

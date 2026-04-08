@@ -101,7 +101,6 @@ export const postReview = async (
   const savedUser = localStorage.getItem("user");
   const parsedUser = savedUser ? JSON.parse(savedUser) : null;
   const userName = parsedUser?.name || "Cliente Vital";
-
   const response = await api.post("reviews", {
     products_id: productId,
     user_id: userId,

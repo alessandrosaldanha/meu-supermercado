@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
-import { getFeaturedProducts, type Product } from "../services/api";
-import { ProductCard } from "./ProductCard";
+import { getFeaturedProducts, type Product } from "../../services/api";
+import { ProductCard } from "../ProductCard/ProductCard";
 
 // Estilos do Swiper
 import "swiper/css";

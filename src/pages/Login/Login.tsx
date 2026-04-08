@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Mail, Lock, LogIn } from "lucide-react";
-import { loginUser } from "../services/api";
+import { loginUser } from "../../services/api";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 

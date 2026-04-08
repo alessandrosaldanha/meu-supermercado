@@ -1,9 +1,9 @@
-import { ProductCard } from "../components/ProductCard";
+import { ProductCard } from "../../components/ProductCard/ProductCard";
 import { useEffect, useState } from "react";
-import { FeaturedSlider } from "../components/FeaturedSlider";
-import { Toast } from "../components/Toast";
-import { getProducts, type Product } from "../services/api";
-import { useCart } from "../context/CartContext";
+import { FeaturedSlider } from "../../components/FeaturedSlider/FeaturedSlider";
+import { Toast } from "../../components/Toasts/Toast";
+import { getProducts, type Product } from "../../services/api";
+import { useCart } from "../../context/CartContext";
 import "./Home.css";
 
 export default function Home() {

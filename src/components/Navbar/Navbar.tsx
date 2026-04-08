@@ -10,7 +10,7 @@ import {
   LogOut,
   ShieldCheck,
 } from "lucide-react";
-import { useCart } from "../context/CartContext";
+import { useCart } from "../../context/CartContext";
 import { useState, useEffect, useCallback } from "react";
 import "./Navbar.css";
 
@@ -147,12 +147,15 @@ export function Navbar() {
                     navigate("/perfil");
                     closeMenu();
                   }}
-                  style={{ cursor: "pointer" }}
                 >
                   <User size={20} />
                   <span>{displayName}</span>
                 </div>
-                <button className="logout-btn-mobile" onClick={handleLogout}>
+                <button
+                  type="button"
+                  className="logout-btn-mobile"
+                  onClick={handleLogout}
+                >
                   <LogOut size={18} /> Sair
                 </button>
               </div>

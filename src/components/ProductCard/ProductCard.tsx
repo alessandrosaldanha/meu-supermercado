@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Plus, Eye } from "lucide-react";
-import { type Product } from "../services/api";
-import { Button } from "./Button";
+import { type Product } from "../../services/api";
+import { Button } from "../Buttons/Button";
 import "./ProductCard.css";
 
 interface ProductCardProps {
