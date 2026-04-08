@@ -1,0 +1,149 @@
+/* Container Principal */
+.orders-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 20px;
+  min-height: 70vh;
+}
+
+.orders-title {
+  font-size: 2rem;
+  color: #2d3748;
+  margin-bottom: 30px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Estado Vazio */
+.orders-empty {
+  background: white;
+  padding: 60px 20px;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px border #edf2f7;
+}
+
+.orders-empty p {
+  color: #718096;
+  font-size: 1.1rem;
+}
+
+/* Card de Pedido */
+.order-card {
+  background: white;
+  border-radius: 16px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  border: 1px solid #edf2f7;
+  overflow: hidden;
+  transition: transform 0.2s;
+}
+
+.order-card:hover {
+  transform: translateY(-2px);
+}
+
+/* Cabeçalho do Card */
+.order-header {
+  background: #f8fafc;
+  padding: 16px 24px;
+  border-bottom: 1px solid #edf2f7;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.order-info h3 {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  color: #a0aec0;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+.order-date {
+  font-size: 0.95rem;
+  color: #4a5568;
+  font-weight: 500;
+}
+
+/* Status Badge */
+.status-badge {
+  padding: 6px 14px;
+  border-radius: 99px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.status-pendente {
+  background: #fffbe6;
+  color: #b7791f;
+}
+
+.status-entregue {
+  background: #f0fff4;
+  color: #38a169;
+}
+
+/* Lista de Itens */
+.order-body {
+  padding: 20px 24px;
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #f7fafc;
+}
+
+.order-item:last-child {
+  border-bottom: none;
+}
+
+.item-name {
+  color: #2d3748;
+  font-weight: 500;
+}
+
+.item-price {
+  color: #718096;
+}
+
+/* Rodapé do Card */
+.order-footer {
+  background: #f8fafc;
+  padding: 16px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #edf2f7;
+}
+
+.payment-info {
+  font-size: 0.9rem;
+  color: #718096;
+}
+
+.payment-info strong {
+  color: #4a5568;
+}
+
+.order-total-value {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--primary); /* Sua cor verde do Mercado Vital */
+}
+
+/* Responsividade */
+@media (max-width: 600px) {
+  .order-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}

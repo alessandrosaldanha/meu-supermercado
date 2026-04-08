@@ -2,43 +2,21 @@ import { useCart } from "../../context/CartContext";
 import { Trash2, ShoppingBag } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/Buttons/Button";
-import api from "../../services/api";
 import "./Cart.css";
 
 export default function Cart() {
-  const { cart, removeFromCart, updateQuantity, setQuantity, clearCart } =
-    useCart();
+  const { cart, removeFromCart, updateQuantity, setQuantity } = useCart();
   const navigate = useNavigate();
-
   const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
-  const handleFinishPurchase = async () => {
-    const savedUser = JSON.parse(localStorage.getItem("user") || "{}");
-
-    try {
-      const pedido = {
-        user_id: savedUser.id,
-        items: cart,
-        total: total,
-        status: "pendente",
-        payment_method: "Pix",
-        address: {
-          logradouro: savedUser.logradouro,
-          numero: savedUser.numero,
-          bairro: savedUser.bairro,
-          cidade: "Maceió",
-        },
-      };
-
-      await api.post("orders", pedido);
-
-      clearCart();
-      localStorage.removeItem("cart");
-      alert("🚀 Pedido realizado! Verifique no painel do Xano.");
-      navigate("/");
-    } catch (error) {
-      console.error("Erro ao salvar:", error);
+  const handleGoToCheckout = () => {
+    if (cart.length === 0) {
+      alert(
+        "Seu carrinho está vazio! Adicione alguns produtos antes de finalizar.",
+      );
+      return;
     }
+    navigate("/checkout");
   };
 
   return (
@@ -122,7 +100,7 @@ export default function Cart() {
               <Button
                 variant="primary"
                 className="checkout-button"
-                onClick={handleFinishPurchase}
+                onClick={handleGoToCheckout}
               >
                 Finalizar Pedido
               </Button>

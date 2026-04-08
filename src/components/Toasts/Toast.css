@@ -3,20 +3,48 @@
   position: fixed;
   bottom: 30px;
   right: 30px;
-  background-color: #2ecc71; /* Verde sucesso */
-  color: white;
-  padding: 12px 20px;
-  border-radius: 8px; /* ou var(--radius-md) */
+  min-width: 280px;
+  padding: 14px 20px;
+  border-radius: 12px; /* Bem redondinho */
   display: flex;
   align-items: center;
   gap: 12px;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+  color: white;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   z-index: 10000 !important;
   font-weight: 500;
 
-  /* APLICAÇÃO DA ANIMAÇÃO DE PULINHO */
-  /* Usamos cubic-bezier para dar o efeito elástico (bounce) */
+  /* Animação de entrada elástica */
   animation: toastEntrance 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+
+/* VARIAÇÕES DE CORES */
+.toast-success {
+  background-color: #22c55e; /* Verde Mercado Vital */
+}
+
+.toast-error {
+  background-color: #ef4444; /* Vermelho erro */
+}
+
+.toast-warning {
+  background-color: #f59e0b; /* Amarelo alerta */
+}
+
+.toast-info {
+  background-color: #3b82f6; /* Azul info */
+}
+
+/* CONTEÚDO */
+.toast-icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.toast-message {
+  flex: 1;
+  font-size: 0.95rem;
 }
 
 /* BOTÃO DE FECHAR */
@@ -26,28 +54,29 @@
   color: white;
   cursor: pointer;
   display: flex;
-  opacity: 0.7;
-  transition: opacity 0.2s;
-  padding: 0;
-  margin-left: 8px;
+  opacity: 0.6;
+  transition: all 0.2s ease;
+  padding: 4px;
+  border-radius: 50%;
 }
 
 .toast-close:hover {
   opacity: 1;
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
-/* ANIMAÇÃO DO PULINHO (ENTRADA ELÁSTICA) */
+/* ANIMAÇÃO (ENTRADA ELÁSTICA) */
 @keyframes toastEntrance {
   0% {
-    transform: translateX(100%) scale(0.5); /* Começa fora da tela e pequeno */
+    transform: translateX(120%) scale(0.7);
     opacity: 0;
   }
   70% {
-    transform: translateX(-20px) scale(1.1); /* Passa um pouco da posição (o pulo) */
+    transform: translateX(-10px) scale(1.05);
     opacity: 1;
   }
   100% {
-    transform: translateX(0) scale(1); /* Para na posição certa */
+    transform: translateX(0) scale(1);
     opacity: 1;
   }
 }

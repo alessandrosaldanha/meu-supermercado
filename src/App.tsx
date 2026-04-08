@@ -9,6 +9,8 @@ import Login from "./pages/Login/Login";
 import Cart from "./pages/Cart/Cart";
 import Signup from "./pages/Signup/Signup";
 import Profile from "./pages/Profile/Profile";
+import { Orders } from "./pages/Orders/Orders";
+import Checkout from "./components/Checkout/Checkout";
 import { ProductDetail } from "./pages/ProductDetail/ProductDetail";
 import "./App.css";
 
@@ -32,6 +34,10 @@ function App() {
             <Route path="/cart" element={<Cart />} />
             <Route path="/product/:id" element={<ProductDetail />} />
             <Route path="/perfil" element={<Profile />} />
+            <Route path="/checkout" element={<Checkout />} />
+            {/* Ajustado para /orders para bater com o Link do Navbar */}
+            <Route path="/orders" element={<Orders />} />
+
             <Route
               path="/admin/users"
               element={

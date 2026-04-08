@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import api from "../../services/api";
-import { Save, MapPin, Loader2 } from "lucide-react";
+import { Save, MapPin, Loader2, Edit3 } from "lucide-react";
 import "./Profile.css";
-import { useNavigate } from "react-router-dom";
 import type { User } from "../../services/api";
 
 export default function Profile() {
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const [isEditing, setIsEditing] = useState(false); // Estado para controlar edição
   const [userData, setUserData] = useState<User>({
     id: 0,
     name: "",
@@ -29,7 +28,6 @@ export default function Profile() {
   }, []);
 
   const handleCEPBlur = async () => {
-    // Agora o .cep sempre será uma string (mesmo que vazia), então o replace funciona
     const cleanCEP = (userData.cep || "").replace(/\D/g, "");
     if (cleanCEP.length !== 8) return;
 
@@ -54,12 +52,17 @@ export default function Profile() {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isEditing) {
+      setIsEditing(true);
+      return;
+    }
+
     setLoading(true);
     try {
       const response = await api.patch(`user/${userData.id}`, userData);
       localStorage.setItem("user", JSON.stringify(response.data));
       alert("✅ Dados atualizados com sucesso!");
-      navigate("/");
+      setIsEditing(false); // Volta para o modo de leitura após salvar
     } catch (error) {
       alert("Erro ao salvar dados.");
     } finally {
@@ -80,6 +83,8 @@ export default function Profile() {
             <label>CEP</label>
             <input
               type="text"
+              disabled={!isEditing}
+              className={!isEditing ? "input-readonly" : ""}
               value={userData.cep}
               onChange={(e) =>
                 setUserData({ ...userData, cep: e.target.value })
@@ -95,6 +100,8 @@ export default function Profile() {
               <input
                 id="rua-field"
                 type="text"
+                disabled={!isEditing}
+                className={!isEditing ? "input-readonly" : ""}
                 value={userData.logradouro}
                 onChange={(e) =>
                   setUserData({ ...userData, logradouro: e.target.value })
@@ -106,6 +113,8 @@ export default function Profile() {
               <input
                 id="num-field"
                 type="text"
+                disabled={!isEditing}
+                className={!isEditing ? "input-readonly" : ""}
                 value={userData.numero}
                 onChange={(e) =>
                   setUserData({ ...userData, numero: e.target.value })
@@ -119,6 +128,8 @@ export default function Profile() {
             <input
               id="bairro-field"
               type="text"
+              disabled={!isEditing}
+              className={!isEditing ? "input-readonly" : ""}
               value={userData.bairro}
               onChange={(e) =>
                 setUserData({ ...userData, bairro: e.target.value })
@@ -133,6 +144,8 @@ export default function Profile() {
             <input
               id="comp-field"
               type="text"
+              disabled={!isEditing}
+              className={!isEditing ? "input-readonly" : ""}
               value={userData.complemento}
               onChange={(e) =>
                 setUserData({ ...userData, complemento: e.target.value })
@@ -142,9 +155,22 @@ export default function Profile() {
           </div>
         </section>
 
-        <button type="submit" disabled={loading} className="btn-save">
-          {loading ? <Loader2 className="spinner" /> : <Save size={20} />}
-          Salvar Endereço
+        <button
+          type="submit"
+          disabled={loading}
+          className={isEditing ? "btn-save" : "btn-edit-mode"}
+        >
+          {loading ? (
+            <Loader2 className="spinner" />
+          ) : isEditing ? (
+            <>
+              <Save size={20} /> Salvar Alterações
+            </>
+          ) : (
+            <>
+              <Edit3 size={20} /> Editar Endereço
+            </>
+          )}
         </button>
       </form>
     </div>

@@ -28,8 +28,23 @@ export function Footer() {
             comodidade de receber tudo em casa.
           </p>
           <div className="footer-social">
-            <LuInstagram size={20} />
-            <LuFacebook size={20} />
+            <a
+              href="https://instagram.com" // Substitua pelo seu link real
+              aria-label="Instagram"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <LuInstagram size={20} />
+            </a>
+
+            <a
+              href="https://facebook.com" // Substitua pelo seu link real
+              aria-label="Facebook"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <LuFacebook size={20} />
+            </a>
           </div>
         </div>
 

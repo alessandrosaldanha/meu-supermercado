@@ -102,11 +102,13 @@ export function Navbar() {
               <Package size={18} /> Produtos
             </Link>
           </li>
+          {/* Link para Meus Pedidos ajustado para /orders */}
           <li onClick={closeMenu}>
             <Link to="/orders">
               <Package size={18} /> Meus Pedidos
             </Link>
           </li>
+
           {isPrivileged && (
             <li onClick={closeMenu} className="admin-menu-item">
               <Link
@@ -117,10 +119,12 @@ export function Navbar() {
               </Link>
             </li>
           )}
+
           <li className="mobile-auth-wrapper">
             {!isLoggedIn ? (
               <div className="mobile-auth-container">
                 <button
+                  type="button"
                   className="login-btn-mobile"
                   onClick={() => {
                     navigate("/login");
@@ -130,6 +134,7 @@ export function Navbar() {
                   Entrar
                 </button>
                 <button
+                  type="button"
                   className="signup-btn-mobile"
                   onClick={() => {
                     navigate("/signup");
@@ -176,10 +181,10 @@ export function Navbar() {
               <span className="nav-cart-badge">{cartCount}</span>
             )}
           </div>
+
           <div className="desktop-auth-area">
             {isLoggedIn ? (
               <div className="user-logged-area">
-                {/* 1. Transformamos o ícone e o texto em um Link para o Perfil */}
                 <Link
                   to="/perfil"
                   className="user-profile-link"
