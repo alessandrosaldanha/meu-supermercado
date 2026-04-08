@@ -141,7 +141,14 @@ export function Navbar() {
               </div>
             ) : (
               <div className="mobile-auth-container">
-                <div className="user-info-mobile">
+                <div
+                  className="user-info-mobile"
+                  onClick={() => {
+                    navigate("/perfil");
+                    closeMenu();
+                  }}
+                  style={{ cursor: "pointer" }}
+                >
                   <User size={20} />
                   <span>{displayName}</span>
                 </div>
@@ -169,10 +176,18 @@ export function Navbar() {
           <div className="desktop-auth-area">
             {isLoggedIn ? (
               <div className="user-logged-area">
-                <User size={20} />
-                <span className="user-name-text">
-                  Olá, <strong>{displayName}</strong>
-                </span>
+                {/* 1. Transformamos o ícone e o texto em um Link para o Perfil */}
+                <Link
+                  to="/perfil"
+                  className="user-profile-link"
+                  title="Ir para meu perfil"
+                >
+                  <User size={20} />
+                  <span className="user-name-text">
+                    Olá, <strong>{displayName}</strong>
+                  </span>
+                </Link>
+
                 <button
                   type="button"
                   className="logout-btn-icon"

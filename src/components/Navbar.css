@@ -250,3 +250,23 @@
     display: none;
   }
 }
+
+.user-profile-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: inherit; /* Mantém a cor original do texto */
+  transition: opacity 0.2s;
+  cursor: pointer;
+}
+
+.user-profile-link:hover {
+  opacity: 0.8;
+  color: var(--primary); /* Dá um leve destaque ao passar o mouse */
+}
+
+/* Garante que o ícone (SVG) não quebre a linha */
+.user-profile-link svg {
+  flex-shrink: 0;
+}

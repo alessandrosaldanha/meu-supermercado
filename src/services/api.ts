@@ -1,7 +1,18 @@
 import axios from "axios";
 
-const API_URL = "https://x8ki-letl-twmt.n7.xano.io/api:jB1XPgef";
+const API_URL = "https://x8ki-letl-twmt.n7.xano.io/api:28B-MVDq/";
 
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+  cep?: string;
+  logradouro?: string;
+  numero?: string;
+  bairro?: string;
+  cidade?: string;
+  complemento?: string;
+}
 export interface Review {
   id: string | number;
   products_id: string | number;
@@ -39,23 +50,16 @@ const api = axios.create({
 });
 
 export const getProducts = async (page: number = 1): Promise<Product[]> => {
-  const response = await api.get(
-    `https://x8ki-letl-twmt.n7.xano.io/api:jB1XPgef/products`,
-    {
-      params: {
-        page: page,
-      },
-    },
-  );
+  const response = await api.get(`products`, {
+    params: { page },
+  });
   return response.data.items || response.data || [];
 };
 
 export const loginUser = async (email: string, password: string) => {
   try {
-    const response = await axios.post(
-      "https://x8ki-letl-twmt.n7.xano.io/api:28B-MVDq/auth/login",
-      { email, password },
-    );
+    // Agora usa o baseURL correto automaticamente
+    const response = await api.post("auth/login", { email, password });
     return response.data;
   } catch (error) {
     console.error("Erro na autenticação:", error);
@@ -65,10 +69,8 @@ export const loginUser = async (email: string, password: string) => {
 
 export const getFeaturedProducts = async (): Promise<Product[]> => {
   try {
-    const response = await fetch(
-      `https://x8ki-letl-twmt.n7.xano.io/api:jB1XPgef/featured`,
-    );
-    const data = await response.json();
+    const response = await api.get(`featured`);
+    const data = response.data;
     const productsList = data.items || data;
     return Array.isArray(productsList) ? productsList : [];
   } catch (error) {
@@ -81,9 +83,7 @@ export const getProductById = async (
   id: string | undefined,
 ): Promise<Product | null> => {
   try {
-    const response = await api.get<Product>(
-      `https://x8ki-letl-twmt.n7.xano.io/api:jB1XPgef/products/${id}`,
-    );
+    const response = await api.get<Product>(`products/${id}`);
     return response.data;
   } catch (error) {
     console.error("Erro ao buscar detalhes do produto", error);
@@ -102,7 +102,7 @@ export const postReview = async (
   const parsedUser = savedUser ? JSON.parse(savedUser) : null;
   const userName = parsedUser?.name || "Cliente Vital";
 
-  const response = await api.post("/reviews", {
+  const response = await api.post("reviews", {
     products_id: productId,
     user_id: userId,
     user_name: userName,
@@ -112,6 +112,19 @@ export const postReview = async (
   });
 
   return response.data;
+};
+
+export const updateUserProfile = async (
+  userId: number,
+  data: Partial<User>,
+): Promise<User> => {
+  try {
+    const response = await api.patch(`user/${userId}`, data);
+    return response.data;
+  } catch (error) {
+    console.error("Erro ao atualizar perfil:", error);
+    throw error;
+  }
 };
 
 export default api;

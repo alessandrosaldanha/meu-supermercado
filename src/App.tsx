@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Cart from "./pages/Cart";
 import Signup from "./pages/Signup";
+import Profile from "./pages/Profile";
 import { ProductDetail } from "./pages/ProductDetail";
 
 const ProtectedAdminRoute = ({ children }: { children: React.ReactNode }) => {
@@ -29,6 +30,7 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/product/:id" element={<ProductDetail />} />
+            <Route path="/perfil" element={<Profile />} />
             <Route
               path="/admin/users"
               element={

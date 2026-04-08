@@ -11,12 +11,26 @@ export default function Cart() {
 
   const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
-  const handleCheckout = () => {
-    alert(
-      "🛒 Pedido realizado com sucesso! Em breve sairá para entrega em Maceió.",
-    );
-    clearCart();
-    navigate("/");
+  const handleFinishPurchase = async () => {
+    const savedUser = JSON.parse(localStorage.getItem("user") || "{}");
+    if (!savedUser.cep) {
+      alert("Precisamos do seu endereço para a entrega em Maceió!");
+      navigate("/perfil");
+      return;
+    }
+
+    try {
+      // await api.post("orders", { items: cart, userId: savedUser.id });
+      clearCart();
+      localStorage.removeItem("cart");
+
+      alert(
+        "🚀 Compra finalizada com sucesso! Seu pedido está sendo preparado.",
+      );
+      navigate("/");
+    } catch (error) {
+      alert("Erro ao processar a compra.");
+    }
   };
 
   return (
@@ -100,7 +114,7 @@ export default function Cart() {
               <Button
                 variant="primary"
                 className="checkout-button"
-                onClick={handleCheckout}
+                onClick={handleFinishPurchase}
               >
                 Finalizar Pedido
               </Button>
