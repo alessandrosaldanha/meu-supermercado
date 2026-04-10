@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "https://x8ki-letl-twmt.n7.xano.io/api:28B-MVDq/";
+const API_URL = import.meta.env.VITE_API_URL;
 
 export interface User {
   id: number;
