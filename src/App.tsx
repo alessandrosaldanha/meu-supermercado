@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { ProtectedRoute } from "./components/ProtectedRoute/ProtectedRoute";
 import { CartProvider } from "./context/CartContext";
 import React from "react";
 import { Navbar } from "./components/Navbar/Navbar";
@@ -18,7 +19,7 @@ const ProtectedAdminRoute = ({ children }: { children: React.ReactNode }) => {
   const userRole = localStorage.getItem("userRole");
   const isPrivileged = userRole === "master" || userRole === "admin";
 
-  return isPrivileged ? <>{children}</> : <Navigate to="/" />;
+  return isPrivileged ? <>{children}</> : <Navigate to="/" replace />;
 };
 
 function App() {
@@ -33,10 +34,31 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/product/:id" element={<ProductDetail />} />
-            <Route path="/perfil" element={<Profile />} />
-            <Route path="/checkout" element={<Checkout />} />
-            {/* Ajustado para /orders para bater com o Link do Navbar */}
-            <Route path="/orders" element={<Orders />} />
+
+            <Route
+              path="/perfil"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/checkout"
+              element={
+                <ProtectedRoute>
+                  <Checkout />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/orders"
+              element={
+                <ProtectedRoute>
+                  <Orders />
+                </ProtectedRoute>
+              }
+            />
 
             <Route
               path="/admin/users"
@@ -51,7 +73,7 @@ function App() {
                 </ProtectedAdminRoute>
               }
             />
-            <Route path="*" element={<Navigate to="/" />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </div>
         <Footer />
