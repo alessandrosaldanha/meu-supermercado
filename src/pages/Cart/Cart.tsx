@@ -1,7 +1,9 @@
 import { useCart } from "../../context/CartContext";
 import { Trash2, ShoppingBag } from "lucide-react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/Buttons/Button";
+import { Toast } from "../../components/Toasts/Toast";
 import "./Cart.css";
 
 export default function Cart() {
@@ -9,11 +11,20 @@ export default function Cart() {
   const navigate = useNavigate();
   const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
+  const [showToast, setShowToast] = useState(false);
+  const [toastConfig, setToastConfig] = useState<{
+    message: string;
+    type: "success" | "error" | "warning" | "info";
+  }>({ message: "", type: "warning" });
+
   const handleGoToCheckout = () => {
     if (cart.length === 0) {
-      alert(
-        "Seu carrinho está vazio! Adicione alguns produtos antes de finalizar.",
-      );
+      setToastConfig({
+        message:
+          "Seu carrinho está vazio! Adicione alguns produtos antes de finalizar.",
+        type: "warning",
+      });
+      setShowToast(true);
       return;
     }
     navigate("/checkout");
@@ -108,6 +119,13 @@ export default function Cart() {
           </>
         )}
       </main>
+      {showToast && (
+        <Toast
+          message={toastConfig.message}
+          type={toastConfig.type}
+          onClose={() => setShowToast(false)}
+        />
+      )}
     </div>
   );
 }

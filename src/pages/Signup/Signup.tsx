@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/Buttons/Button";
+import { Toast } from "../../components/Toasts/Toast";
 import "./Signup.css";
 
 export default function Signup() {
@@ -10,13 +11,23 @@ export default function Signup() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const [showToast, setShowToast] = useState(false);
+  const [toastConfig, setToastConfig] = useState<{
+    message: string;
+    type: "success" | "error" | "warning" | "info";
+  }>({ message: "", type: "warning" });
+
   const navigate = useNavigate();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      alert("❌ As senhas não coincidem!");
+      setToastConfig({
+        message: "❌ As senhas não coincidem!",
+        type: "error",
+      });
+      setShowToast(true);
       return;
     }
 
@@ -27,43 +38,46 @@ export default function Signup() {
         "https://x8ki-letl-twmt.n7.xano.io/api:28B-MVDq/auth/signup",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: name,
-            email: email,
-            password: password,
-          }),
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email, password }),
         },
       );
 
       const data = await response.json();
 
       if (response.ok) {
-        alert(`✅ Conta criada com sucesso! Bem-vindo, ${name}!`);
+        setToastConfig({
+          message: `🚀 Conta criada com sucesso! Bem-vindo, ${name}!`,
+          type: "success",
+        });
+        setShowToast(true);
+
         localStorage.setItem("token", data.authToken);
-        navigate("/");
+
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
       } else {
         let errorMessage = "Não foi possível realizar o cadastro.";
 
-        if (data.message && data.message.includes("already exists")) {
-          errorMessage =
-            "Este e-mail já está cadastrado. Tente fazer login ou use outro!";
-        } else if (data.message && data.message.includes("required")) {
-          errorMessage = "Por favor, preencha todos os campos.";
-        } else if (data.message && data.message.includes("short")) {
-          errorMessage =
-            "Sua senha é muito curta. Use pelo menos 6 caracteres.";
+        if (data.message?.includes("already exists")) {
+          errorMessage = "Este e-mail já está cadastrado!";
+        } else if (data.message?.includes("short")) {
+          errorMessage = "Senha muito curta (mínimo 6 caracteres).";
         }
 
-        alert(`⚠️ Ops! ${errorMessage}`);
+        setToastConfig({
+          message: `⚠️ ${errorMessage}`,
+          type: "warning",
+        });
+        setShowToast(true);
       }
     } catch (error) {
-      console.error("Erro ao conectar com Xano:", error);
-      alert(
-        "📡 Verifique sua conexão. Não conseguimos falar com o Mercado Vital.",
-      );
+      setToastConfig({
+        message: "📡 Erro de conexão com o servidor.",
+        type: "error",
+      });
+      setShowToast(true);
     } finally {
       setLoading(false);
     }
@@ -115,6 +129,13 @@ export default function Signup() {
           <span onClick={() => navigate("/login")}>Entrar</span>
         </div>
       </form>
+      {showToast && (
+        <Toast
+          message={toastConfig.message}
+          type={toastConfig.type}
+          onClose={() => setShowToast(false)}
+        />
+      )}
     </div>
   );
 }

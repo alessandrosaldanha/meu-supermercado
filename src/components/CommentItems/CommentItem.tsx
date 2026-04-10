@@ -38,7 +38,7 @@ export function CommentItem({ review, onReply }: CommentItemProps) {
           ))}
         </div>
         <strong className="user-name">
-          {review.user?.name || "Cliente Vital"}
+          {review.user?.name || review.user_name || "Cliente Vital"}
         </strong>
       </div>
 

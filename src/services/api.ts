@@ -25,6 +25,7 @@ export interface Review {
   user?: {
     name: string;
   };
+  user_name: string;
 }
 export interface Product {
   id: number;

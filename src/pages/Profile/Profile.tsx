@@ -3,6 +3,7 @@ import api from "../../services/api";
 import { Save, MapPin, Loader2, Edit3 } from "lucide-react";
 import "./Profile.css";
 import type { User } from "../../services/api";
+import { Toast } from "../../components/Toasts/Toast";
 
 export default function Profile() {
   const [loading, setLoading] = useState(false);
@@ -18,13 +19,40 @@ export default function Profile() {
     cidade: "Maceió",
     complemento: "",
   });
+  const [showToast, setShowToast] = useState(false);
+  const [toastConfig, setToastConfig] = useState<{
+    message: string;
+    type: "success" | "error" | "warning" | "info";
+  }>({ message: "", type: "warning" });
 
   useEffect(() => {
-    const savedUser = localStorage.getItem("user");
-    if (savedUser) {
+    const fetchUserData = async () => {
+      // 1. Pegamos o ID do usuário que está logado
+      const savedUser = localStorage.getItem("user");
+      if (!savedUser) return;
+
       const parsedUser = JSON.parse(savedUser);
-      setUserData((prev) => ({ ...prev, ...parsedUser }));
-    }
+      const userId = parsedUser.id;
+
+      setLoading(true);
+      try {
+        const response = await api.get(`user/${userId}`);
+        setUserData(response.data);
+
+        localStorage.setItem("user", JSON.stringify(response.data));
+      } catch (error) {
+        console.error("Erro ao carregar dados do Xano:", error);
+        setToastConfig({
+          message: "❌ Não conseguimos carregar seus dados.",
+          type: "error",
+        });
+        setShowToast(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
   }, []);
 
   const handleCEPBlur = async () => {
@@ -52,6 +80,7 @@ export default function Profile() {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!isEditing) {
       setIsEditing(true);
       return;
@@ -61,10 +90,21 @@ export default function Profile() {
     try {
       const response = await api.patch(`user/${userData.id}`, userData);
       localStorage.setItem("user", JSON.stringify(response.data));
-      alert("✅ Dados atualizados com sucesso!");
-      setIsEditing(false); // Volta para o modo de leitura após salvar
+
+      setToastConfig({
+        message: "✅ Seus dados foram atualizados com sucesso!",
+        type: "success",
+      });
+      setShowToast(true);
+
+      setIsEditing(false); // Volta para o modo de leitura
     } catch (error) {
-      alert("Erro ao salvar dados.");
+      console.error(error);
+      setToastConfig({
+        message: "❌ Erro ao salvar os dados. Tente novamente.",
+        type: "error",
+      });
+      setShowToast(true);
     } finally {
       setLoading(false);
     }
@@ -173,6 +213,13 @@ export default function Profile() {
           )}
         </button>
       </form>
+      {showToast && (
+        <Toast
+          message={toastConfig.message}
+          type={toastConfig.type}
+          onClose={() => setShowToast(false)}
+        />
+      )}
     </div>
   );
 }

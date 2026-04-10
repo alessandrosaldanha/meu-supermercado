@@ -17,6 +17,10 @@ export function ProductDetail() {
   const [mainImage, setMainImage] = useState("");
   const [loading, setLoading] = useState(true);
   const [showToast, setShowToast] = useState(false);
+  const [toastConfig, setToastConfig] = useState<{
+    message: string;
+    type: "success" | "error" | "warning" | "info";
+  }>({ message: "", type: "warning" });
   const [toastMessage, setToastMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [comment, setComment] = useState("");
@@ -44,7 +48,6 @@ export function ProductDetail() {
       setLoading(false);
     }
   }, [id, mainImage]);
-
   useEffect(() => {
     loadProductData();
   }, [loadProductData]);
@@ -72,7 +75,9 @@ export function ProductDetail() {
       if (product) {
         const reviewParaExibir = {
           ...newReview,
-          user_name: parsedUser?.name || "Alessandro",
+          user: {
+            name: parsedUser?.name || "Usuário",
+          },
           replies: [],
         };
 
@@ -81,12 +86,19 @@ export function ProductDetail() {
           reviews: [reviewParaExibir, ...(product.reviews || [])],
         });
       }
-
       setComment("");
-      alert(parentId ? "Resposta enviada!" : "Avaliação enviada!");
+      setToastConfig({
+        message: parentId ? "✅ Resposta enviada!" : "✅ Avaliação enviada!",
+        type: "success",
+      });
+      setShowToast(true);
     } catch (err) {
       console.error("Erro ao enviar:", err);
-      alert("Erro ao enviar. Verifique o console.");
+      setToastConfig({
+        message: "❌ Erro ao enviar. Tente novamente.",
+        type: "error",
+      });
+      setShowToast(true);
     } finally {
       setIsSubmitting(false);
     }
@@ -229,6 +241,13 @@ export function ProductDetail() {
           )}
         </div>
       </section>
+      {showToast && (
+        <Toast
+          message={toastConfig.message}
+          type={toastConfig.type}
+          onClose={() => setShowToast(false)}
+        />
+      )}
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Mail, Lock, LogIn } from "lucide-react";
 import { loginUser } from "../../services/api";
 import { useNavigate } from "react-router-dom";
+import { Toast } from "../../components/Toasts/Toast";
 import "./Login.css";
 
 export default function Login() {
@@ -9,24 +10,26 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [showToast, setShowToast] = useState(false);
+  const [toastConfig, setToastConfig] = useState<{
+    message: string;
+    type: "success" | "error" | "warning" | "info";
+  }>({ message: "", type: "warning" });
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+
     try {
       const data = await loginUser(email, password);
+
       if (data.authToken) {
-        localStorage.setItem("token", data.authToken);
-
-        // 1. Pegamos o ID que vem do Xano (pode vir como user_id ou id)
         const userId = data.user_id || data.user?.id || data.id;
-
-        // 2. Pegamos o nome real
         const rawName =
           data.user?.name || data.name || data.userName || "Usuário";
         const firstName = String(rawName).trim().split(" ")[0];
 
-        // 3. SALVAMOS O OBJETO USER (Isso é o que falta para o comentário funcionar)
+        localStorage.setItem("token", data.authToken);
         localStorage.setItem(
           "user",
           JSON.stringify({
@@ -34,19 +37,30 @@ export default function Login() {
             name: firstName,
           }),
         );
-
-        // 4. Outras chaves para a Navbar
         localStorage.setItem("userName", firstName);
         localStorage.setItem("userRole", data.user_role || "member");
 
         window.dispatchEvent(new Event("storage"));
         window.dispatchEvent(new Event("focus"));
 
-        navigate("/");
+        setToastConfig({
+          message: `👋 Bem-vindo de volta, ${firstName}!`,
+          type: "success",
+        });
+        setShowToast(true);
+
+        setTimeout(() => {
+          navigate("/");
+        }, 1500);
       }
     } catch (error) {
       console.error(error);
-      alert("Erro ao logar! Verifique suas credenciais.");
+
+      setToastConfig({
+        message: "❌ Erro ao logar! Verifique seu e-mail e senha.",
+        type: "error",
+      });
+      setShowToast(true);
     } finally {
       setLoading(false);
     }
@@ -86,6 +100,13 @@ export default function Login() {
           )}
         </button>
       </form>
+      {showToast && (
+        <Toast
+          message={toastConfig.message}
+          type={toastConfig.type}
+          onClose={() => setShowToast(false)}
+        />
+      )}
     </div>
   );
 }
