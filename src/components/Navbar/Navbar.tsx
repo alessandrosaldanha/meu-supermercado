@@ -13,8 +13,15 @@ import {
 import { useCart } from "../../context/CartContext";
 import { useState, useEffect, useCallback } from "react";
 import "./Navbar.css";
+import { Toast } from "../Toasts/Toast";
 
 export function Navbar() {
+  const [showToast, setShowToast] = useState(false);
+  const [toastConfig, setToastConfig] = useState<{
+    message: string;
+    type: "success" | "error" | "warning" | "info";
+  }>({ message: "", type: "warning" });
+
   const { cartCount } = useCart();
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -65,10 +72,22 @@ export function Navbar() {
   const isPrivileged = userRole === "master" || userRole === "admin";
 
   const handleLogout = () => {
-    localStorage.clear();
-    updateNavbar();
-    navigate("/login");
-    setIsMenuOpen(false);
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("userRole");
+
+    window.dispatchEvent(new Event("storage"));
+
+    setToastConfig({
+      message: "👋 Até logo! Você saiu com segurança.",
+      type: "info",
+    });
+    setShowToast(true);
+
+    setTimeout(() => {
+      navigate("/");
+    }, 1000);
   };
 
   const closeMenu = () => setIsMenuOpen(false);
@@ -102,7 +121,6 @@ export function Navbar() {
               <Package size={18} /> Produtos
             </Link>
           </li>
-          {/* Link para Meus Pedidos ajustado para /orders */}
           <li onClick={closeMenu}>
             <Link to="/orders">
               <Package size={18} /> Meus Pedidos
@@ -225,6 +243,13 @@ export function Navbar() {
           </div>
         </div>
       </div>
+      {showToast && (
+        <Toast
+          message={toastConfig.message}
+          type={toastConfig.type}
+          onClose={() => setShowToast(false)}
+        />
+      )}
     </nav>
   );
 }

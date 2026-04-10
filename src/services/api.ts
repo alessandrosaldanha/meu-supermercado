@@ -58,6 +58,23 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      localStorage.removeItem("userName");
+      localStorage.removeItem("userRole");
+
+      window.dispatchEvent(new Event("storage"));
+
+      window.location.href = "/login";
+    }
+    return Promise.reject(error);
+  },
+);
+
 export const getProducts = async (page: number = 1): Promise<Product[]> => {
   const response = await api.get(`products`, {
     params: { page },
