@@ -1,13 +1,26 @@
-/* src/pages/Home.css */
-
 .home-container {
   min-height: 100vh;
-  background-color: #f9f9f9; /* Fundo leve para destacar os cards brancos */
+  background-color: #f9f9f9;
 }
 
+.page-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 15px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 /* Container principal que segura o Slider e a Grid */
 .product-section {
-  max-width: 1300px;
+  max-width: 1640px;
   margin: 0 auto;
   padding: 2rem 5%;
 }

@@ -13,19 +13,21 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [showToast, setShowToast] = useState(false);
   const [animatingId, setAnimatingId] = useState<number | null>(null);
+  const [hasNextPage, setHasNextPage] = useState(false);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     const load = async () => {
-      setLoading(true); // Começa a carregar
+      setLoading(true);
       const data = await getProducts(page);
 
-      // Se o Xano devolver dados, a gente atualiza
-      if (data && data.length > 0) {
-        setProducts(data);
+      if (data) {
+        setProducts(data.items || []);
+        setHasNextPage(data.nextPage !== null);
+        const total = data.pageTotal || 1;
+        setTotalPages(total);
       }
-
-      setLoading(false); // Para de carregar
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      setLoading(false);
     };
     load();
   }, [page]);
@@ -65,8 +67,17 @@ export default function Home() {
           </div>
         )}
         <div className="pagination-controls">
+          {/* Pular para a Primeira Página */}
           <button
-            type="button"
+            className="page-btn"
+            disabled={page === 1}
+            onClick={() => setPage(1)}
+            title="Primeira página"
+          >
+            {"<<"}
+          </button>
+
+          <button
             className="page-btn"
             disabled={page === 1}
             onClick={() => setPage((prev) => prev - 1)}
@@ -75,17 +86,24 @@ export default function Home() {
           </button>
 
           <span className="page-indicator">
-            Página <strong>{page}</strong>
+            Página <strong>{page}</strong> de <strong>{totalPages}</strong>
           </span>
 
           <button
-            type="button"
             className="page-btn"
-            /* Se vieram menos de 12 itens, o botão Próxima trava */
-            disabled={products.length < 12}
+            disabled={!hasNextPage}
             onClick={() => setPage((prev) => prev + 1)}
           >
             Próxima
+          </button>
+
+          <button
+            className="page-btn"
+            onClick={() => {
+              setPage(totalPages);
+            }}
+          >
+            {">>"}
           </button>
         </div>
       </main>

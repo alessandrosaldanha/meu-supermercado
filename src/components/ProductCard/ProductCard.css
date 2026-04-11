@@ -13,7 +13,51 @@
   width: 100%;
   min-height: 400px;
   cursor: pointer;
-  border: 1px solid transparent; /* Para o hover não deslocar o layout */
+  border: 1px solid transparent;
+}
+
+/* Estilo específico para o card de destaque */
+.product-card.featured-card {
+  border: 1px solid var(--primary-light);
+  background: linear-gradient(to bottom, #ffffff, #fdfdfd);
+}
+
+/* O BOTÃO VERDE REDONDO (Como na sua imagem) */
+.add-to-cart-btn {
+  background-color: #2ecc71 !important;
+  color: white !important;
+  border-radius: 50% !important;
+  width: 45px !important;
+  height: 45px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  box-shadow: 0 4px 10px rgba(46, 204, 113, 0.3);
+  transition: all 0.2s ease;
+  border: none !important;
+}
+
+.add-to-cart-btn:hover {
+  transform: scale(1.1);
+  background-color: #27ae60 !important;
+  box-shadow: 0 6px 15px rgba(46, 204, 113, 0.4);
+}
+
+/* Ajuste no footer para o botão não esmagar o preço */
+.product-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  min-height: 50px;
+}
+
+/* Se o card for destaque, o preço pode ficar centralizado ou maior */
+.featured-card .product-price {
+  font-size: 1.5rem;
+  width: 100%;
+  text-align: left;
 }
 
 .product-card:hover {
@@ -34,19 +78,19 @@
 .product-image-container {
   position: relative;
   overflow: hidden;
-  background-color: #f9f9f9; /* Fundo leve para imagens com transparência */
+  background-color: #f9f9f9;
 }
 
 .product-image-container img {
   width: 100%;
-  height: 220px; /* Aumentei um pouco para destaque estilo e-commerce */
-  object-fit: contain; /* 'contain' é melhor para produtos não cortarem as bordas */
+  height: 220px;
+  object-fit: contain;
   padding: 20px;
   transition: transform 0.5s ease;
 }
 
 .product-card:hover .product-image-container img {
-  transform: scale(1.05); /* Leve zoom na imagem ao passar o mouse */
+  transform: scale(1.05);
 }
 
 /* OVERLAY "VER DETALHES" */
@@ -59,14 +103,14 @@
   background: rgba(0, 0, 0, 0.4);
   color: white;
   display: flex;
-  flex-direction: column; /* Ícone em cima do texto */
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 8px;
   opacity: 0;
   transition: opacity 0.3s ease;
   -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(2px); /* Efeito de vidro fosco moderno */
+  backdrop-filter: blur(2px);
   z-index: 2;
 }
 
@@ -93,11 +137,12 @@
 .product-desc {
   color: #64748b;
   font-size: 0.875rem;
-  height: 40px;
+  max-height: 40px;
   overflow: hidden;
   margin-bottom: 16px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
 }
 

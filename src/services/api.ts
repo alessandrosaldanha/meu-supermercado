@@ -2,6 +2,15 @@ import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
+export interface PaginatedResponse {
+  items: Product[];
+  curPage: number;
+  nextPage: number | null;
+  prevPage: number | null;
+  itemsReceived: number;
+  perPage: number;
+  pageTotal: number;
+}
 export interface User {
   id: number;
   name: string;
@@ -75,16 +84,31 @@ api.interceptors.response.use(
   },
 );
 
-export const getProducts = async (page: number = 1): Promise<Product[]> => {
-  const response = await api.get(`products`, {
-    params: { page },
-  });
-  return response.data.items || response.data || [];
-};
+export async function getProducts(page: number): Promise<PaginatedResponse> {
+  try {
+    const response = await api.get<PaginatedResponse>(`products`, {
+      params: {
+        page: page,
+        per_page: 10,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Erro na API:", error);
+    return {
+      items: [],
+      curPage: page,
+      nextPage: null,
+      prevPage: null,
+      itemsReceived: 0,
+      perPage: 10,
+      pageTotal: 1,
+    };
+  }
+}
 
 export const loginUser = async (email: string, password: string) => {
   try {
-    // Agora usa o baseURL correto automaticamente
     const response = await api.post("auth/login", { email, password });
     return response.data;
   } catch (error) {
