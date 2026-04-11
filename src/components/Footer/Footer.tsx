@@ -29,7 +29,7 @@ export function Footer() {
           </p>
           <div className="footer-social">
             <a
-              href="https://instagram.com" // Substitua pelo seu link real
+              href="https://www.instagram.com/alessandrosaldanha.as/"
               aria-label="Instagram"
               target="_blank"
               rel="noopener noreferrer"
@@ -38,7 +38,7 @@ export function Footer() {
             </a>
 
             <a
-              href="https://facebook.com" // Substitua pelo seu link real
+              href="https://www.facebook.com/alessandro.saldanha.2025?locale=pt_BR"
               aria-label="Facebook"
               target="_blank"
               rel="noopener noreferrer"
@@ -69,10 +69,10 @@ export function Footer() {
           <h3>Contato</h3>
           <ul className="contact-list">
             <li>
-              <LuPhone size={16} /> (82) 9999-9999
+              <LuPhone size={16} /> (82) 98127-3619
             </li>
             <li>
-              <LuMail size={16} /> contato@mercadovital.com
+              <LuMail size={16} /> alessandrosaldanha.as@gmail.com
             </li>
             <li>
               <LuMapPin size={16} /> Maceió, Alagoas
