@@ -23,7 +23,7 @@ export default function Home() {
 
       if (data) {
         setProducts(data.items || []);
-        setHasNextPage(data.nextPage !== null);
+        setHasNextPage(page < data.pageTotal);
         const total = data.pageTotal || 1;
         setTotalPages(total);
       }
