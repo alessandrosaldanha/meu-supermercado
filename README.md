@@ -1,15 +1,24 @@
 # Mercado Vital
 
+[![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![React Router](https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=reactrouter&logoColor=white)](https://reactrouter.com/)
+[![Axios](https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white)](https://axios-http.com/)
+[![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+
 Frontend de e-commerce para supermercado com entrega em Maceió/AL. React + TypeScript + Vite, consumindo uma API Xano (no-code) via REST.
 
 ## Tecnologias
 
-- React 19 + TypeScript
-- Vite 8
-- React Router DOM 7
-- Axios
-- Swiper (carrossel de produtos em destaque)
-- lucide-react / react-icons
+| Tecnologia | Descrição |
+|---|---|
+| React 19 + TypeScript | Biblioteca de UI com tipagem estática |
+| Vite 8 | Build tool e servidor de desenvolvimento |
+| React Router DOM 7 | Roteamento de páginas |
+| Axios | Cliente HTTP para consumo da API |
+| Swiper | Carrossel de produtos em destaque |
+| lucide-react / react-icons | Bibliotecas de ícones |
 
 ## Pré-requisitos
 
