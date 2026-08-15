@@ -37,17 +37,14 @@ export function ProductDetail() {
 
       if (productData) {
         setProduct(productData);
-
-        if (!mainImage && productData.image?.[0]?.url) {
-          setMainImage(productData.image[0].url);
-        }
+        setMainImage(productData.image?.[0]?.url ?? "");
       }
     } catch (err) {
       console.error("Erro ao carregar dados:", err);
     } finally {
       setLoading(false);
     }
-  }, [id, mainImage]);
+  }, [id]);
   useEffect(() => {
     loadProductData();
   }, [loadProductData]);
