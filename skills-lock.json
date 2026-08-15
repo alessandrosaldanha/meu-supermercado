@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "skills": {
+    "find-skills": {
+      "source": "vercel-labs/skills",
+      "sourceType": "github",
+      "skillPath": "skills/find-skills/SKILL.md",
+      "computedHash": "b146008599c31057cef1c145774cea5d5afb30e8f43fa802e47a4b461419aaaf"
+    },
+    "xano-init": {
+      "source": "xano-inc/xano-developer-mcp",
+      "sourceType": "github",
+      "skillPath": "skills/xano-init/SKILL.md",
+      "computedHash": "252b615c8ef14c2f603cd481ee58f313f269f2f949d2bacd75ceec3870f267ba"
+    },
+    "xanoscript-docs-expert": {
+      "source": "xano-inc/xano-developer-mcp",
+      "sourceType": "github",
+      "skillPath": "skills/xanoscript-docs-expert/SKILL.md",
+      "computedHash": "ce76346b8ba2e445a62f309cc1f26cad04397bac6cf36d82df730626992a58c9"
+    }
+  }
+}

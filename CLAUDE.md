@@ -43,3 +43,17 @@ This is the only env var read by the app (`src/services/api.ts`). Note it does *
 - **Styling**: plain per-component `.css` files (no CSS Modules/Tailwind/styled-components), design tokens as CSS custom properties in `src/index.css`.
 
 Before making structural changes (adding a new shared context, centralizing an API call, adding a types folder), check [docs/known-issues.md](docs/known-issues.md) — it lists the existing inconsistencies you'd likely be fixing, so you don't rediscover them from scratch.
+
+## Xano Backend
+
+- **Workspace:** SuperMercado (ID: 157205) on `x8ki-letl-twmt.n7.xano.io` — **Free plan**
+- **Status:** 🟢 Production (live users/data)
+- **CLI Profile:** `default` (workspace + branch already configured)
+- **Playbook:** See `.claude/xano-workspace-profile.md` for full development rules
+
+### Critical Rules
+1. **No isolation exists**: no sandbox (unavailable on Free plan), no dev branch (`v1` is the only branch and it's live), no test data source. Every push is a production change.
+2. Always run `xano workspace push -d ./xano -p default --dry-run` and show the preview before any real push. Never use `--force`.
+3. Never use `--truncate`, `--delete`, `--records`, or `--no-transaction` without explicit confirmation in that conversation.
+4. Validate XanoScript (`xano_validate_xanoscript`) before pushing.
+5. Extra caution on `user`, `account`, `employee_auth`, and orders-related tables — no test copy exists.

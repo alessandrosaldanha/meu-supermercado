@@ -17,6 +17,12 @@ dist-ssr
 !.vscode/extensions.json
 .idea
 .env
+
+# Xano local pull (working copy, can contain env vars/secrets if pulled with --env)
+xano/
+
+# Claude Code local settings (personal, not shared)
+.claude/settings.local.json
 .DS_Store
 *.suo
 *.ntvs*
