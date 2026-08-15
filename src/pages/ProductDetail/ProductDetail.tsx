@@ -194,8 +194,8 @@ export function ProductDetail() {
                 <Star
                   key={s}
                   size={24}
-                  fill={s <= userRating ? "#3483fa" : "none"}
-                  color="#3483fa"
+                  fill={s <= userRating ? "var(--papaya)" : "none"}
+                  color="var(--papaya)"
                   onClick={() => setUserRating(s)}
                   style={{ cursor: "pointer" }}
                 />

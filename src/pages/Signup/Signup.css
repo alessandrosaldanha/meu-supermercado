@@ -4,16 +4,18 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background-color: #f9fafb; /* Cinza bem clarinho para destacar o card */
+  background-color: var(--paper);
   padding: 20px;
 }
 
 /* O "Card" do formulário */
 .signup-form {
-  background: white;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--leaf);
   padding: 40px;
-  border-radius: 16px;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
   width: 100%;
   max-width: 400px;
   display: flex;
@@ -22,9 +24,9 @@
 }
 
 .signup-form h2 {
-  color: #1a1a1a;
-  font-size: 24px;
-  font-weight: 700;
+  font-family: var(--font-display);
+  color: var(--forest);
+  font-size: 22px;
   text-align: center;
   margin-bottom: 10px;
 }
@@ -33,17 +35,18 @@
 .signup-form input {
   width: 100%;
   padding: 14px 16px;
-  border: 1.5px solid #e5e7eb;
-  border-radius: 8px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-md);
   font-size: 16px;
+  font-family: var(--font-main);
   transition: all 0.2s ease;
   outline: none;
 }
 
 /* Efeito de foco no input (Destaque UI) */
 .signup-form input:focus {
-  border-color: var(--primary); /* Usa a cor verde do seu Mercado */
-  box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.1);
+  border-color: var(--leaf);
+  box-shadow: 0 0 0 4px rgba(63, 125, 63, 0.12);
 }
 
 /* Ajuste no botão dentro do formulário */
@@ -57,12 +60,12 @@
 .signup-footer {
   text-align: center;
   font-size: 14px;
-  color: #6b7280;
+  color: var(--ink-soft);
   margin-top: 10px;
 }
 
 .signup-footer span {
-  color: var(--primary);
+  color: var(--leaf);
   font-weight: 600;
   cursor: pointer;
 }

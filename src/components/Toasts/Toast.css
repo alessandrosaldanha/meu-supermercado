@@ -5,12 +5,13 @@
   right: 30px;
   min-width: 280px;
   padding: 14px 20px;
-  border-radius: 12px; /* Bem redondinho */
+  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   gap: 12px;
-  color: white;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  color: var(--paper);
+  font-family: var(--font-main);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
   z-index: 10000 !important;
   font-weight: 500;
 
@@ -20,19 +21,19 @@
 
 /* VARIAÇÕES DE CORES */
 .toast-success {
-  background-color: #22c55e; /* Verde Mercado Vital */
+  background-color: var(--leaf);
 }
 
 .toast-error {
-  background-color: #ef4444; /* Vermelho erro */
+  background-color: var(--stamp);
 }
 
 .toast-warning {
-  background-color: #f59e0b; /* Amarelo alerta */
+  background-color: var(--papaya);
 }
 
 .toast-info {
-  background-color: #3b82f6; /* Azul info */
+  background-color: var(--forest-light);
 }
 
 /* CONTEÚDO */

@@ -24,7 +24,9 @@ export function CommentItem({ review, onReply }: CommentItemProps) {
       className={`comment-node ${review.parent_id ? "is-reply" : "is-main"}`}
     >
       <div className="comment-header">
-        {review.parent_id && <CornerDownRight size={14} color="#3483fa" />}
+        {review.parent_id && (
+          <CornerDownRight size={14} color="var(--leaf)" />
+        )}
         <div className="stars-mini">
           {" "}
           {[...Array(5)].map((_, i) => (
@@ -32,8 +34,8 @@ export function CommentItem({ review, onReply }: CommentItemProps) {
               key={i}
               size={12}
               className="star-icon"
-              fill={i < (review.rating || 0) ? "#3483fa" : "none"}
-              color="#3483fa"
+              fill={i < (review.rating || 0) ? "var(--papaya)" : "none"}
+              color="var(--papaya)"
             />
           ))}
         </div>

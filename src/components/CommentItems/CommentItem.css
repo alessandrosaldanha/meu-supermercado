@@ -8,12 +8,12 @@
 
 .comment-node.is-reply {
   margin-left: 25px;
-  border-left: 2px solid #3483fa; /* Linha azul para respostas */
+  border-left: 2px solid var(--leaf);
 }
 
 .comment-node.is-main {
   margin-left: 0;
-  border-left: 1px solid #eee; /* Linha cinza para comentários principais */
+  border-left: 1px solid var(--line);
 }
 
 .comment-header {
@@ -25,13 +25,13 @@
 .comment-text {
   margin: 8px 0;
   font-size: 0.95rem;
-  color: #444;
+  color: var(--ink);
 }
 
 .btn-reply-action {
   background: none;
   border: none;
-  color: #3483fa;
+  color: var(--leaf);
   font-size: 0.8rem;
   cursor: pointer;
   display: flex;
@@ -50,18 +50,19 @@
 .reply-textarea {
   width: 100%;
   padding: 8px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
   font-size: 0.9rem;
+  font-family: var(--font-main);
 }
 
 .btn-submit-reply {
   align-self: flex-start;
   padding: 5px 12px;
-  background-color: #3483fa;
-  color: white;
+  background-color: var(--leaf);
+  color: var(--card);
   border: none;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
 }
 
@@ -71,5 +72,5 @@
 }
 
 .star-icon {
-  color: #3483fa;
+  color: var(--papaya);
 }

@@ -1,6 +1,160 @@
 .home-container {
   min-height: 100vh;
-  background-color: #f9f9f9;
+  background-color: var(--paper);
+}
+
+/* --- HERO: "colheita do dia" --- */
+.hero {
+  background: var(--forest);
+  background-image:
+    radial-gradient(
+      circle at 15% 20%,
+      rgba(246, 241, 228, 0.05) 0,
+      transparent 45%
+    ),
+    radial-gradient(
+      circle at 85% 80%,
+      rgba(226, 121, 58, 0.12) 0,
+      transparent 40%
+    );
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-inner {
+  max-width: 1640px;
+  margin: 0 auto;
+  padding: 4.5rem 5% 5rem;
+  display: grid;
+  grid-template-columns: 1.4fr 0.6fr;
+  gap: 40px;
+  align-items: center;
+}
+
+.hero-eyebrow {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.8rem;
+  color: var(--papaya);
+  margin-bottom: 18px;
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  color: var(--paper);
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  line-height: 1.12;
+  max-width: 14ch;
+  margin-bottom: 20px;
+}
+
+.hero-sub {
+  color: var(--paper);
+  opacity: 0.8;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  max-width: 46ch;
+  margin-bottom: 30px;
+}
+
+.hero-cta {
+  display: inline-flex;
+  align-items: center;
+  background: var(--papaya);
+  color: var(--forest);
+  font-weight: 700;
+  padding: 14px 28px;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  transition:
+    transform 0.2s,
+    filter 0.2s;
+}
+
+.hero-cta:hover {
+  filter: brightness(1.08);
+  transform: translateY(-2px);
+}
+
+/* O carimbo: elemento-assinatura da marca */
+.hero-stamp {
+  display: flex;
+  justify-content: center;
+}
+
+.hero-stamp-ring {
+  width: 190px;
+  height: 190px;
+  border-radius: 50%;
+  border: 2px dashed var(--stamp);
+  background: var(--paper);
+  color: var(--stamp);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transform: rotate(-8deg);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  mix-blend-mode: multiply;
+  position: relative;
+}
+
+.hero-stamp-ring::before {
+  content: "";
+  position: absolute;
+  inset: 10px;
+  border: 1px solid var(--stamp);
+  border-radius: 50%;
+  opacity: 0.6;
+}
+
+.hero-stamp-top {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.95rem;
+}
+
+.hero-stamp-date {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  margin: 4px 0;
+  text-transform: uppercase;
+}
+
+.hero-stamp-bottom {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+@media (max-width: 850px) {
+  .hero-inner {
+    grid-template-columns: 1fr;
+    padding: 2.5rem 6% 3rem;
+    text-align: center;
+  }
+
+  .hero-title {
+    max-width: none;
+  }
+
+  .hero-sub {
+    max-width: none;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-stamp-ring {
+    width: 150px;
+    height: 150px;
+    margin: 0 auto;
+  }
 }
 
 .page-btn {
@@ -25,14 +179,18 @@
   padding: 2rem 5%;
 }
 
-/* Título da seção (Ofertas em Destaque) */
+/* Título da seção — etiqueta de caixote */
 .section-title {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: var(--secondary);
-  margin: 40px 0 24px;
-  padding-left: 5px;
-  border-left: 5px solid var(--primary); /* Detalhe visual elegante */
+  display: inline-block;
+  font-size: 1.3rem;
+  color: var(--ink);
+  margin: 48px 0 24px;
+  padding: 8px 18px;
+  background: var(--card);
+  border: 1.5px solid var(--line);
+  border-left: 6px solid var(--leaf);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  box-shadow: var(--shadow);
 }
 
 /* A GRID: Responsável por organizar os cards na tela */
@@ -51,61 +209,63 @@
   align-items: center;
   min-height: 300px;
   font-size: 1.2rem;
-  color: var(--primary);
+  color: var(--leaf);
   font-weight: 600;
+  font-family: var(--font-mono);
 }
 
-/* --- CONTROLES DE PAGINAÇÃO --- */
+/* --- CONTROLES DE PAGINAÇÃO: canhoto de ticket --- */
 
 .pagination-controls {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 14px;
   margin: 60px 0;
   padding-bottom: 40px;
+  font-family: var(--font-mono);
 }
 
 .page-btn {
-  background: var(--white);
-  border: 2px solid var(--primary);
-  color: var(--primary);
-  padding: 10px 30px;
-  border-radius: 50px; /* Estilo pílula moderno */
+  background: var(--card);
+  border: 1.5px solid var(--leaf);
+  color: var(--leaf);
+  padding: 10px 22px;
+  border-radius: var(--radius-md);
   font-weight: 700;
+  font-family: var(--font-mono);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
 .page-btn:hover:not(:disabled) {
-  background: var(--primary);
-  color: var(--white);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(46, 204, 113, 0.2);
+  background: var(--leaf);
+  color: var(--card);
+  box-shadow: 0 4px 12px rgba(63, 125, 63, 0.25);
 }
 
 .page-btn:disabled {
-  border-color: #e2e8f0;
-  color: #94a3b8;
+  border-color: var(--line);
+  color: #b7b09a;
   cursor: not-allowed;
-  background: #f1f5f9;
+  background: var(--paper);
 }
 
 .page-indicator {
-  font-size: 1rem;
-  color: var(--secondary);
-  background: #fff;
-  padding: 8px 20px;
-  border-radius: 20px;
-  box-shadow: var(--shadow);
+  font-size: 0.95rem;
+  color: var(--ink);
+  background: var(--card);
+  border: 1px dashed var(--line);
+  padding: 8px 18px;
+  border-radius: var(--radius-md);
 }
 
 .page-indicator strong {
-  color: var(--primary);
-  font-size: 1.2rem;
+  color: var(--papaya);
+  font-size: 1.1rem;
 }
 
 /* AJUSTES RESPONSIVOS */

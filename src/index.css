@@ -1,23 +1,41 @@
+@import url("https://fonts.googleapis.com/css2?family=Archivo+Black&family=Work+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap");
+
 :root {
-  /* Cores do Sistema (Paleta de Supermercado) */
-  --primary: #2ecc71; /* Verde Sucesso/Dinheiro */
-  --primary-hover: #27ae60;
-  --secondary: #2c3e50; /* Azul Escuro/Texto Principal */
-  --background: #f4f7f6; /* Cinza bem clarinho */
-  --white: #ffffff;
-  --error: #e74c3c;
+  /* Paleta "Feira Livre" — mercado de bairro, colheita do dia */
+  --forest: #1e3d2a; /* Verde-mata profundo: nav, footer, faixas de destaque */
+  --forest-light: #2b5640;
+  --leaf: #3f7d3f; /* Verde-folha: ações primárias */
+  --leaf-hover: #2f6330;
+  --paper: #f6f1e4; /* Papel kraft claro: fundo da página */
+  --card: #fffdf8; /* Branco quente: superfície dos cards */
+  --papaya: #e2793a; /* Laranja-mamão: preço, destaque, selo */
+  --stamp: #a23b32; /* Vermelho-carimbo: urgência, uso pontual */
+  --ink: #22241f; /* Texto principal */
+  --ink-soft: #5b5c52; /* Texto secundário */
+  --line: #ded4bb; /* Linhas e bordas sobre o papel */
+
+  /* Compat: mantém nomes antigos usados em componentes ainda não migrados */
+  --primary: var(--leaf);
+  --primary-hover: var(--leaf-hover);
+  --secondary: var(--forest);
+  --background: var(--paper);
+  --white: var(--card);
+  --error: var(--stamp);
 
   /* Tipografia */
-  --font-main: "Inter", system-ui, sans-serif;
+  --font-display: "Archivo Black", "Arial Black", sans-serif;
+  --font-main: "Work Sans", system-ui, sans-serif;
+  --font-mono: "Space Mono", "Courier New", monospace;
   --text-base: 16px;
   --text-sm: 14px;
   --text-lg: 18px;
   --text-xl: 24px;
 
   /* Espaçamentos e Bordas */
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  --shadow: 0 4px 14px rgba(30, 61, 42, 0.08);
 }
 
 * {
@@ -29,9 +47,33 @@
 body {
   font-family: var(--font-main);
   background-color: var(--background);
-  color: var(--secondary);
+  color: var(--ink);
   font-size: var(--text-base);
   -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+.section-title {
+  font-family: var(--font-display);
+  letter-spacing: 0.01em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--papaya);
+  outline-offset: 2px;
 }
 
 /* Ajuste para o Footer ficar sempre no final (Sticky Footer) */

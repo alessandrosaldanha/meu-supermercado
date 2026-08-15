@@ -104,7 +104,7 @@ export function Navbar() {
         </button>
 
         <Link to="/" className="nav-logo" onClick={closeMenu}>
-          <Store size={28} color="var(--primary)" />
+          <Store size={26} color="var(--papaya)" />
           <span>
             Mercado <span className="logo-bold">Vital</span>
           </span>
@@ -131,7 +131,7 @@ export function Navbar() {
             <li onClick={closeMenu} className="admin-menu-item">
               <Link
                 to="/admin/users"
-                style={{ color: "var(--primary)", fontWeight: "bold" }}
+                style={{ color: "var(--papaya)", fontWeight: "bold" }}
               >
                 <ShieldCheck size={18} /> Painel Admin
               </Link>

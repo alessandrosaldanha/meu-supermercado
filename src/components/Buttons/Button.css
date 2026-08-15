@@ -5,6 +5,7 @@
   justify-content: center;
   border: none;
   border-radius: var(--radius-md);
+  font-family: var(--font-main);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -13,19 +14,19 @@
 
 /* Variante Verde (Principal) */
 .btn-primary {
-  background-color: var(--primary);
-  color: white;
+  background-color: var(--leaf);
+  color: var(--card);
   padding: 10px 20px;
 }
 
 .btn-primary:hover {
-  filter: brightness(1.1);
+  background-color: var(--leaf-hover);
 }
 
 /* Variante de Ícone (Círculo verde da Home) */
 .btn-icon {
-  background-color: var(--primary);
-  color: white;
+  background-color: var(--leaf);
+  color: var(--card);
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -39,5 +40,5 @@
 /* Variante de Erro (Lixeira do Carrinho) */
 .btn-danger {
   background: none;
-  color: var(--error);
+  color: var(--stamp);
 }

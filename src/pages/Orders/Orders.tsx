@@ -38,9 +38,7 @@ export function Orders() {
   if (loading) {
     return (
       <div className="orders-container">
-        <div className="p-10 text-center text-gray-500 text-xl">
-          Carregando seus pedidos...
-        </div>
+        <div className="orders-loading">Carregando seus pedidos...</div>
       </div>
     );
   }

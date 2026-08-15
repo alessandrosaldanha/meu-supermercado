@@ -46,11 +46,41 @@ export default function Home() {
     }, 300);
   };
 
+  const today = new Date().toLocaleDateString("pt-BR", {
+    day: "2-digit",
+    month: "short",
+  });
+
   return (
     <div className="home-container">
-      <main className="product-section">
+      <section className="hero">
+        <div className="hero-inner">
+          <div className="hero-copy">
+            <p className="hero-eyebrow">Mercado de bairro, em Maceió</p>
+            <h1 className="hero-title">
+              O que colhemos hoje, direto pra sua casa.
+            </h1>
+            <p className="hero-sub">
+              Fruta, verdura e mercearia selecionadas nesta manhã. Peça até
+              18h e receba ainda hoje.
+            </p>
+            <a href="#colheita" className="hero-cta">
+              Ver o que chegou hoje
+            </a>
+          </div>
+          <div className="hero-stamp" aria-hidden="true">
+            <span className="hero-stamp-ring">
+              <span className="hero-stamp-top">Colhido hoje</span>
+              <span className="hero-stamp-date">{today}</span>
+              <span className="hero-stamp-bottom">Mercado Vital · AL</span>
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <main className="product-section" id="colheita">
         <FeaturedSlider />
-        <h2 className="section-title">Ofertas em Destaque</h2>
+        <h2 className="section-title">Ofertas em destaque</h2>
 
         {loading ? (
           <div className="loader">Carregando...</div>

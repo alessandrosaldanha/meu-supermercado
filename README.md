@@ -1,73 +1,78 @@
-# React + TypeScript + Vite
+# Mercado Vital
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend de e-commerce para supermercado com entrega em Maceió/AL. React + TypeScript + Vite, consumindo uma API Xano (no-code) via REST.
 
-Currently, two official plugins are available:
+## Tecnologias
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React 19 + TypeScript
+- Vite 8
+- React Router DOM 7
+- Axios
+- Swiper (carrossel de produtos em destaque)
+- lucide-react / react-icons
 
-## React Compiler
+## Pré-requisitos
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Node.js 18+
+- Uma URL de API Xano válida (ou outra API compatível com os endpoints usados — ver `src/services/api.ts`)
 
-## Expanding the ESLint configuration
+## Configuração
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+1. Instale as dependências:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+   ```bash
+   npm install
+   ```
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+2. Crie um arquivo `.env` na raiz do projeto com a URL da API:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+   ```
+   VITE_API_URL=https://sua-instancia.xano.io/api:xxxxxxxx/
+   ```
+
+3. Rode o servidor de desenvolvimento:
+
+   ```bash
+   npm run dev
+   ```
+
+   O app fica disponível em `http://localhost:5173`.
+
+## Scripts disponíveis
+
+```bash
+npm run dev       # servidor de desenvolvimento (Vite)
+npm run build     # type-check (tsc -b) + build de produção
+npm run lint      # ESLint
+npm run preview   # preview local do build de produção
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Não há framework de testes configurado neste projeto no momento.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Funcionalidades
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- Catálogo de produtos com paginação e destaques em carrossel
+- Página de detalhe de produto com avaliações (reviews aninhadas)
+- Carrinho de compras
+- Cadastro/login de usuário
+- Checkout em 3 passos (entrega, pagamento, revisão) com Pix, cartão (simulado) ou pagamento na entrega
+- Histórico de pedidos
+- Perfil do usuário com busca automática de endereço por CEP (ViaCEP)
+- Área administrativa protegida por role (`/admin/users`)
+
+## Estrutura do projeto
+
 ```
+src/
+├── components/   # UI reutilizável (Navbar, Footer, ProductCard, Checkout, Toasts, ...)
+├── context/      # CartContext (carrinho de compras)
+├── pages/        # Páginas roteadas (Home, Login, Signup, Cart, Orders, Profile, ProductDetail)
+└── services/     # Camada de API (axios + endpoints)
+```
+
+Para detalhes de arquitetura, autenticação e decisões de implementação, veja a pasta [docs/](docs/):
+
+- [docs/architecture.md](docs/architecture.md) — estrutura de pastas, rotas, paginação, estilização
+- [docs/auth-e-estado.md](docs/auth-e-estado.md) — autenticação, carrinho e gerenciamento de estado
+- [docs/api.md](docs/api.md) — endpoints da API e fluxo de checkout
+- [docs/known-issues.md](docs/known-issues.md) — inconsistências e dívidas técnicas conhecidas

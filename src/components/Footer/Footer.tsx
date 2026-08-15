@@ -18,7 +18,7 @@ export function Footer() {
         <div className="footer-column">
           <div className="footer-logo">
             {/* Note que o nome mudou de Store para LuStore */}
-            <LuStore size={24} color="var(--primary)" />
+            <LuStore size={24} color="var(--papaya)" />
             <span>
               Mercado <strong>Vital</strong>
             </span>
