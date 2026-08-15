@@ -77,60 +77,10 @@
   transform: translateY(-2px);
 }
 
-/* O carimbo: elemento-assinatura da marca */
+/* O carimbo: elemento-assinatura da marca (ver components/Stamp) */
 .hero-stamp {
   display: flex;
   justify-content: center;
-}
-
-.hero-stamp-ring {
-  width: 190px;
-  height: 190px;
-  border-radius: 50%;
-  border: 2px dashed var(--stamp);
-  background: var(--paper);
-  color: var(--stamp);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  transform: rotate(-8deg);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-  mix-blend-mode: multiply;
-  position: relative;
-}
-
-.hero-stamp-ring::before {
-  content: "";
-  position: absolute;
-  inset: 10px;
-  border: 1px solid var(--stamp);
-  border-radius: 50%;
-  opacity: 0.6;
-}
-
-.hero-stamp-top {
-  font-family: var(--font-mono);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  font-size: 0.95rem;
-}
-
-.hero-stamp-date {
-  font-family: var(--font-display);
-  font-size: 1.6rem;
-  margin: 4px 0;
-  text-transform: uppercase;
-}
-
-.hero-stamp-bottom {
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  opacity: 0.85;
 }
 
 @media (max-width: 850px) {
@@ -149,34 +99,13 @@
     margin-left: auto;
     margin-right: auto;
   }
-
-  .hero-stamp-ring {
-    width: 150px;
-    height: 150px;
-    margin: 0 auto;
-  }
 }
 
-.page-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 40px;
-  height: 40px;
-  padding: 0 15px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.page-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
 /* Container principal que segura o Slider e a Grid */
 .product-section {
   max-width: 1640px;
   margin: 0 auto;
-  padding: 2rem 5%;
+  padding: var(--space-6) 5%;
 }
 
 /* Título da seção — etiqueta de caixote */
@@ -184,13 +113,13 @@
   display: inline-block;
   font-size: 1.3rem;
   color: var(--ink);
-  margin: 48px 0 24px;
-  padding: 8px 18px;
+  margin: var(--space-7) 0 var(--space-5);
+  padding: var(--space-2) var(--space-4);
   background: var(--card);
   border: 1.5px solid var(--line);
   border-left: 6px solid var(--leaf);
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-sm);
 }
 
 /* A GRID: Responsável por organizar os cards na tela */
@@ -198,8 +127,8 @@
   display: grid;
   /* Cria colunas automáticas de no mínimo 240px */
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 24px;
-  margin-bottom: 50px;
+  gap: var(--space-5);
+  margin-bottom: var(--space-7);
 }
 
 /* Feedback visual de carregamento */
@@ -208,7 +137,7 @@
   justify-content: center;
   align-items: center;
   min-height: 300px;
-  font-size: 1.2rem;
+  font-size: var(--text-lg);
   color: var(--leaf);
   font-weight: 600;
   font-family: var(--font-mono);
@@ -220,9 +149,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 14px;
-  margin: 60px 0;
-  padding-bottom: 40px;
+  gap: var(--space-3);
+  margin: var(--space-8) 0;
+  padding-bottom: var(--space-6);
   font-family: var(--font-mono);
 }
 
@@ -230,21 +159,21 @@
   background: var(--card);
   border: 1.5px solid var(--leaf);
   color: var(--leaf);
-  padding: 10px 22px;
+  padding: var(--space-3) var(--space-5);
   border-radius: var(--radius-md);
   font-weight: 700;
   font-family: var(--font-mono);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--duration-base) var(--ease-market);
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .page-btn:hover:not(:disabled) {
   background: var(--leaf);
   color: var(--card);
-  box-shadow: 0 4px 12px rgba(63, 125, 63, 0.25);
+  box-shadow: var(--shadow-md);
 }
 
 .page-btn:disabled {
@@ -259,7 +188,7 @@
   color: var(--ink);
   background: var(--card);
   border: 1px dashed var(--line);
-  padding: 8px 18px;
+  padding: var(--space-2) var(--space-4);
   border-radius: var(--radius-md);
 }
 
@@ -271,21 +200,21 @@
 /* AJUSTES RESPONSIVOS */
 @media (max-width: 768px) {
   .product-section {
-    padding: 1rem 3%;
+    padding: var(--space-4) 3%;
   }
 
   .section-title {
     font-size: 1.5rem;
-    margin: 20px 0;
+    margin: var(--space-5) 0;
   }
 
   .pagination-controls {
     flex-direction: row;
-    gap: 10px;
+    gap: var(--space-3);
   }
 
   .page-btn {
-    padding: 8px 15px;
+    padding: var(--space-2) var(--space-4);
     font-size: 0.9rem;
   }
 }

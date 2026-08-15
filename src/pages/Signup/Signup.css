@@ -1,71 +1,141 @@
-/* Centraliza o formulário na tela */
-.signup-container {
+/* Página de autenticação (compartilhada visualmente com Login.css) */
+.auth-page {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
+  min-height: 100%;
+  padding: var(--space-6) var(--space-4);
   background-color: var(--paper);
-  padding: 20px;
+  background-image:
+    radial-gradient(circle at 10% 10%, rgba(63, 125, 63, 0.08) 0, transparent 40%),
+    radial-gradient(circle at 90% 90%, rgba(226, 121, 58, 0.1) 0, transparent 40%);
 }
 
-/* O "Card" do formulário */
-.signup-form {
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-top: 4px solid var(--leaf);
-  padding: 40px;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow);
+.auth-card {
   width: 100%;
   max-width: 400px;
+  background-color: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+/* Faixa "carimbada" no topo do card, no verde-mata da marca */
+.auth-header {
+  background: var(--forest);
+  padding: var(--space-6) var(--space-5) var(--space-5);
+}
+
+.auth-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.auth-eyebrow {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: var(--text-xs);
+  color: var(--papaya);
+}
+
+.auth-badge {
+  background: var(--paper);
+  transform: rotate(-4deg);
+}
+
+.auth-title {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  color: var(--paper);
+  margin-bottom: var(--space-2);
+}
+
+.auth-sub {
+  font-family: var(--font-main);
+  font-size: var(--text-sm);
+  color: var(--paper);
+  opacity: 0.8;
+  line-height: 1.5;
+}
+
+.auth-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: var(--space-4);
+  padding: var(--space-6) var(--space-5);
 }
 
-.signup-form h2 {
-  font-family: var(--font-display);
-  color: var(--forest);
-  font-size: 22px;
-  text-align: center;
-  margin-bottom: 10px;
+.input-container {
+  position: relative;
 }
 
-/* Estilização dos Inputs */
-.signup-form input {
+.input-container .icon {
+  position: absolute;
+  left: var(--space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--ink-soft);
+  pointer-events: none;
+}
+
+.input-container input {
   width: 100%;
-  padding: 14px 16px;
+  padding: var(--space-3) var(--space-3) var(--space-3) var(--space-7);
   border: 1.5px solid var(--line);
   border-radius: var(--radius-md);
-  font-size: 16px;
   font-family: var(--font-main);
-  transition: all 0.2s ease;
+  font-size: var(--text-base);
+  color: var(--ink);
   outline: none;
+  transition:
+    border-color var(--duration-fast) var(--ease-market),
+    box-shadow var(--duration-fast) var(--ease-market);
 }
 
-/* Efeito de foco no input (Destaque UI) */
-.signup-form input:focus {
+.input-container input:focus {
   border-color: var(--leaf);
-  box-shadow: 0 0 0 4px rgba(63, 125, 63, 0.12);
+  box-shadow: 0 0 0 4px var(--leaf-soft);
 }
 
-/* Ajuste no botão dentro do formulário */
-.signup-form button {
-  margin-top: 10px;
-  height: 50px;
-  font-size: 16px;
+.auth-submit {
+  width: 100%;
+  margin-top: var(--space-2);
 }
 
-/* Link para quem já tem conta (Opcional) */
-.signup-footer {
+.auth-footer {
   text-align: center;
-  font-size: 14px;
+  font-size: var(--text-sm);
   color: var(--ink-soft);
-  margin-top: 10px;
+  padding: 0 var(--space-5) var(--space-6);
 }
 
-.signup-footer span {
+.auth-footer span {
   color: var(--leaf);
   font-weight: 600;
   cursor: pointer;
+}
+
+.auth-footer span:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .auth-header {
+    padding: var(--space-5) var(--space-4);
+  }
+
+  .auth-form {
+    padding: var(--space-5) var(--space-4);
+    gap: var(--space-3);
+  }
+
+  .auth-footer {
+    padding: 0 var(--space-4) var(--space-5);
+  }
 }

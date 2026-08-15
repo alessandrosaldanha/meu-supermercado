@@ -11,17 +11,13 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { useCart } from "../../context/CartContext";
+import { useToast } from "../../context/ToastContext";
+import { Stamp } from "../Stamp/Stamp";
 import { useState, useEffect, useCallback } from "react";
 import "./Navbar.css";
-import { Toast } from "../Toasts/Toast";
 
 export function Navbar() {
-  const [showToast, setShowToast] = useState(false);
-  const [toastConfig, setToastConfig] = useState<{
-    message: string;
-    type: "success" | "error" | "warning" | "info";
-  }>({ message: "", type: "warning" });
-
+  const { showToast } = useToast();
   const { cartCount } = useCart();
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -79,11 +75,7 @@ export function Navbar() {
 
     window.dispatchEvent(new Event("storage"));
 
-    setToastConfig({
-      message: "👋 Até logo! Você saiu com segurança.",
-      type: "info",
-    });
-    setShowToast(true);
+    showToast("👋 Até logo! Você saiu com segurança.", "info");
 
     setTimeout(() => {
       navigate("/");
@@ -129,11 +121,10 @@ export function Navbar() {
 
           {isPrivileged && (
             <li onClick={closeMenu} className="admin-menu-item">
-              <Link
-                to="/admin/users"
-                style={{ color: "var(--papaya)", fontWeight: "bold" }}
-              >
-                <ShieldCheck size={18} /> Painel Admin
+              <Link to="/admin/users" className="admin-menu-link">
+                <Stamp variant="tag" tone="papaya">
+                  <ShieldCheck size={14} /> Painel Admin
+                </Stamp>
               </Link>
             </li>
           )}
@@ -243,13 +234,6 @@ export function Navbar() {
           </div>
         </div>
       </div>
-      {showToast && (
-        <Toast
-          message={toastConfig.message}
-          type={toastConfig.type}
-          onClose={() => setShowToast(false)}
-        />
-      )}
     </nav>
   );
 }

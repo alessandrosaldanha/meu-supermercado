@@ -2,7 +2,9 @@ import { useState } from "react";
 import { Mail, Lock, LogIn } from "lucide-react";
 import { loginUser } from "../../services/api";
 import { useNavigate } from "react-router-dom";
-import { Toast } from "../../components/Toasts/Toast";
+import { useToast } from "../../context/ToastContext";
+import { Button } from "../../components/Buttons/Button";
+import { Stamp } from "../../components/Stamp/Stamp";
 import "./Login.css";
 
 export default function Login() {
@@ -10,11 +12,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const [showToast, setShowToast] = useState(false);
-  const [toastConfig, setToastConfig] = useState<{
-    message: string;
-    type: "success" | "error" | "warning" | "info";
-  }>({ message: "", type: "warning" });
+  const { showToast } = useToast();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,11 +41,7 @@ export default function Login() {
         window.dispatchEvent(new Event("storage"));
         window.dispatchEvent(new Event("focus"));
 
-        setToastConfig({
-          message: `👋 Bem-vindo de volta, ${firstName}!`,
-          type: "success",
-        });
-        setShowToast(true);
+        showToast(`👋 Bem-vindo de volta, ${firstName}!`, "success");
 
         setTimeout(() => {
           navigate("/");
@@ -56,57 +50,71 @@ export default function Login() {
     } catch (error) {
       console.error(error);
 
-      setToastConfig({
-        message: "❌ Erro ao logar! Verifique seu e-mail e senha.",
-        type: "error",
-      });
-      setShowToast(true);
+      showToast("❌ Erro ao logar! Verifique seu e-mail e senha.", "error");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="login-page">
-      <form className="login-form" onSubmit={handleLogin}>
-        <h2 className="login-title">Mercado Vital</h2>
-        <div className="input-container">
-          <Mail className="icon" size={18} />
-          <input
-            type="email"
-            placeholder="E-mail"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+    <div className="auth-page">
+      <div className="auth-card">
+        <div className="auth-header">
+          <div className="auth-header-top">
+            <span className="auth-eyebrow">Mercado de bairro, em Maceió</span>
+            <Stamp variant="tag" tone="papaya" className="auth-badge">
+              Feira Livre
+            </Stamp>
+          </div>
+          <h1 className="auth-title">Bem-vindo de volta</h1>
+          <p className="auth-sub">
+            Entre para continuar suas compras na feira.
+          </p>
         </div>
-        <div className="input-container">
-          <Lock className="icon" size={18} />
-          <input
-            type="password"
-            placeholder="Senha"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit" className="login-button" disabled={loading}>
-          {loading ? (
-            "Entrando..."
-          ) : (
-            <>
-              <LogIn size={20} /> Entrar
-            </>
-          )}
-        </button>
-      </form>
-      {showToast && (
-        <Toast
-          message={toastConfig.message}
-          type={toastConfig.type}
-          onClose={() => setShowToast(false)}
-        />
-      )}
+
+        <form className="auth-form" onSubmit={handleLogin}>
+          <div className="input-container">
+            <Mail className="icon" size={18} />
+            <input
+              type="email"
+              placeholder="E-mail"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="input-container">
+            <Lock className="icon" size={18} />
+            <input
+              type="password"
+              placeholder="Senha"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+
+          <Button
+            type="submit"
+            variant="primary"
+            className="auth-submit"
+            disabled={loading}
+          >
+            {loading ? (
+              "Entrando..."
+            ) : (
+              <>
+                <LogIn size={20} /> Entrar
+              </>
+            )}
+          </Button>
+        </form>
+
+        <p className="auth-footer">
+          Ainda não tem conta?{" "}
+          <span onClick={() => navigate("/signup")}>Criar conta</span>
+        </p>
+      </div>
     </div>
   );
 }

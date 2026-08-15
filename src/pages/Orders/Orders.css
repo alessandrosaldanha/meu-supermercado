@@ -1,8 +1,8 @@
 /* Container Principal */
 .orders-container {
   max-width: 900px;
-  margin: 40px auto;
-  padding: 0 20px;
+  margin: var(--space-7) auto;
+  padding: 0 var(--space-5);
   min-height: 70vh;
 }
 
@@ -10,14 +10,14 @@
   font-family: var(--font-display);
   font-size: 1.7rem;
   color: var(--forest);
-  margin-bottom: 30px;
+  margin-bottom: var(--space-6);
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-3);
 }
 
 .orders-loading {
-  padding: 60px 20px;
+  padding: var(--space-8) var(--space-5);
   text-align: center;
   font-family: var(--font-mono);
   color: var(--leaf);
@@ -27,7 +27,7 @@
 /* Estado Vazio */
 .orders-empty {
   background: var(--card);
-  padding: 60px 20px;
+  padding: var(--space-8) var(--space-5);
   border-radius: var(--radius-lg);
   text-align: center;
   box-shadow: var(--shadow);
@@ -43,11 +43,11 @@
 .order-card {
   background: var(--card);
   border-radius: var(--radius-lg);
-  margin-bottom: 24px;
+  margin-bottom: var(--space-5);
   box-shadow: var(--shadow);
   border: 1px solid var(--line);
   overflow: hidden;
-  transition: transform 0.2s;
+  transition: transform var(--duration-base) var(--ease-market);
 }
 
 .order-card:hover {
@@ -57,11 +57,12 @@
 /* Cabeçalho do Card */
 .order-header {
   background: var(--paper);
-  padding: 16px 24px;
+  padding: var(--space-4) var(--space-5);
   border-bottom: 1px solid var(--line);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: var(--space-3);
 }
 
 .order-info h3 {
@@ -79,34 +80,15 @@
   font-weight: 500;
 }
 
-/* Status Badge */
-.status-badge {
-  padding: 6px 14px;
-  border-radius: 99px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-}
-
-.status-pendente {
-  background: #faf1de;
-  color: #9a6a1f;
-}
-
-.status-entregue {
-  background: #e9f2e6;
-  color: var(--leaf-hover);
-}
-
 /* Lista de Itens */
 .order-body {
-  padding: 20px 24px;
+  padding: var(--space-5);
 }
 
 .order-item {
   display: flex;
   justify-content: space-between;
-  padding: 12px 0;
+  padding: var(--space-3) 0;
   border-bottom: 1px solid var(--line);
   font-family: var(--font-mono);
   font-size: 0.9rem;
@@ -128,7 +110,7 @@
 /* Rodapé do Card */
 .order-footer {
   background: var(--paper);
-  padding: 16px 24px;
+  padding: var(--space-4) var(--space-5);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -156,6 +138,6 @@
   .order-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 12px;
+    gap: var(--space-3);
   }
 }

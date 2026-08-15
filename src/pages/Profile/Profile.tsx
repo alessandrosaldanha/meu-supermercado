@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import api from "../../services/api";
 import { Save, MapPin, Loader2, Edit3 } from "lucide-react";
+import { Button } from "../../components/Buttons/Button";
 import "./Profile.css";
 import type { User } from "../../services/api";
-import { Toast } from "../../components/Toasts/Toast";
+import { useToast } from "../../context/ToastContext";
 
 export default function Profile() {
   const [loading, setLoading] = useState(false);
@@ -19,11 +20,7 @@ export default function Profile() {
     cidade: "Maceió",
     complemento: "",
   });
-  const [showToast, setShowToast] = useState(false);
-  const [toastConfig, setToastConfig] = useState<{
-    message: string;
-    type: "success" | "error" | "warning" | "info";
-  }>({ message: "", type: "warning" });
+  const { showToast } = useToast();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -42,11 +39,7 @@ export default function Profile() {
         localStorage.setItem("user", JSON.stringify(response.data));
       } catch (error) {
         console.error("Erro ao carregar dados do Xano:", error);
-        setToastConfig({
-          message: "❌ Não conseguimos carregar seus dados.",
-          type: "error",
-        });
-        setShowToast(true);
+        showToast("❌ Não conseguimos carregar seus dados.", "error");
       } finally {
         setLoading(false);
       }
@@ -91,20 +84,12 @@ export default function Profile() {
       const response = await api.patch(`user/${userData.id}`, userData);
       localStorage.setItem("user", JSON.stringify(response.data));
 
-      setToastConfig({
-        message: "✅ Seus dados foram atualizados com sucesso!",
-        type: "success",
-      });
-      setShowToast(true);
+      showToast("✅ Seus dados foram atualizados com sucesso!", "success");
 
       setIsEditing(false); // Volta para o modo de leitura
     } catch (error) {
       console.error(error);
-      setToastConfig({
-        message: "❌ Erro ao salvar os dados. Tente novamente.",
-        type: "error",
-      });
-      setShowToast(true);
+      showToast("❌ Erro ao salvar os dados. Tente novamente.", "error");
     } finally {
       setLoading(false);
     }
@@ -195,10 +180,11 @@ export default function Profile() {
           </div>
         </section>
 
-        <button
+        <Button
           type="submit"
+          variant={isEditing ? "primary" : "secondary"}
           disabled={loading}
-          className={isEditing ? "btn-save" : "btn-edit-mode"}
+          className="profile-submit"
         >
           {loading ? (
             <Loader2 className="spinner" />
@@ -211,15 +197,8 @@ export default function Profile() {
               <Edit3 size={20} /> Editar Endereço
             </>
           )}
-        </button>
+        </Button>
       </form>
-      {showToast && (
-        <Toast
-          message={toastConfig.message}
-          type={toastConfig.type}
-          onClose={() => setShowToast(false)}
-        />
-      )}
     </div>
   );
 }

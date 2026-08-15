@@ -1,17 +1,18 @@
 import { ProductCard } from "../../components/ProductCard/ProductCard";
 import { useEffect, useState } from "react";
 import { FeaturedSlider } from "../../components/FeaturedSlider/FeaturedSlider";
-import { Toast } from "../../components/Toasts/Toast";
 import { getProducts, type Product } from "../../services/api";
 import { useCart } from "../../context/CartContext";
+import { useToast } from "../../context/ToastContext";
+import { Stamp } from "../../components/Stamp/Stamp";
 import "./Home.css";
 
 export default function Home() {
   const { addToCart } = useCart();
+  const { showToast } = useToast();
   const [page, setPage] = useState(1);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showToast, setShowToast] = useState(false);
   const [animatingId, setAnimatingId] = useState<number | null>(null);
   const [hasNextPage, setHasNextPage] = useState(false);
   const [totalPages, setTotalPages] = useState(1);
@@ -35,11 +36,7 @@ export default function Home() {
   const handleAddProduct = (product: Product) => {
     addToCart(product);
     setAnimatingId(product.id);
-
-    setShowToast(false);
-    setTimeout(() => {
-      setShowToast(true);
-    }, 10);
+    showToast("Produto adicionado ao carrinho!", "success");
 
     setTimeout(() => {
       setAnimatingId(null);
@@ -68,12 +65,14 @@ export default function Home() {
               Ver o que chegou hoje
             </a>
           </div>
-          <div className="hero-stamp" aria-hidden="true">
-            <span className="hero-stamp-ring">
-              <span className="hero-stamp-top">Colhido hoje</span>
-              <span className="hero-stamp-date">{today}</span>
-              <span className="hero-stamp-bottom">Mercado Vital · AL</span>
-            </span>
+          <div className="hero-stamp">
+            <Stamp
+              variant="seal"
+              tone="stamp"
+              top="Colhido hoje"
+              label={today}
+              bottom="Mercado Vital · AL"
+            />
           </div>
         </div>
       </section>
@@ -129,21 +128,16 @@ export default function Home() {
 
           <button
             className="page-btn"
+            disabled={page === totalPages}
             onClick={() => {
               setPage(totalPages);
             }}
+            title="Última página"
           >
             {">>"}
           </button>
         </div>
       </main>
-
-      {showToast && (
-        <Toast
-          message="Produto adicionado ao carrinho!"
-          onClose={() => setShowToast(false)}
-        />
-      )}
     </div>
   );
 }

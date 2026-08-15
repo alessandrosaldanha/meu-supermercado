@@ -1,10 +1,11 @@
 import { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
-import { Toast } from "../../components/Toasts/Toast";
+import { useToast } from "../../context/ToastContext";
 import { ShoppingCart, Star, ChevronLeft } from "lucide-react";
 import { getProductById, postReview } from "../../services/api";
 import { CommentItem } from "../../components/CommentItems/CommentItem";
+import { Stamp } from "../../components/Stamp/Stamp";
 
 import "./ProductDetail.css";
 
@@ -12,16 +13,11 @@ export function ProductDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { addToCart } = useCart();
+  const { showToast } = useToast();
 
   const [product, setProduct] = useState<any | null>(null);
   const [mainImage, setMainImage] = useState("");
   const [loading, setLoading] = useState(true);
-  const [showToast, setShowToast] = useState(false);
-  const [toastConfig, setToastConfig] = useState<{
-    message: string;
-    type: "success" | "error" | "warning" | "info";
-  }>({ message: "", type: "warning" });
-  const [toastMessage, setToastMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [comment, setComment] = useState("");
   const [userRating, setUserRating] = useState(5);
@@ -84,18 +80,13 @@ export function ProductDetail() {
         });
       }
       setComment("");
-      setToastConfig({
-        message: parentId ? "✅ Resposta enviada!" : "✅ Avaliação enviada!",
-        type: "success",
-      });
-      setShowToast(true);
+      showToast(
+        parentId ? "✅ Resposta enviada!" : "✅ Avaliação enviada!",
+        "success",
+      );
     } catch (err) {
       console.error("Erro ao enviar:", err);
-      setToastConfig({
-        message: "❌ Erro ao enviar. Tente novamente.",
-        type: "error",
-      });
-      setShowToast(true);
+      showToast("❌ Erro ao enviar. Tente novamente.", "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -111,8 +102,7 @@ export function ProductDetail() {
   const handleAddToCart = () => {
     if (product) {
       addToCart(product);
-      setToastMessage(`${product.name} adicionado!`);
-      setShowToast(true);
+      showToast(`${product.name} adicionado!`, "success");
     }
   };
 
@@ -127,11 +117,7 @@ export function ProductDetail() {
 
   return (
     <div className="product-detail-container">
-      {showToast && (
-        <Toast message={toastMessage} onClose={() => setShowToast(false)} />
-      )}
-
-      <button className="btn-back" onClick={() => navigate(-1)}>
+      <button className="pd-back-btn" onClick={() => navigate(-1)}>
         <ChevronLeft size={20} /> Voltar
       </button>
 
@@ -144,12 +130,13 @@ export function ProductDetail() {
                 src={img.url}
                 onMouseEnter={() => setMainImage(img.url)}
                 className={`thumb-img ${mainImage === img.url ? "active-thumb" : ""}`}
-                alt=""
+                alt={`Miniatura ${index + 1} de ${product.name}`}
               />
             ))}
           </div>
           <div className="main-image-wrapper">
             <img
+              key={mainImage}
               src={mainImage}
               alt={product.name}
               className="featured-image"
@@ -158,7 +145,9 @@ export function ProductDetail() {
         </div>
 
         <div className="product-info-sidebar">
-          <span className="badge-new">Novo | +100 vendidos</span>
+          <Stamp variant="tag" tone="papaya">
+            Novo · +100 vendidos
+          </Stamp>
           <h1 className="product-title">{product.name}</h1>
           <div className="price-container">
             <span className="currency">R$</span>
@@ -191,10 +180,10 @@ export function ProductDetail() {
                 <Star
                   key={s}
                   size={24}
+                  className="rating-star"
                   fill={s <= userRating ? "var(--papaya)" : "none"}
                   color="var(--papaya)"
                   onClick={() => setUserRating(s)}
-                  style={{ cursor: "pointer" }}
                 />
               ))}
             </div>
@@ -238,13 +227,6 @@ export function ProductDetail() {
           )}
         </div>
       </section>
-      {showToast && (
-        <Toast
-          message={toastConfig.message}
-          type={toastConfig.type}
-          onClose={() => setShowToast(false)}
-        />
-      )}
     </div>
   );
 }

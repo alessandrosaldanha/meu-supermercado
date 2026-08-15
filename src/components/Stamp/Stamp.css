@@ -1,0 +1,96 @@
+.stamp-tone-leaf {
+  --tone-color: var(--leaf);
+  --tone-soft: var(--leaf-soft);
+}
+
+.stamp-tone-papaya {
+  --tone-color: var(--papaya);
+  --tone-soft: var(--papaya-soft);
+}
+
+.stamp-tone-stamp {
+  --tone-color: var(--stamp);
+  --tone-soft: var(--stamp-soft);
+}
+
+.stamp-tone-forest {
+  --tone-color: var(--forest);
+  --tone-soft: rgba(30, 61, 42, 0.1);
+}
+
+/* --- Variante selo: momentos de destaque --- */
+.stamp-seal {
+  width: var(--seal-size, 190px);
+  height: var(--seal-size, 190px);
+  border-radius: 50%;
+  border: 2px dashed var(--tone-color);
+  background: var(--paper);
+  color: var(--tone-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+  mix-blend-mode: multiply;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.stamp-seal::before {
+  content: "";
+  position: absolute;
+  inset: 10px;
+  border: 1px solid var(--tone-color);
+  border-radius: 50%;
+  opacity: 0.6;
+}
+
+.stamp-seal-top {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.95rem;
+}
+
+.stamp-seal-label {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  margin: 4px 0;
+  text-transform: uppercase;
+}
+
+.stamp-seal-bottom {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+@media (max-width: 850px) {
+  .stamp-seal {
+    width: var(--seal-size-mobile, 150px);
+    height: var(--seal-size-mobile, 150px);
+  }
+}
+
+/* --- Variante etiqueta: status, categoria, badges --- */
+.stamp-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: var(--text-xs);
+  line-height: 1;
+  padding: var(--space-2) var(--space-3);
+  border: 1.5px dashed var(--tone-color);
+  border-radius: var(--radius-full);
+  background: var(--tone-soft);
+  color: var(--tone-color);
+  white-space: nowrap;
+}

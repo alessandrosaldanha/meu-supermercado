@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../../services/api";
+import { Stamp, type StampTone } from "../../components/Stamp/Stamp";
 import "./Orders.css";
 
 interface Order {
@@ -9,6 +10,19 @@ interface Order {
   status: string;
   payment_method: string;
   items: any[];
+}
+
+// Mapeia os status reais retornados pelo Xano para o tom do Stamp.
+function getStatusTone(status: string): StampTone {
+  const normalized = status.toLowerCase();
+
+  if (normalized.includes("cancel")) return "stamp";
+  if (normalized.includes("entreg") || normalized.includes("confirm"))
+    return "leaf";
+  if (normalized.includes("pend") || normalized.includes("caminho"))
+    return "papaya";
+
+  return "forest";
 }
 
 export function Orders() {
@@ -63,11 +77,9 @@ export function Orders() {
                     {new Date(order.created_at).toLocaleDateString("pt-BR")}
                   </p>
                 </div>
-                <span
-                  className={`status-badge status-${order.status.toLowerCase()}`}
-                >
+                <Stamp variant="tag" tone={getStatusTone(order.status)}>
                   {order.status}
-                </span>
+                </Stamp>
               </div>
 
               {/* Corpo do Card com a lista de produtos */}

@@ -1,30 +1,22 @@
 import { useCart } from "../../context/CartContext";
-import { Trash2, ShoppingBag } from "lucide-react";
-import { useState } from "react";
+import { useToast } from "../../context/ToastContext";
+import { Trash2, ShoppingBag, Minus, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/Buttons/Button";
-import { Toast } from "../../components/Toasts/Toast";
 import "./Cart.css";
 
 export default function Cart() {
   const { cart, removeFromCart, updateQuantity, setQuantity } = useCart();
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
-
-  const [showToast, setShowToast] = useState(false);
-  const [toastConfig, setToastConfig] = useState<{
-    message: string;
-    type: "success" | "error" | "warning" | "info";
-  }>({ message: "", type: "warning" });
 
   const handleGoToCheckout = () => {
     if (cart.length === 0) {
-      setToastConfig({
-        message:
-          "Seu carrinho está vazio! Adicione alguns produtos antes de finalizar.",
-        type: "warning",
-      });
-      setShowToast(true);
+      showToast(
+        "Seu carrinho está vazio! Adicione alguns produtos antes de finalizar.",
+        "warning",
+      );
       return;
     }
     navigate("/checkout");
@@ -35,8 +27,11 @@ export default function Cart() {
       <main className="cart-content">
         {cart.length === 0 ? (
           <div className="empty-cart">
-            <ShoppingBag size={64} color="#ccc" />
-            <p>Seu carrinho está vazio.</p>
+            <div className="empty-cart-badge">
+              <ShoppingBag size={36} />
+            </div>
+            <h2>Sua cesta está vazia</h2>
+            <p>Seu carrinho está vazio — hora de colher alguns produtos frescos.</p>
             <Button
               variant="primary"
               className="continue-shopping-btn"
@@ -48,10 +43,12 @@ export default function Cart() {
           </div>
         ) : (
           <>
+            <h1 className="cart-title">Seu Carrinho</h1>
             <div className="cart-items">
               {cart.map((item) => (
                 <div key={item.id} className="cart-item">
                   <img src={item.image[0]?.url} alt={item.name} />
+
                   <div className="item-details">
                     <h3>{item.name}</h3>
 
@@ -60,8 +57,9 @@ export default function Cart() {
                         type="button"
                         className="qty-btn"
                         onClick={() => updateQuantity(item.id, "decrease")}
+                        aria-label="Diminuir quantidade"
                       >
-                        -
+                        <Minus size={14} />
                       </button>
 
                       <input
@@ -80,25 +78,28 @@ export default function Cart() {
                         type="button"
                         className="qty-btn"
                         onClick={() => updateQuantity(item.id, "increase")}
+                        aria-label="Aumentar quantidade"
                       >
-                        +
+                        <Plus size={14} />
                       </button>
                     </div>
+                  </div>
 
+                  <div className="item-side">
                     <span className="item-price">
                       R$ {(item.price * item.quantity).toFixed(2)}
                     </span>
+                    <Button
+                      type="button"
+                      variant="danger"
+                      className="remove-button"
+                      aria-label="Remover produto"
+                      onClick={() => removeFromCart(item.id)}
+                      title="Remover produto"
+                    >
+                      <Trash2 size={18} />
+                    </Button>
                   </div>
-
-                  <button
-                    type="button"
-                    className="remove-button"
-                    aria-label="Remover produto"
-                    onClick={() => removeFromCart(item.id)}
-                    title="Remover produto"
-                  >
-                    <Trash2 size={20} />
-                  </button>
                 </div>
               ))}
             </div>
@@ -119,13 +120,6 @@ export default function Cart() {
           </>
         )}
       </main>
-      {showToast && (
-        <Toast
-          message={toastConfig.message}
-          type={toastConfig.type}
-          onClose={() => setShowToast(false)}
-        />
-      )}
     </div>
   );
 }

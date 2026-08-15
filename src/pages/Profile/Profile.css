@@ -1,7 +1,7 @@
 .profile-container {
   max-width: 600px;
-  margin: 2rem auto;
-  padding: 20px;
+  margin: var(--space-6) auto;
+  padding: var(--space-5);
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
@@ -11,53 +11,64 @@
 .profile-container h1 {
   font-family: var(--font-display);
   color: var(--forest);
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--space-5);
   font-size: 1.4rem;
 }
 
 .profile-form section {
   border: 1px solid var(--line);
-  padding: 1.5rem;
+  padding: var(--space-5);
   border-radius: var(--radius-md);
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--space-5);
 }
 
 .profile-form h3 {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-2);
+  font-family: var(--font-display);
+  font-size: var(--text-base);
   color: var(--leaf);
-  margin-bottom: 1rem;
+  margin-bottom: var(--space-4);
 }
 
 .input-group {
-  margin-bottom: 1rem;
+  margin-bottom: var(--space-4);
   display: flex;
   flex-direction: column;
 }
 
 .input-group label {
-  font-size: 0.85rem;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: var(--text-xs);
   color: var(--ink-soft);
-  margin-bottom: 4px;
+  margin-bottom: var(--space-2);
 }
 
 .input-group input {
-  padding: 12px;
-  border: 1px solid var(--line);
+  padding: var(--space-3);
+  border: 1.5px solid var(--line);
   border-radius: var(--radius-sm);
-  font-size: 1rem;
+  background: var(--card);
+  color: var(--ink);
+  font-size: var(--text-base);
   font-family: var(--font-main);
+  transition:
+    border-color var(--duration-fast) var(--ease-market),
+    box-shadow var(--duration-fast) var(--ease-market);
 }
 
 .input-group input:focus {
   border-color: var(--leaf);
+  box-shadow: 0 0 0 4px var(--leaf-soft);
   outline: none;
 }
 
 .row {
   display: flex;
-  gap: 15px;
+  gap: var(--space-4);
   flex-wrap: wrap;
 }
 
@@ -68,57 +79,21 @@
   flex: 1;
 }
 
-/* Estilo para os inputs quando estão bloqueados */
+/* Estilo para os inputs quando estão bloqueados: borda tracejada,
+   ecoando o carimbo da marca — um jeito visual de dizer "somente leitura" */
 .input-readonly {
   background-color: var(--paper) !important;
   color: var(--ink-soft) !important;
-  border-color: var(--line) !important;
+  border: 1.5px dashed var(--line) !important;
+  box-shadow: none !important;
   cursor: not-allowed;
 }
 
-/* Container do botão para dar um espaço do formulário */
-.profile-form button {
+/* Botão de editar/salvar (componente compartilhado Button) ocupa a largura
+   do card e ganha uma respiração do restante do formulário */
+.profile-submit {
   width: 100%;
-  padding: 14px;
-  border-radius: var(--radius-md);
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border: none;
-  margin-top: 20px;
-}
-
-/* Botão editar */
-.btn-edit-mode {
-  background-color: var(--paper);
-  color: var(--ink-soft);
-  border: 1px solid var(--line) !important;
-}
-
-.btn-edit-mode:hover {
-  background-color: var(--line);
-  color: var(--ink);
-}
-
-/* Botão salvar */
-.btn-save {
-  background-color: var(--leaf);
-  color: var(--card);
-}
-
-.btn-save:hover {
-  background-color: var(--leaf-hover);
-  box-shadow: 0 4px 12px rgba(63, 125, 63, 0.3);
-}
-
-.btn-save:disabled {
-  background: var(--line);
-  color: var(--ink-soft);
-  cursor: not-allowed;
+  margin-top: var(--space-5);
 }
 
 .spinner {

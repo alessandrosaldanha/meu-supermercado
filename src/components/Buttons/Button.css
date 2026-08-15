@@ -6,21 +6,41 @@
   border: none;
   border-radius: var(--radius-md);
   font-family: var(--font-main);
+  font-size: var(--text-base);
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
-  gap: 8px;
+  transition: all var(--duration-fast) var(--ease-market);
+  gap: var(--space-2);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 /* Variante Verde (Principal) */
 .btn-primary {
   background-color: var(--leaf);
   color: var(--card);
-  padding: 10px 20px;
+  padding: var(--space-3) var(--space-5);
 }
 
-.btn-primary:hover {
+.btn-primary:hover:not(:disabled) {
   background-color: var(--leaf-hover);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Variante secundária (contorno) */
+.btn-secondary {
+  background: var(--card);
+  color: var(--forest);
+  border: 1.5px solid var(--line);
+  padding: var(--space-3) var(--space-5);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  border-color: var(--forest);
+  background: var(--paper);
 }
 
 /* Variante de Ícone (Círculo verde da Home) */
@@ -33,7 +53,7 @@
   padding: 0;
 }
 
-.btn-icon:hover {
+.btn-icon:hover:not(:disabled) {
   transform: scale(1.1);
 }
 
@@ -41,4 +61,8 @@
 .btn-danger {
   background: none;
   color: var(--stamp);
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: var(--stamp-soft);
 }

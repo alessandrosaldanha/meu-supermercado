@@ -1,11 +1,6 @@
-import {
-  LuStore,
-  LuMail,
-  LuPhone,
-  LuMapPin,
-  LuInstagram,
-  LuFacebook,
-} from "react-icons/lu";
+import { Store, Mail, Phone, MapPin } from "lucide-react";
+// lucide-react não inclui logos de marca; usa react-icons só para essas duas.
+import { LuInstagram, LuFacebook } from "react-icons/lu";
 import "./Footer.css";
 
 export function Footer() {
@@ -17,8 +12,7 @@ export function Footer() {
         {/* Coluna 1: Logo e Sobre */}
         <div className="footer-column">
           <div className="footer-logo">
-            {/* Note que o nome mudou de Store para LuStore */}
-            <LuStore size={24} color="var(--papaya)" />
+            <Store size={24} color="var(--papaya)" />
             <span>
               Mercado <strong>Vital</strong>
             </span>
@@ -69,13 +63,13 @@ export function Footer() {
           <h3>Contato</h3>
           <ul className="contact-list">
             <li>
-              <LuPhone size={16} /> (82) 98127-3619
+              <Phone size={16} /> (82) 98127-3619
             </li>
             <li>
-              <LuMail size={16} /> alessandrosaldanha.as@gmail.com
+              <Mail size={16} /> alessandrosaldanha.as@gmail.com
             </li>
             <li>
-              <LuMapPin size={16} /> Maceió, Alagoas
+              <MapPin size={16} /> Maceió, Alagoas
             </li>
           </ul>
         </div>

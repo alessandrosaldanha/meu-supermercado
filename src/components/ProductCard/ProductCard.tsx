@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { ShoppingCart, Eye } from "lucide-react";
 import { type Product } from "../../services/api";
 import { Button } from "../Buttons/Button";
+import { Stamp } from "../Stamp/Stamp";
 import "./ProductCard.css";
 
 interface ProductCardProps {
@@ -30,6 +31,11 @@ export function ProductCard({ product, onAdd, isAnimating }: ProductCardProps) {
       </div>
 
       <div className="product-info">
+        {product.category && (
+          <Stamp variant="tag" tone="leaf" className="product-category-tag">
+            {product.category}
+          </Stamp>
+        )}
         <h3>{product.name}</h3>
         <p className="product-desc">{product.description}</p>
 

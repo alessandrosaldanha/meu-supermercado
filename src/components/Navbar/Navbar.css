@@ -6,6 +6,7 @@
   z-index: 1000;
   background: var(--forest);
   border-bottom: 3px solid var(--papaya);
+  box-shadow: var(--shadow-sm);
   height: 70px;
   display: flex;
   align-items: center;
@@ -18,7 +19,7 @@
   max-width: 1640px;
   margin: 0 auto;
   width: 100%;
-  padding: 2rem 5%;
+  padding: 0 5%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -27,11 +28,11 @@
 .nav-logo {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
   text-decoration: none;
   color: var(--paper);
   font-family: var(--font-display);
-  font-size: 1.05rem;
+  font-size: var(--text-lg);
   letter-spacing: 0.01em;
   z-index: 1001;
 }
@@ -44,7 +45,8 @@
 .nav-menu {
   display: flex;
   list-style: none;
-  gap: 25px;
+  align-items: center;
+  gap: var(--space-5);
 }
 
 .nav-menu a {
@@ -52,13 +54,13 @@
   color: var(--paper);
   opacity: 0.85;
   font-weight: 600;
-  font-size: 0.92rem;
+  font-size: var(--text-sm);
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-2);
   transition:
-    color 0.3s,
-    opacity 0.3s;
+    color var(--duration-base) var(--ease-market),
+    opacity var(--duration-base) var(--ease-market);
 }
 
 .nav-menu a:hover {
@@ -66,17 +68,28 @@
   opacity: 1;
 }
 
+.admin-menu-link:hover .stamp {
+  filter: brightness(1.08);
+}
+
 .nav-actions {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: var(--space-4);
 }
 
 /* Carrinho */
 .nav-cart-wrapper {
   position: relative;
+  display: flex;
+  align-items: center;
   cursor: pointer;
   color: var(--paper);
+  transition: color var(--duration-fast) var(--ease-market);
+}
+
+.nav-cart-wrapper:hover {
+  color: var(--papaya);
 }
 
 .nav-cart-badge {
@@ -89,7 +102,7 @@
   font-size: 10px;
   font-weight: 700;
   padding: 2px 6px;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   border: 2px solid var(--forest);
 }
 
@@ -100,7 +113,7 @@
 
 .nav-auth-buttons {
   display: flex;
-  gap: 10px;
+  gap: var(--space-2);
 }
 
 .login-btn-nav {
@@ -108,11 +121,13 @@
   color: var(--paper);
   border: 1.5px solid var(--paper);
   opacity: 0.9;
-  padding: 8px 16px;
+  padding: var(--space-2) var(--space-4);
   border-radius: var(--radius-md);
   cursor: pointer;
+  font-family: var(--font-main);
+  font-size: var(--text-sm);
   font-weight: 600;
-  transition: all 0.2s;
+  transition: all var(--duration-fast) var(--ease-market);
 }
 
 .login-btn-nav:hover {
@@ -125,11 +140,13 @@
   background: var(--papaya);
   color: var(--forest);
   border: none;
-  padding: 8px 16px;
+  padding: var(--space-2) var(--space-4);
   border-radius: var(--radius-md);
   cursor: pointer;
+  font-family: var(--font-main);
+  font-size: var(--text-sm);
   font-weight: 700;
-  transition: filter 0.2s;
+  transition: filter var(--duration-fast) var(--ease-market);
 }
 
 .signup-btn-nav:hover {
@@ -139,18 +156,26 @@
 .user-logged-area {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-2);
   background: var(--forest-light);
   color: var(--paper);
-  padding: 5px 15px;
-  border-radius: 50px;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
 }
 
 .logout-btn-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: none;
   border: none;
   color: var(--papaya);
   cursor: pointer;
+  transition: opacity var(--duration-fast) var(--ease-market);
+}
+
+.logout-btn-icon:hover {
+  opacity: 0.75;
 }
 
 /* MOBILE MENU ICON */
@@ -161,6 +186,11 @@
   color: var(--paper);
   cursor: pointer;
   z-index: 1001;
+  transition: color var(--duration-fast) var(--ease-market);
+}
+
+.mobile-menu-icon:hover {
+  color: var(--papaya);
 }
 
 /* --- RESPONSIVIDADE (TABLET E CELULAR) --- */
@@ -187,12 +217,13 @@
     top: 0;
     left: -100%;
     flex-direction: column;
+    align-items: stretch;
     background: var(--paper);
     width: 80%;
     height: 100vh;
-    padding: 100px 30px;
-    transition: 0.4s ease-in-out;
-    box-shadow: 10px 0 30px rgba(30, 61, 42, 0.2);
+    padding: var(--space-8) var(--space-6);
+    transition: left var(--duration-slow) var(--ease-market);
+    box-shadow: var(--shadow-lg);
   }
 
   .nav-menu.active {
@@ -209,7 +240,7 @@
   }
 
   .nav-menu li {
-    padding: 15px 0;
+    padding: var(--space-4) 0;
     border-bottom: 1px solid var(--line);
   }
 
@@ -217,18 +248,21 @@
   .mobile-auth-container {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    margin-top: 30px;
-    padding-top: 20px;
+    gap: var(--space-3);
+    margin-top: var(--space-6);
+    padding-top: var(--space-5);
   }
 
   .login-btn-mobile,
   .signup-btn-mobile {
     width: 100%;
-    padding: 15px;
+    padding: var(--space-4);
     border-radius: var(--radius-md);
+    font-family: var(--font-main);
+    font-size: var(--text-sm);
     font-weight: 700;
     cursor: pointer;
+    transition: filter var(--duration-fast) var(--ease-market);
   }
 
   .login-btn-mobile {
@@ -243,34 +277,41 @@
     border: none;
   }
 
+  .login-btn-mobile:hover,
+  .signup-btn-mobile:hover {
+    filter: brightness(1.05);
+  }
+
   .user-info-mobile {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: var(--space-2);
     font-weight: 600;
-    margin-bottom: 10px;
+    margin-bottom: var(--space-2);
   }
 
   .logout-btn-mobile {
-    background: #fdeceb;
+    background: var(--stamp-soft);
     color: var(--stamp);
     border: none;
-    padding: 12px;
+    padding: var(--space-3);
     border-radius: var(--radius-md);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: var(--space-2);
+    font-family: var(--font-main);
     font-weight: 600;
+    cursor: pointer;
   }
 }
 @media (max-width: 850px) {
   .mobile-auth-container {
     display: flex; /* Aqui ele volta a aparecer quando o menu abre */
     flex-direction: column;
-    gap: 12px;
-    margin-top: 20px;
-    padding-top: 20px;
+    gap: var(--space-3);
+    margin-top: var(--space-5);
+    padding-top: var(--space-5);
     border-top: 1px solid var(--line);
     width: 100%;
   }
@@ -284,10 +325,10 @@
 .user-profile-link {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
   text-decoration: none;
   color: var(--paper);
-  transition: opacity 0.2s;
+  transition: opacity var(--duration-fast) var(--ease-market);
   cursor: pointer;
 }
 

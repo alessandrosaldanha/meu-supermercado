@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { User, Mail, Lock } from "lucide-react";
 import { Button } from "../../components/Buttons/Button";
-import { Toast } from "../../components/Toasts/Toast";
+import { Stamp } from "../../components/Stamp/Stamp";
+import { useToast } from "../../context/ToastContext";
 import "./Signup.css";
 
 export default function Signup() {
@@ -11,23 +13,14 @@ export default function Signup() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const [showToast, setShowToast] = useState(false);
-  const [toastConfig, setToastConfig] = useState<{
-    message: string;
-    type: "success" | "error" | "warning" | "info";
-  }>({ message: "", type: "warning" });
-
+  const { showToast } = useToast();
   const navigate = useNavigate();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      setToastConfig({
-        message: "❌ As senhas não coincidem!",
-        type: "error",
-      });
-      setShowToast(true);
+      showToast("❌ As senhas não coincidem!", "error");
       return;
     }
 
@@ -46,11 +39,7 @@ export default function Signup() {
       const data = await response.json();
 
       if (response.ok) {
-        setToastConfig({
-          message: `🚀 Conta criada com sucesso! Bem-vindo, ${name}!`,
-          type: "success",
-        });
-        setShowToast(true);
+        showToast(`🚀 Conta criada com sucesso! Bem-vindo, ${name}!`, "success");
 
         localStorage.setItem("token", data.authToken);
 
@@ -66,76 +55,91 @@ export default function Signup() {
           errorMessage = "Senha muito curta (mínimo 6 caracteres).";
         }
 
-        setToastConfig({
-          message: `⚠️ ${errorMessage}`,
-          type: "warning",
-        });
-        setShowToast(true);
+        showToast(`⚠️ ${errorMessage}`, "warning");
       }
     } catch (error) {
-      setToastConfig({
-        message: "📡 Erro de conexão com o servidor.",
-        type: "error",
-      });
-      setShowToast(true);
+      showToast("📡 Erro de conexão com o servidor.", "error");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="signup-container">
-      <form className="signup-form" onSubmit={handleRegister}>
-        <h2>Criar Conta</h2>
+    <div className="auth-page">
+      <div className="auth-card">
+        <div className="auth-header">
+          <div className="auth-header-top">
+            <span className="auth-eyebrow">Novo por aqui?</span>
+            <Stamp variant="tag" tone="papaya" className="auth-badge">
+              Feira Livre
+            </Stamp>
+          </div>
+          <h1 className="auth-title">Criar conta</h1>
+          <p className="auth-sub">
+            Cadastre-se e receba a colheita de hoje direto em casa.
+          </p>
+        </div>
 
-        <input
-          type="text"
-          placeholder="Seu nome"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-        />
+        <form className="auth-form" onSubmit={handleRegister}>
+          <div className="input-container">
+            <User className="icon" size={18} />
+            <input
+              type="text"
+              placeholder="Seu nome"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+          </div>
 
-        <input
-          type="email"
-          placeholder="Seu e-mail"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+          <div className="input-container">
+            <Mail className="icon" size={18} />
+            <input
+              type="email"
+              placeholder="Seu e-mail"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
 
-        <input
-          type="password"
-          placeholder="Crie uma senha"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+          <div className="input-container">
+            <Lock className="icon" size={18} />
+            <input
+              type="password"
+              placeholder="Crie uma senha"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
 
-        <input
-          type="password"
-          placeholder="Confirme sua senha"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          required
-        />
+          <div className="input-container">
+            <Lock className="icon" size={18} />
+            <input
+              type="password"
+              placeholder="Confirme sua senha"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+          </div>
 
-        <Button variant="primary" type="submit" disabled={loading}>
-          {loading ? "Cadastrando..." : "Finalizar Cadastro"}
-        </Button>
+          <Button
+            variant="primary"
+            type="submit"
+            className="auth-submit"
+            disabled={loading}
+          >
+            {loading ? "Cadastrando..." : "Finalizar Cadastro"}
+          </Button>
+        </form>
 
-        <div className="signup-footer">
+        <p className="auth-footer">
           Já tem uma conta?{" "}
           <span onClick={() => navigate("/login")}>Entrar</span>
-        </div>
-      </form>
-      {showToast && (
-        <Toast
-          message={toastConfig.message}
-          type={toastConfig.type}
-          onClose={() => setShowToast(false)}
-        />
-      )}
+        </p>
+      </div>
     </div>
   );
 }

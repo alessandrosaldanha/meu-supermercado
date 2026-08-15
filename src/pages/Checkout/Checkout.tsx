@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
-import { Toast } from "../Toasts/Toast";
+import { useToast } from "../../context/ToastContext";
 import api from "../../services/api";
 import {
   MapPin,
@@ -12,23 +12,24 @@ import {
   ChevronRight,
   ChevronLeft,
 } from "lucide-react";
+import { Button } from "../../components/Buttons/Button";
+import { Stamp } from "../../components/Stamp/Stamp";
 import "./Checkout.css";
+
+const STEPS = [
+  { n: 1, label: "Entrega" },
+  { n: 2, label: "Pagamento" },
+  { n: 3, label: "Revisão" },
+];
 
 export default function Checkout() {
   const { cart, cartCount, clearCart } = useCart();
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("pix");
   const [user, setUser] = useState<any>(null);
-  const [showToast, setShowToast] = useState(false);
-  const [toastConfig, setToastConfig] = useState<{
-    message: string;
-    type: "success" | "error" | "warning" | "info";
-  }>({
-    message: "",
-    type: "success",
-  });
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
     if (savedUser) {
@@ -59,21 +60,13 @@ export default function Checkout() {
       };
 
       await api.post("/orders", orderData);
-      setToastConfig({
-        message: "🚀 Pedido realizado com sucesso!",
-        type: "success",
-      });
-      setShowToast(true);
+      showToast("🚀 Pedido realizado com sucesso!", "success");
       clearCart();
       setTimeout(() => {
         navigate("/orders");
       }, 2500);
     } catch (error) {
-      setToastConfig({
-        message: "Erro ao finalizar pedido. Tente novamente.",
-        type: "error",
-      });
-      setShowToast(true);
+      showToast("Erro ao finalizar pedido. Tente novamente.", "error");
     } finally {
       setLoading(false);
     }
@@ -84,16 +77,38 @@ export default function Checkout() {
   const copyPixCode = () => {
     const pixCode = "00020126330014br.gov.bcb.pix0111...";
     navigator.clipboard.writeText(pixCode);
-    setToastConfig({ message: "✅ Código Pix copiado!", type: "success" });
-    setShowToast(true);
+    showToast("✅ Código Pix copiado!", "success");
   };
 
   return (
     <div className="checkout-container">
-      <div className="checkout-steps">
-        <div className={`step ${step >= 1 ? "active" : ""}`}>1. Entrega</div>
-        <div className={`step ${step >= 2 ? "active" : ""}`}>2. Pagamento</div>
-        <div className={`step ${step >= 3 ? "active" : ""}`}>3. Revisão</div>
+      <div className="checkout-ticket">
+        <div className="checkout-steps">
+          {STEPS.map((s, i) => (
+            <div key={s.n} className="checkout-step-wrap">
+              {step > s.n ? (
+                <Stamp variant="tag" tone="leaf">
+                  <CheckCircle size={12} /> {s.label}
+                </Stamp>
+              ) : step === s.n ? (
+                <Stamp variant="tag" tone="papaya">
+                  {s.n}. {s.label}
+                </Stamp>
+              ) : (
+                <span className="checkout-step-pending">
+                  {s.n}. {s.label}
+                </span>
+              )}
+
+              {i < STEPS.length - 1 && (
+                <span
+                  className={`checkout-step-connector ${step > s.n ? "done" : ""}`}
+                  aria-hidden="true"
+                />
+              )}
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className="checkout-content">
@@ -118,14 +133,14 @@ export default function Checkout() {
             <div className="checkout-actions">
               <button
                 type="button"
-                className="btn-back"
+                className="checkout-btn-back"
                 onClick={() => navigate("/perfil")}
               >
                 Alterar Endereço
               </button>
               <button
                 type="button"
-                className="btn-next"
+                className="checkout-btn-next"
                 onClick={() => setStep(2)}
               >
                 Ir para pagamento <ChevronRight size={18} />
@@ -160,7 +175,10 @@ export default function Checkout() {
 
                 {paymentMethod === "pix" && (
                   <div className="payment-details-expanded">
-                    <div className="mock-qr">QR CODE TESTE</div>
+                    <div className="mock-qr">
+                      <QrCode size={40} />
+                      <span>Ambiente de teste</span>
+                    </div>
                     <p>
                       Escaneie o QR Code acima ou clique no código abaixo para
                       copiar:
@@ -175,14 +193,14 @@ export default function Checkout() {
                       00020126330014br.gov.bcb.pix0111...
                     </code>
 
-                    {/* Botão de copiar com classe dedicada */}
-                    <button
+                    <Button
                       type="button"
+                      variant="secondary"
                       className="btn-copy-pix"
                       onClick={copyPixCode}
                     >
                       Copiar Código Pix
-                    </button>
+                    </Button>
                   </div>
                 )}
               </div>
@@ -249,10 +267,13 @@ export default function Checkout() {
             </div>
 
             <div className="checkout-actions">
-              <button className="btn-back" onClick={() => setStep(1)}>
+              <button
+                className="checkout-btn-back"
+                onClick={() => setStep(1)}
+              >
                 <ChevronLeft size={18} /> Voltar
               </button>
-              <button className="btn-next" onClick={() => setStep(3)}>
+              <button className="checkout-btn-next" onClick={() => setStep(3)}>
                 Revisar Pedido <ChevronRight size={18} />
               </button>
             </div>
@@ -280,14 +301,14 @@ export default function Checkout() {
             <div className="checkout-actions">
               <button
                 type="button"
-                className="btn-back"
+                className="checkout-btn-back"
                 onClick={() => setStep(2)}
               >
                 <ChevronLeft size={18} /> Voltar
               </button>
               <button
                 type="button"
-                className="btn-finish"
+                className="checkout-btn-finish"
                 onClick={handleFinishOrder}
                 disabled={loading || cart.length === 0}
               >
@@ -297,13 +318,6 @@ export default function Checkout() {
           </div>
         )}
       </div>
-      {showToast && (
-        <Toast
-          message={toastConfig.message}
-          type={toastConfig.type}
-          onClose={() => setShowToast(false)}
-        />
-      )}
     </div>
   );
 }
