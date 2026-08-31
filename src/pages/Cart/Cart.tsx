@@ -1,15 +1,23 @@
 import { useCart } from "../../context/CartContext";
 import { useToast } from "../../context/ToastContext";
-import { Trash2, ShoppingBag, Minus, Plus } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { Button } from "../../components/Buttons/Button";
+import { Trash2, ShoppingBag, Minus, Plus, Lock, Truck } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import "./Cart.css";
 
+const brl = (valor: number) =>
+  valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+
 export default function Cart() {
-  const { cart, removeFromCart, updateQuantity, setQuantity } = useCart();
+  const { cart, cartCount, removeFromCart, updateQuantity, setQuantity } =
+    useCart();
   const navigate = useNavigate();
   const { showToast } = useToast();
-  const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+
+  const subtotal = cart.reduce(
+    (acc, item) => acc + item.price * item.quantity,
+    0,
+  );
+  const descontoPix = subtotal * 0.05;
 
   const handleGoToCheckout = () => {
     if (cart.length === 0) {
@@ -22,104 +30,152 @@ export default function Cart() {
     navigate("/checkout");
   };
 
+  if (cart.length === 0) {
+    return (
+      <div className="cart-page">
+        <div className="empty-cart">
+          <div className="empty-cart-badge">
+            <ShoppingBag size={34} />
+          </div>
+          <h2>Sua cesta está vazia</h2>
+          <p>Hora de colher alguns produtos frescos.</p>
+          <Link to="/products" className="continue-shopping-btn">
+            <ShoppingBag size={18} />
+            Ir às compras
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="cart-page">
-      <main className="cart-content">
-        {cart.length === 0 ? (
-          <div className="empty-cart">
-            <div className="empty-cart-badge">
-              <ShoppingBag size={36} />
+      <div className="cart-shell">
+        <h1 className="cart-title">
+          Seu carrinho <span>· {cartCount} itens</span>
+        </h1>
+
+        <div className="cart-layout">
+          <section className="cart-main">
+            <div className="cart-delivery">
+              <Truck size={20} strokeWidth={1.9} />
+              <span>
+                <strong>Entrega no mesmo dia</strong> para pedidos confirmados
+                até as 18h em Maceió.
+              </span>
             </div>
-            <h2>Sua cesta está vazia</h2>
-            <p>Seu carrinho está vazio — hora de colher alguns produtos frescos.</p>
-            <Button
-              variant="primary"
-              className="continue-shopping-btn"
-              onClick={() => navigate("/")}
-            >
-              <ShoppingBag size={20} />
-              Ir às compras
-            </Button>
-          </div>
-        ) : (
-          <>
-            <h1 className="cart-title">Seu Carrinho</h1>
-            <div className="cart-items">
+
+            <ul className="cart-items">
               {cart.map((item) => (
-                <div key={item.id} className="cart-item">
-                  <img src={item.image[0]?.url} alt={item.name} />
+                <li key={item.id} className="cart-item">
+                  <div className="cart-item-thumb">
+                    {item.image?.[0]?.url ? (
+                      <img src={item.image[0].url} alt={item.name} />
+                    ) : (
+                      <span>Sem foto</span>
+                    )}
+                  </div>
 
-                  <div className="item-details">
+                  <div className="cart-item-info">
                     <h3>{item.name}</h3>
-
-                    <div className="quantity-controls">
-                      <button
-                        type="button"
-                        className="qty-btn"
-                        onClick={() => updateQuantity(item.id, "decrease")}
-                        aria-label="Diminuir quantidade"
-                      >
-                        <Minus size={14} />
-                      </button>
-
-                      <input
-                        type="number"
-                        className="qty-input"
-                        value={item.quantity}
-                        min="1"
-                        onChange={(e) =>
-                          setQuantity(item.id, Number(e.target.value))
-                        }
-                        aria-label="Quantidade do produto"
-                        title="Digite a quantidade"
-                      />
-
-                      <button
-                        type="button"
-                        className="qty-btn"
-                        onClick={() => updateQuantity(item.id, "increase")}
-                        aria-label="Aumentar quantidade"
-                      >
-                        <Plus size={14} />
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="item-side">
-                    <span className="item-price">
-                      R$ {(item.price * item.quantity).toFixed(2)}
-                    </span>
-                    <Button
+                    <p className="cart-item-unit">
+                      {brl(item.price)} a unidade
+                    </p>
+                    <button
                       type="button"
-                      variant="danger"
-                      className="remove-button"
-                      aria-label="Remover produto"
+                      className="cart-item-remove"
                       onClick={() => removeFromCart(item.id)}
-                      title="Remover produto"
                     >
-                      <Trash2 size={18} />
-                    </Button>
+                      <Trash2 size={14} /> Excluir
+                    </button>
                   </div>
-                </div>
-              ))}
-            </div>
 
-            <footer className="cart-footer">
-              <div className="total-container">
-                <span>Total da Compra:</span>
-                <span className="total-value">R$ {total.toFixed(2)}</span>
+                  <div className="quantity-controls">
+                    <button
+                      type="button"
+                      className="qty-btn"
+                      onClick={() => updateQuantity(item.id, "decrease")}
+                      aria-label="Diminuir quantidade"
+                    >
+                      <Minus size={14} />
+                    </button>
+                    <input
+                      type="number"
+                      className="qty-input"
+                      value={item.quantity}
+                      min="1"
+                      onChange={(e) =>
+                        setQuantity(item.id, Number(e.target.value))
+                      }
+                      aria-label="Quantidade do produto"
+                      title="Digite a quantidade"
+                    />
+                    <button
+                      type="button"
+                      className="qty-btn"
+                      onClick={() => updateQuantity(item.id, "increase")}
+                      aria-label="Aumentar quantidade"
+                    >
+                      <Plus size={14} />
+                    </button>
+                  </div>
+
+                  <div className="cart-item-total">
+                    {brl(item.price * item.quantity)}
+                  </div>
+                </li>
+              ))}
+            </ul>
+
+            <div className="cart-continue">
+              <Link to="/products">Continuar comprando</Link>
+              <span>
+                Subtotal ({cartCount} itens):{" "}
+                <strong>{brl(subtotal)}</strong>
+              </span>
+            </div>
+          </section>
+
+          <aside className="cart-summary">
+            <h2>Resumo do pedido</h2>
+
+            <dl className="summary-lines">
+              <div>
+                <dt>Produtos ({cartCount})</dt>
+                <dd>{brl(subtotal)}</dd>
               </div>
-              <Button
-                variant="primary"
-                className="checkout-button"
-                onClick={handleGoToCheckout}
-              >
-                Finalizar Pedido
-              </Button>
-            </footer>
-          </>
-        )}
-      </main>
+              <div>
+                <dt>Entrega</dt>
+                <dd className="summary-muted">calculada no checkout</dd>
+              </div>
+              <div>
+                <dt>Desconto no Pix (5%)</dt>
+                <dd className="summary-success">− {brl(descontoPix)}</dd>
+              </div>
+            </dl>
+
+            <div className="summary-total">
+              <span>Total no Pix</span>
+              <strong>{brl(subtotal - descontoPix)}</strong>
+            </div>
+            <p className="summary-alt">
+              ou {brl(subtotal)} em cartão ou pagamento na entrega
+            </p>
+
+            <button
+              type="button"
+              className="checkout-button"
+              onClick={handleGoToCheckout}
+            >
+              Fechar pedido
+            </button>
+
+            <p className="summary-secure">
+              <Lock size={13} /> Compra protegida
+            </p>
+          </aside>
+        </div>
+      </div>
     </div>
   );
 }

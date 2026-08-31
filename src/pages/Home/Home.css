@@ -1,33 +1,35 @@
 .home-container {
-  min-height: 100vh;
   background-color: var(--paper);
 }
 
-/* --- HERO: "colheita do dia" --- */
+/* --- HERO --- */
 .hero {
   background: var(--forest);
-  background-image:
-    radial-gradient(
-      circle at 15% 20%,
-      rgba(246, 241, 228, 0.05) 0,
-      transparent 45%
-    ),
-    radial-gradient(
-      circle at 85% 80%,
-      rgba(226, 121, 58, 0.12) 0,
-      transparent 40%
-    );
   position: relative;
   overflow: hidden;
 }
 
+.hero::after {
+  content: "";
+  position: absolute;
+  right: -80px;
+  top: -120px;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  background: var(--forest-light);
+  opacity: 0.55;
+}
+
 .hero-inner {
-  max-width: 1640px;
+  position: relative;
+  z-index: 1;
+  max-width: var(--shell-max);
   margin: 0 auto;
-  padding: 4.5rem 5% 5rem;
+  padding: var(--space-7) var(--shell-pad);
   display: grid;
-  grid-template-columns: 1.4fr 0.6fr;
-  gap: 40px;
+  grid-template-columns: minmax(0, 1.6fr) 340px;
+  gap: var(--space-6);
   align-items: center;
 }
 
@@ -35,101 +37,198 @@
   font-family: var(--font-mono);
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  font-size: 0.8rem;
+  font-size: 12px;
   color: var(--papaya);
-  margin-bottom: 18px;
+  margin-bottom: var(--space-3);
 }
 
 .hero-title {
   font-family: var(--font-display);
-  color: var(--paper);
-  font-size: clamp(2rem, 4vw, 3.4rem);
-  line-height: 1.12;
-  max-width: 14ch;
-  margin-bottom: 20px;
+  color: #fff;
+  font-size: clamp(28px, 3.6vw, 42px);
+  line-height: 1.1;
+  max-width: 15ch;
+  margin-bottom: var(--space-3);
 }
 
 .hero-sub {
-  color: var(--paper);
-  opacity: 0.8;
-  font-size: 1.05rem;
-  line-height: 1.6;
-  max-width: 46ch;
-  margin-bottom: 30px;
+  color: #c3d2c6;
+  font-size: 15px;
+  line-height: 1.55;
+  max-width: 48ch;
+  margin-bottom: var(--space-5);
 }
 
 .hero-cta {
   display: inline-flex;
   align-items: center;
+  gap: var(--space-2);
   background: var(--papaya);
-  color: var(--forest);
+  color: #fff;
+  font-size: 14.5px;
   font-weight: 700;
-  padding: 14px 28px;
-  border-radius: var(--radius-md);
-  text-decoration: none;
-  transition:
-    transform 0.2s,
-    filter 0.2s;
+  padding: 13px 24px;
+  border-radius: var(--radius-sm);
+  transition: all var(--duration-fast) var(--ease-market);
 }
 
 .hero-cta:hover {
-  filter: brightness(1.08);
+  background: var(--papaya-dark);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.hero-side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.hero-card {
+  background: var(--card);
+  border-radius: var(--radius-md);
+  padding: var(--space-4) var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.hero-card strong {
+  font-family: var(--font-display);
+  font-size: 17px;
+  letter-spacing: -0.02em;
+}
+
+.hero-card span {
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+
+/* --- ATALHOS DE DEPARTAMENTO --- */
+.dep-shortcuts {
+  max-width: var(--shell-max);
+  margin: 0 auto;
+  padding: var(--space-5) var(--shell-pad) 0;
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.dep-shortcut {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: var(--space-4) var(--space-2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--leaf);
+  transition: all var(--duration-fast) var(--ease-market);
+}
+
+.dep-shortcut span {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink);
+  text-align: center;
+}
+
+.dep-shortcut:hover {
+  border-color: var(--leaf);
+  color: var(--leaf);
   transform: translateY(-2px);
 }
 
-/* O carimbo: elemento-assinatura da marca (ver components/Stamp) */
-.hero-stamp {
-  display: flex;
-  justify-content: center;
+/* --- FAIXA DE GARANTIAS --- */
+.value-props {
+  max-width: var(--shell-max);
+  margin: 0 auto var(--space-7);
+  padding: 0 var(--shell-pad);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  background: transparent;
 }
 
-@media (max-width: 850px) {
+.value-prop {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-right-width: 0;
+  padding: var(--space-4) var(--space-5);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--leaf);
+}
+
+.value-prop:first-child {
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+}
+
+.value-prop:last-child {
+  border-right-width: 1px;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+
+.value-prop div {
+  display: flex;
+  flex-direction: column;
+}
+
+.value-prop strong {
+  font-size: 13.5px;
+  color: var(--ink);
+}
+
+.value-prop span {
+  font-size: var(--text-xs);
+  color: var(--ink-soft);
+}
+
+/* --- RESPONSIVO --- */
+@media (max-width: 1024px) {
   .hero-inner {
     grid-template-columns: 1fr;
-    padding: 2.5rem 6% 3rem;
-    text-align: center;
+  }
+
+  .dep-shortcuts {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-inner {
+    padding: var(--space-6) 4%;
   }
 
   .hero-title {
     max-width: none;
   }
 
-  .hero-sub {
-    max-width: none;
-    margin-left: auto;
-    margin-right: auto;
-  }
-}
-
-/* Container principal que segura o Slider de destaques */
-.product-section {
-  max-width: 1640px;
-  margin: 0 auto;
-  padding: var(--space-6) 5%;
-}
-
-/* Título da seção — etiqueta de caixote (usado pelo h2 interno do FeaturedSlider) */
-.section-title {
-  display: inline-block;
-  font-size: 1.3rem;
-  color: var(--ink);
-  margin: var(--space-7) 0 var(--space-5);
-  padding: var(--space-2) var(--space-4);
-  background: var(--card);
-  border: 1.5px solid var(--line);
-  border-left: 6px solid var(--leaf);
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  box-shadow: var(--shadow-sm);
-}
-
-/* AJUSTES RESPONSIVOS */
-@media (max-width: 768px) {
-  .product-section {
-    padding: var(--space-4) 3%;
+  .dep-shortcuts {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    padding: var(--space-4) 4% 0;
   }
 
-  .section-title {
-    font-size: 1.5rem;
-    margin: var(--space-5) 0;
+  .value-props {
+    grid-template-columns: 1fr;
+    padding: 0 4%;
+  }
+
+  .value-prop {
+    border-right-width: 1px;
+    border-bottom-width: 0;
+    border-radius: 0;
+  }
+
+  .value-prop:first-child {
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+  }
+
+  .value-prop:last-child {
+    border-bottom-width: 1px;
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
   }
 }

@@ -1,13 +1,27 @@
-import { useEffect, useState, useCallback } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useEffect, useState, useCallback, useMemo } from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import { useToast } from "../../context/ToastContext";
-import { ShoppingCart, Star, ChevronLeft } from "lucide-react";
-import { getProductById, postReview } from "../../services/api";
+import {
+  ShoppingCart,
+  Star,
+  ChevronRight,
+  Truck,
+  CreditCard,
+  ShieldCheck,
+} from "lucide-react";
+import {
+  getProductById,
+  postReview,
+  type Product,
+  type Review,
+} from "../../services/api";
 import { CommentItem } from "../../components/CommentItems/CommentItem";
-import { Stamp } from "../../components/Stamp/Stamp";
 
 import "./ProductDetail.css";
+
+const brl = (valor: number) =>
+  valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
 export function ProductDetail() {
   const { id } = useParams<{ id: string }>();
@@ -15,12 +29,13 @@ export function ProductDetail() {
   const { addToCart } = useCart();
   const { showToast } = useToast();
 
-  const [product, setProduct] = useState<any | null>(null);
+  const [product, setProduct] = useState<Product | null>(null);
   const [mainImage, setMainImage] = useState("");
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [comment, setComment] = useState("");
   const [userRating, setUserRating] = useState(5);
+  const [quantidade, setQuantidade] = useState(1);
 
   const isLoggedIn = !!localStorage.getItem("token");
 
@@ -29,7 +44,6 @@ export function ProductDetail() {
     setLoading(true);
     try {
       const productData = await getProductById(id);
-      console.log("Dados que chegaram do Xano:", productData);
 
       if (productData) {
         setProduct(productData);
@@ -41,9 +55,21 @@ export function ProductDetail() {
       setLoading(false);
     }
   }, [id]);
+
   useEffect(() => {
     loadProductData();
   }, [loadProductData]);
+
+  const avaliacoes = useMemo(
+    () => (product?.reviews ?? []).filter((rev) => !rev.parent_id),
+    [product],
+  );
+
+  const notaMedia = useMemo(() => {
+    const notas = avaliacoes.map((r) => r.rating).filter((n) => n > 0);
+    if (notas.length === 0) return null;
+    return notas.reduce((a, b) => a + b, 0) / notas.length;
+  }, [avaliacoes]);
 
   const handleSendReview = async (parentId?: string, replyText?: string) => {
     const finalComment = replyText || comment;
@@ -66,7 +92,7 @@ export function ProductDetail() {
       );
 
       if (product) {
-        const reviewParaExibir = {
+        const reviewParaExibir: Review = {
           ...newReview,
           user: {
             name: parsedUser?.name || "Usuário",
@@ -81,29 +107,30 @@ export function ProductDetail() {
       }
       setComment("");
       showToast(
-        parentId ? "✅ Resposta enviada!" : "✅ Avaliação enviada!",
+        parentId ? "Resposta enviada!" : "Avaliação enviada!",
         "success",
       );
     } catch (err) {
       console.error("Erro ao enviar:", err);
-      showToast("❌ Erro ao enviar. Tente novamente.", "error");
+      showToast("Erro ao enviar. Tente novamente.", "error");
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  const adicionar = (vezes: number) => {
+    if (!product) return;
+    for (let i = 0; i < vezes; i += 1) addToCart(product);
+  };
+
   const handleBuyNow = () => {
-    if (product) {
-      addToCart(product);
-      navigate("/cart");
-    }
+    adicionar(quantidade);
+    navigate("/cart");
   };
 
   const handleAddToCart = () => {
-    if (product) {
-      addToCart(product);
-      showToast(`${product.name} adicionado!`, "success");
-    }
+    adicionar(quantidade);
+    showToast(`${product?.name} adicionado ao carrinho!`, "success");
   };
 
   if (loading)
@@ -112,106 +139,189 @@ export function ProductDetail() {
     return (
       <div className="error-container">
         <h2>Produto não encontrado</h2>
+        <Link to="/products">Ver todos os produtos</Link>
       </div>
     );
 
   return (
-    <div className="product-detail-container">
-      <button className="pd-back-btn" onClick={() => navigate(-1)}>
-        <ChevronLeft size={20} /> Voltar
-      </button>
+    <div className="product-detail-page">
+      <nav className="breadcrumb" aria-label="Você está em">
+        <Link to="/">Início</Link>
+        <ChevronRight size={12} />
+        <Link to="/products">Todos os produtos</Link>
+        <ChevronRight size={12} />
+        <span className="breadcrumb-current">{product.name}</span>
+      </nav>
 
-      <div className="product-main-section">
-        <div className="product-gallery">
-          <div className="thumbnails">
-            {product.image?.map((img: any, index: number) => (
-              <img
-                key={index}
-                src={img.url}
-                onMouseEnter={() => setMainImage(img.url)}
-                className={`thumb-img ${mainImage === img.url ? "active-thumb" : ""}`}
-                alt={`Miniatura ${index + 1} de ${product.name}`}
-              />
-            ))}
-          </div>
-          <div className="main-image-wrapper">
-            <img
-              key={mainImage}
-              src={mainImage}
-              alt={product.name}
-              className="featured-image"
-            />
-          </div>
-        </div>
-
-        <div className="product-info-sidebar">
-          <Stamp variant="tag" tone="papaya">
-            Novo · +100 vendidos
-          </Stamp>
-          <h1 className="product-title">{product.name}</h1>
-          <div className="price-container">
-            <span className="currency">R$</span>
-            <span className="price-value">{product.price.toFixed(2)}</span>
-          </div>
-          <div className="action-buttons">
-            <button className="btn-buy" onClick={handleBuyNow}>
-              Comprar agora
-            </button>
-            <button className="btn-add-cart" onClick={handleAddToCart}>
-              <ShoppingCart size={20} /> Carrinho
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <section className="product-extra-info">
-        <h2>Descrição</h2>
-        <p className="description-text">{product.description}</p>
-      </section>
-
-      <section className="reviews-section">
-        <h2>Opiniões sobre o produto</h2>
-
-        {isLoggedIn ? (
-          <div className="comment-form">
-            <h3>Avaliar produto</h3>
-            <div className="star-rating-input">
-              {[1, 2, 3, 4, 5].map((s) => (
-                <Star
-                  key={s}
-                  size={24}
-                  className="rating-star"
-                  fill={s <= userRating ? "var(--papaya)" : "none"}
-                  color="var(--papaya)"
-                  onClick={() => setUserRating(s)}
-                />
+      <div className="pd-shell">
+        <div className="pd-card">
+          <div className="product-gallery">
+            <div className="thumbnails">
+              {product.image?.map((img, index) => (
+                <button
+                  type="button"
+                  key={index}
+                  className={`thumb-img ${mainImage === img.url ? "active-thumb" : ""}`}
+                  onMouseEnter={() => setMainImage(img.url)}
+                  onFocus={() => setMainImage(img.url)}
+                  aria-label={`Ver imagem ${index + 1} de ${product.name}`}
+                >
+                  <img src={img.url} alt="" />
+                </button>
               ))}
             </div>
-            <textarea
-              className="comment-textarea"
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-              placeholder="Escreva sua opinião..."
-            />
-            <button
-              className="btn-send-review"
-              onClick={() => handleSendReview()}
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? "Enviando..." : "Enviar Avaliação"}
-            </button>
+            <div className="main-image-wrapper">
+              {mainImage ? (
+                <img
+                  key={mainImage}
+                  src={mainImage}
+                  alt={product.name}
+                  className="featured-image"
+                />
+              ) : (
+                <span className="sem-foto">Sem foto</span>
+              )}
+            </div>
           </div>
-        ) : (
-          <div className="login-notice">
-            Faça login para avaliar este produto.
-          </div>
-        )}
 
-        <div className="comments-list">
-          {product.reviews && product.reviews.length > 0 ? (
-            product.reviews
-              .filter((rev: any) => !rev.parent_id)
-              .map((rev: any) => (
+          <div className="pd-info">
+            {product.category && (
+              <span className="pd-category">{product.category}</span>
+            )}
+            <h1 className="product-title">{product.name}</h1>
+
+            {notaMedia !== null && (
+              <div className="pd-rating">
+                <strong>{notaMedia.toFixed(1)}</strong>
+                <span className="pd-stars" aria-hidden="true">
+                  {[1, 2, 3, 4, 5].map((s) => (
+                    <Star
+                      key={s}
+                      size={14}
+                      fill={s <= Math.round(notaMedia) ? "currentColor" : "none"}
+                      strokeWidth={1.6}
+                    />
+                  ))}
+                </span>
+                <a href="#avaliacoes">
+                  {avaliacoes.length}{" "}
+                  {avaliacoes.length === 1 ? "avaliação" : "avaliações"}
+                </a>
+              </div>
+            )}
+
+            <div className="price-container">{brl(product.price)}</div>
+
+            {product.description && (
+              <p className="pd-description">{product.description}</p>
+            )}
+          </div>
+
+          <aside className="pd-buybox">
+            <p className="buybox-delivery">
+              <Truck size={17} strokeWidth={2} />
+              <span>
+                <strong>Entrega no mesmo dia</strong> para pedidos até as 18h em
+                Maceió.
+              </span>
+            </p>
+
+            <span className="buybox-label">Quantidade</span>
+            <div className="buybox-qty">
+              <button
+                type="button"
+                onClick={() => setQuantidade((q) => Math.max(1, q - 1))}
+                aria-label="Diminuir quantidade"
+              >
+                −
+              </button>
+              <span>{quantidade}</span>
+              <button
+                type="button"
+                onClick={() => setQuantidade((q) => q + 1)}
+                aria-label="Aumentar quantidade"
+              >
+                +
+              </button>
+            </div>
+
+            <button type="button" className="btn-buy" onClick={handleBuyNow}>
+              Comprar agora
+            </button>
+            <button
+              type="button"
+              className="btn-add-cart"
+              onClick={handleAddToCart}
+            >
+              <ShoppingCart size={18} /> Adicionar ao carrinho
+            </button>
+
+            <ul className="buybox-perks">
+              <li>
+                <CreditCard size={16} strokeWidth={1.9} />
+                <span>
+                  <strong>5% de desconto no Pix.</strong> Ou pague na entrega,
+                  com cartão ou dinheiro.
+                </span>
+              </li>
+              <li>
+                <ShieldCheck size={16} strokeWidth={1.9} />
+                <span>
+                  <strong>Compra protegida.</strong> Acompanhe o pedido do
+                  pendente ao entregue.
+                </span>
+              </li>
+            </ul>
+          </aside>
+        </div>
+
+        <section className="reviews-section" id="avaliacoes">
+          <h2 className="section-title">Opiniões sobre o produto</h2>
+
+          {isLoggedIn ? (
+            <div className="comment-form">
+              <h3>Avaliar produto</h3>
+              <div className="star-rating-input">
+                {[1, 2, 3, 4, 5].map((s) => (
+                  <button
+                    type="button"
+                    key={s}
+                    className="rating-star"
+                    onClick={() => setUserRating(s)}
+                    aria-label={`Dar nota ${s}`}
+                  >
+                    <Star
+                      size={24}
+                      fill={s <= userRating ? "var(--papaya)" : "none"}
+                      color="var(--papaya)"
+                    />
+                  </button>
+                ))}
+              </div>
+              <textarea
+                className="comment-textarea"
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                placeholder="Conte como foi sua experiência com este produto..."
+              />
+              <button
+                type="button"
+                className="btn-send-review"
+                onClick={() => handleSendReview()}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Enviando..." : "Enviar avaliação"}
+              </button>
+            </div>
+          ) : (
+            <div className="login-notice">
+              <Link to="/login">Faça login</Link> para avaliar este produto.
+            </div>
+          )}
+
+          <div className="comments-list">
+            {avaliacoes.length > 0 ? (
+              avaliacoes.map((rev) => (
                 <CommentItem
                   key={rev.id}
                   review={rev}
@@ -220,13 +330,14 @@ export function ProductDetail() {
                   }
                 />
               ))
-          ) : (
-            <p className="no-reviews">
-              Ainda não há avaliações para este produto.
-            </p>
-          )}
-        </div>
-      </section>
+            ) : (
+              <p className="no-reviews">
+                Ainda não há avaliações para este produto.
+              </p>
+            )}
+          </div>
+        </section>
+      </div>
     </div>
   );
 }

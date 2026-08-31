@@ -1,104 +1,73 @@
-/* FeaturedSlider.css - ATUALIZADO PARA CARDS MAIORES */
-
 .featured-section {
   width: 100%;
-  min-height: 450px; /* Aumentado para acomodar cards maiores */
-  background-color: var(--card);
-  border: 1px solid var(--line);
-  margin: var(--space-6) 0;
-  padding: var(--space-6) var(--space-5);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  position: relative;
-  overflow: hidden; /* Garante que o efeito de 'subir' não quebre o layout */
 }
 
-.swiper-navigation-icon {
-  width: 16px !important;
-  height: 16px !important;
+.featured-header {
+  display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.featured-link {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--leaf);
+  flex-shrink: 0;
+}
+
+.featured-link:hover {
+  color: var(--papaya);
 }
 
 .featured-swiper {
-  padding: var(--space-5) 0 var(--space-8) 0;
+  padding-bottom: var(--space-2);
 }
 
-/* --- ESTILO DOS SLIDES (Aumentando os cards) --- */
-
-.swiper-slide {
-  transition: all var(--duration-slow) var(--ease-market);
+.featured-swiper .swiper-slide {
+  height: auto;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: var(--space-6) 0;
-  /* Garante que o card tenha uma largura mínima robusta */
-  min-width: 280px;
 }
 
-/* O ITEM EM DESTAQUE (Agora maior e mais alto) */
-.swiper-slide-active {
-  transform: translateY(-25px) scale(1.15); /* Sobe mais e cresce 15% */
-  z-index: 10;
-  opacity: 1 !important;
+.featured-swiper .swiper-slide > * {
+  width: 100%;
 }
 
-/* ITENS VIZINHOS (Menos apagados para não sumirem) */
-.swiper-slide:not(.swiper-slide-active) {
-  opacity: 0.7;
-  transform: scale(0.95); /* Quase o tamanho normal, para parecerem maiores */
-}
-
-/* --- NAVEGAÇÃO E PONTINHOS --- */
-
-.swiper-button-next,
-.swiper-button-prev {
+/* --- NAVEGAÇÃO --- */
+.featured-swiper .swiper-button-next,
+.featured-swiper .swiper-button-prev {
   background-color: var(--card);
-  width: 55px !important;
-  height: 55px !important;
-  border-radius: 50% !important;
+  border: 1px solid var(--line);
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: var(--radius-full) !important;
   box-shadow: var(--shadow-md);
-  color: var(--leaf) !important;
-  transition: all var(--duration-base) var(--ease-market);
-  z-index: 20;
+  color: var(--forest) !important;
+  transition: all var(--duration-fast) var(--ease-market);
 }
 
-.swiper-button-next:hover,
-.swiper-button-prev:hover {
+.featured-swiper .swiper-button-next::after,
+.featured-swiper .swiper-button-prev::after {
+  font-size: 15px !important;
+  font-weight: 700;
+}
+
+.featured-swiper .swiper-button-next:hover,
+.featured-swiper .swiper-button-prev:hover {
   background-color: var(--leaf);
-  color: var(--card) !important;
-  transform: scale(1.1);
+  border-color: var(--leaf);
+  color: #fff !important;
 }
 
-.swiper-pagination-bullet {
-  background: var(--line);
-  opacity: 1;
-  transition: all var(--duration-base) var(--ease-market);
+.featured-swiper .swiper-button-disabled {
+  opacity: 0;
+  pointer-events: none;
 }
 
-.swiper-pagination-bullet-active {
-  background: var(--papaya) !important;
-  width: 25px; /* Pontinho um pouco mais longo */
-  border-radius: var(--radius-sm);
-}
-
-/* --- AJUSTES PARA CELULAR --- */
 @media (max-width: 768px) {
-  .swiper-slide {
-    min-width: 240px; /* Um pouco menor no celular para caber na tela */
-  }
-
-  .swiper-slide-active {
-    transform: translateY(-15px) scale(1.08); /* Efeito suave no mobile */
-  }
-
-  .swiper-button-next,
-  .swiper-button-prev {
+  .featured-swiper .swiper-button-next,
+  .featured-swiper .swiper-button-prev {
     display: none !important;
-  }
-
-  .featured-section {
-    padding: var(--space-5) var(--space-3);
-    min-height: 380px;
   }
 }

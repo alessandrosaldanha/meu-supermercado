@@ -84,12 +84,15 @@ api.interceptors.response.use(
   },
 );
 
-export async function getProducts(page: number): Promise<PaginatedResponse> {
+export async function getProducts(
+  page: number,
+  perPage = 24,
+): Promise<PaginatedResponse> {
   try {
     const response = await api.get<PaginatedResponse>(`products`, {
       params: {
         page: page,
-        per_page: 10,
+        per_page: perPage,
       },
     });
     return response.data;
@@ -101,7 +104,7 @@ export async function getProducts(page: number): Promise<PaginatedResponse> {
       nextPage: null,
       prevPage: null,
       itemsReceived: 0,
-      perPage: 10,
+      perPage: perPage,
       pageTotal: 1,
     };
   }

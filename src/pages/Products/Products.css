@@ -1,122 +1,319 @@
 .products-page {
-  min-height: 100vh;
   background-color: var(--paper);
 }
 
-/* Container principal que segura o título e a grid */
-.product-section {
-  max-width: 1640px;
+/* --- breadcrumb --- */
+.breadcrumb {
+  max-width: var(--shell-max);
   margin: 0 auto;
-  padding: var(--space-6) 5%;
+  padding: var(--space-4) var(--shell-pad) 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12.5px;
+  color: var(--ink-soft);
 }
 
-/* Título da página — etiqueta de caixote */
-.page-title {
-  display: inline-block;
-  font-size: 1.3rem;
+.breadcrumb a:hover {
+  color: var(--papaya);
+}
+
+.breadcrumb-current {
   color: var(--ink);
-  margin: var(--space-6) 0 var(--space-5);
-  padding: var(--space-2) var(--space-4);
-  background: var(--card);
-  border: 1.5px solid var(--line);
-  border-left: 6px solid var(--leaf);
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  box-shadow: var(--shadow-sm);
-}
-
-/* A GRID: Responsável por organizar os cards na tela */
-.product-grid {
-  display: grid;
-  /* Cria colunas automáticas de no mínimo 240px */
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: var(--space-5);
-  margin-bottom: var(--space-7);
-}
-
-/* Feedback visual de carregamento */
-.loader {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 300px;
-  font-size: var(--text-lg);
-  color: var(--leaf);
   font-weight: 600;
-  font-family: var(--font-mono);
 }
 
-/* --- CONTROLES DE PAGINAÇÃO: canhoto de ticket --- */
+/* --- layout do catálogo --- */
+.catalog {
+  max-width: var(--shell-max);
+  margin: 0 auto;
+  padding: var(--space-4) var(--shell-pad) var(--space-7);
+  display: grid;
+  grid-template-columns: 246px minmax(0, 1fr);
+  gap: var(--space-5);
+  align-items: start;
+}
 
-.pagination-controls {
+/* --- sidebar --- */
+.catalog-sidebar {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
   gap: var(--space-3);
-  margin: var(--space-8) 0;
-  padding-bottom: var(--space-6);
-  font-family: var(--font-mono);
+  position: sticky;
+  top: 150px;
 }
 
-.page-btn {
+.filter-block {
   background: var(--card);
-  border: 1.5px solid var(--leaf);
-  color: var(--leaf);
-  padding: var(--space-3) var(--space-5);
+  border: 1px solid var(--line);
   border-radius: var(--radius-md);
+  padding: var(--space-4);
+}
+
+.filter-block h2 {
+  font-family: var(--font-main);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  margin-bottom: var(--space-3);
+}
+
+.filter-block ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  font-size: 13.5px;
+}
+
+.filter-block li a:hover {
+  color: var(--papaya);
+}
+
+.filter-block li a.ativo {
+  color: var(--leaf);
   font-weight: 700;
-  font-family: var(--font-mono);
-  cursor: pointer;
-  transition: all var(--duration-base) var(--ease-market);
+}
+
+.filter-note {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+/* --- barra de resultados --- */
+.results-bar {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-3);
+}
+
+.results-count {
+  font-size: 13.5px;
+  color: var(--ink-soft);
+}
+
+.results-count strong {
+  color: var(--ink);
+}
+
+.results-page {
+  color: var(--ink-mute);
+}
+
+.sort-control {
   display: flex;
   align-items: center;
   gap: var(--space-2);
+  font-size: 13px;
+  color: var(--ink-soft);
+  flex-shrink: 0;
 }
 
-.page-btn:hover:not(:disabled) {
+.sort-control select {
+  height: 34px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--card);
+  padding: 0 var(--space-3);
+  font-family: var(--font-main);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+/* --- filtros ativos --- */
+.active-filters {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--leaf-soft);
+  border: 1px solid rgba(47, 125, 63, 0.35);
+  color: var(--leaf-hover);
+  font-family: var(--font-main);
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.filter-chip:hover {
   background: var(--leaf);
-  color: var(--card);
-  box-shadow: var(--shadow-md);
+  color: #fff;
+}
+
+.filter-hint {
+  font-size: 12px;
+  color: var(--ink-mute);
+}
+
+/* --- grid --- */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(212px, 1fr));
+  gap: var(--space-3);
+}
+
+.loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 320px;
+  font-family: var(--font-mono);
+  font-size: var(--text-lg);
+  color: var(--leaf);
+  font-weight: 600;
+}
+
+.empty-state {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  min-height: 260px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  color: var(--ink-soft);
+  font-size: var(--text-sm);
+}
+
+.empty-state button {
+  background: var(--leaf);
+  border: none;
+  color: #fff;
+  font-family: var(--font-main);
+  font-size: 13.5px;
+  font-weight: 700;
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.empty-state button:hover {
+  background: var(--leaf-hover);
+}
+
+/* --- paginação --- */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  margin-top: var(--space-6);
+  flex-wrap: wrap;
+}
+
+.page-btn,
+.page-num {
+  height: 36px;
+  border: 1px solid var(--line-strong);
+  background: var(--card);
+  color: var(--ink);
+  font-family: var(--font-main);
+  font-size: 13.5px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-market);
+}
+
+.page-btn {
+  padding: 0 var(--space-4);
+}
+
+.page-num {
+  width: 36px;
+}
+
+.page-btn:hover:not(:disabled),
+.page-num:hover:not(.atual) {
+  border-color: var(--leaf);
+  color: var(--leaf);
 }
 
 .page-btn:disabled {
+  color: var(--ink-mute);
   border-color: var(--line);
-  color: #b7b09a;
   cursor: not-allowed;
-  background: var(--paper);
 }
 
-.page-indicator {
-  font-size: 0.95rem;
-  color: var(--ink);
-  background: var(--card);
-  border: 1px dashed var(--line);
-  padding: var(--space-2) var(--space-4);
-  border-radius: var(--radius-md);
+.page-btn.destaque:not(:disabled) {
+  border-color: var(--leaf);
+  color: var(--leaf);
+  font-weight: 700;
 }
 
-.page-indicator strong {
-  color: var(--papaya);
-  font-size: 1.1rem;
+.page-num.atual {
+  background: var(--forest);
+  border-color: var(--forest);
+  color: #fff;
+  font-weight: 700;
+  cursor: default;
 }
 
-/* AJUSTES RESPONSIVOS */
-@media (max-width: 768px) {
-  .product-section {
-    padding: var(--space-4) 3%;
+.page-gap {
+  color: var(--ink-mute);
+  font-size: 13.5px;
+  padding: 0 2px;
+}
+
+/* --- responsivo --- */
+@media (max-width: 1024px) {
+  .catalog {
+    grid-template-columns: 1fr;
   }
 
-  .page-title {
-    font-size: 1.5rem;
-    margin: var(--space-5) 0;
-  }
-
-  .pagination-controls {
+  .catalog-sidebar {
+    position: static;
     flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .filter-block {
+    flex: 1;
+    min-width: 240px;
+  }
+
+  .filter-block ul {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-4);
+  }
+}
+
+@media (max-width: 768px) {
+  .catalog,
+  .breadcrumb {
+    padding-left: 4%;
+    padding-right: 4%;
+  }
+
+  .results-bar {
+    flex-direction: column;
+    align-items: flex-start;
     gap: var(--space-3);
   }
 
-  .page-btn {
-    padding: var(--space-2) var(--space-4);
-    font-size: 0.9rem;
+  .product-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   }
 }

@@ -1,35 +1,41 @@
-@import url("https://fonts.googleapis.com/css2?family=Archivo+Black&family=Work+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Archivo+Black&family=Space+Mono:wght@400;700&display=swap");
 
 :root {
-  /* Paleta "Feira Livre" — mercado de bairro, colheita do dia */
-  --forest: #1e3d2a; /* Verde-mata profundo: nav, footer, faixas de destaque */
-  --forest-light: #2b5640;
-  --leaf: #3f7d3f; /* Verde-folha: ações primárias */
-  --leaf-hover: #2f6330;
-  --paper: #f6f1e4; /* Papel kraft claro: fundo da página */
-  --card: #fffdf8; /* Branco quente: superfície dos cards */
-  --papaya: #e2793a; /* Laranja-mamão: preço, destaque, selo */
-  --stamp: #a23b32; /* Vermelho-carimbo: urgência, uso pontual */
-  --ink: #22241f; /* Texto principal */
-  --ink-soft: #5b5c52; /* Texto secundário */
-  --line: #ded4bb; /* Linhas e bordas sobre o papel */
+  /* Paleta "Marketplace" — loja densa, produto como protagonista */
+  --forest-deep: #132a1b; /* Faixa utilitária no topo */
+  --forest: #1a3f27; /* Verde-mata: header, footer, faixas escuras */
+  --forest-light: #234a31;
+  --leaf: #2f7d3f; /* Verde-folha: ações primárias */
+  --leaf-hover: #276a34;
+  --paper: #f1f3f0; /* Cinza-claro neutro: fundo da página */
+  --card: #ffffff; /* Branco: superfície dos cards */
+  --tile: #f5f7f3; /* Fundo das áreas de imagem de produto */
+  --papaya: #e2793a; /* Laranja-mamão: selos, destaque, marca */
+  --papaya-dark: #c0602a;
+  --success: #167a3c; /* Frete grátis, economia, confirmações */
+  --stamp: #a9302a; /* Vermelho: urgência, erro */
+  --ink: #191c18; /* Texto principal */
+  --ink-soft: #61675f; /* Texto secundário */
+  --ink-mute: #8b918a; /* Texto terciário, preço riscado */
+  --line: #e0e4dd; /* Linhas e bordas */
+  --line-strong: #d4dad1; /* Bordas de campos e controles */
 
-  /* Tons suaves — fundos de carimbo/badge/alerta sobre o papel */
-  --leaf-soft: rgba(63, 125, 63, 0.12);
+  /* Tons suaves — fundos de badge/alerta */
+  --leaf-soft: rgba(47, 125, 63, 0.12);
   --papaya-soft: rgba(226, 121, 58, 0.14);
-  --stamp-soft: rgba(162, 59, 50, 0.12);
+  --stamp-soft: rgba(169, 48, 42, 0.12);
 
   /* Tipografia */
   --font-display: "Archivo Black", "Arial Black", sans-serif;
-  --font-main: "Work Sans", system-ui, sans-serif;
+  --font-main: "Archivo", system-ui, sans-serif;
   --font-mono: "Space Mono", "Courier New", monospace;
   --text-xs: 12px;
   --text-sm: 14px;
   --text-base: 16px;
   --text-lg: 18px;
   --text-xl: 24px;
-  --text-2xl: clamp(28px, 4vw, 36px);
-  --text-3xl: clamp(34px, 6vw, 56px);
+  --text-2xl: clamp(26px, 3.2vw, 32px);
+  --text-3xl: clamp(32px, 5vw, 46px);
 
   /* Escala de espaçamento (grade de 8px) */
   --space-1: 4px;
@@ -47,11 +53,15 @@
   --radius-lg: 10px;
   --radius-full: 999px;
 
-  /* Elevação */
-  --shadow-sm: 0 2px 6px rgba(30, 61, 42, 0.08);
-  --shadow-md: 0 4px 14px rgba(30, 61, 42, 0.1);
-  --shadow-lg: 0 12px 32px rgba(30, 61, 42, 0.16);
+  /* Elevação — discreta: densidade vem de borda, não de sombra */
+  --shadow-sm: 0 1px 2px rgba(25, 28, 24, 0.05);
+  --shadow-md: 0 2px 8px rgba(25, 28, 24, 0.08);
+  --shadow-lg: 0 8px 24px rgba(25, 28, 24, 0.12);
   --shadow: var(--shadow-md); /* alias legado, ainda referenciado em alguns arquivos */
+
+  /* Largura útil do conteúdo */
+  --shell-max: 1640px;
+  --shell-pad: 5%;
 
   /* Movimento */
   --ease-market: cubic-bezier(0.25, 0.8, 0.4, 1);
@@ -79,7 +89,7 @@ h2,
 h3,
 .section-title {
   font-family: var(--font-display);
-  letter-spacing: 0.01em;
+  letter-spacing: -0.02em;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -102,12 +112,13 @@ h3,
 #root {
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* Ocupa 100% da altura da tela */
+  min-height: 100vh;
 }
 
 /* Isso faz o conteúdo principal "empurrar" o footer para baixo */
 main,
 .home-container,
+.products-page,
 .cart-page,
 .auth-page {
   flex: 1;
@@ -117,14 +128,4 @@ main,
 a {
   text-decoration: none;
   color: inherit;
-}
-
-/* Garante que imagens não quebrem o layout */
-img {
-  max-width: 100%;
-  display: block;
-}
-.main-content {
-  flex: 1; /* Faz o conteúdo ocupar o espaço entre a Navbar e o Footer */
-  padding-top: var(--space-5); /* Evita que a Navbar cubra o início da página */
 }
