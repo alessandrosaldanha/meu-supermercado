@@ -9,7 +9,7 @@ Mercado Vital — e-commerce frontend (supermarket delivery, Maceió/AL) built w
 Detailed docs live under `docs/`, split by topic so this file stays short:
 
 - [docs/architecture.md](docs/architecture.md) — folder structure, routing table, route guards, pagination, styling approach
-- [docs/auth-e-estado.md](docs/auth-e-estado.md) — auth flow (localStorage-based, no context), CartContext, why Toast isn't a shared context
+- [docs/auth-e-estado.md](docs/auth-e-estado.md) — auth flow (localStorage-based, no context), CartContext, ToastContext
 - [docs/api.md](docs/api.md) — `services/api.ts` endpoints, which flows bypass it (Signup, CEP lookup, Orders, Profile), Checkout wizard details
 - [docs/known-issues.md](docs/known-issues.md) — known inconsistencies/tech debt found in the codebase, useful before refactoring
 
@@ -38,7 +38,7 @@ This is the only env var read by the app (`src/services/api.ts`). Note it does *
 
 - **Routing**: `react-router-dom` v7, all routes defined in `src/App.tsx`. Two independent guards: `ProtectedRoute` (any logged-in user, checks `localStorage.token`) and `ProtectedAdminRoute` (inline in `App.tsx`, checks `localStorage.userRole`).
 - **Auth**: no `AuthContext` — session lives in `localStorage` (`token`, `user`, `userName`, `userRole`), propagated across components via a `window.dispatchEvent(new Event("storage"))` hack. Full details in [docs/auth-e-estado.md](docs/auth-e-estado.md).
-- **Cart**: the one real Context in the app, `src/context/CartContext.tsx` (`useCart()`), in-memory only — not persisted across refreshes.
+- **Contexts**: `src/context/CartContext.tsx` (`useCart()`) — in-memory only, not persisted across refreshes — and `src/context/ToastContext.tsx` (`useToast()`) for global notifications. Auth is *not* a context.
 - **API**: single module `src/services/api.ts` (axios instance + Bearer interceptor + global 401 handler). Several flows (checkout, orders, profile updates, signup) make their own inline `api`/`fetch` calls instead of going through it — check [docs/api.md](docs/api.md) before assuming an endpoint has a helper.
 - **Styling**: plain per-component `.css` files (no CSS Modules/Tailwind/styled-components), design tokens as CSS custom properties in `src/index.css`.
 

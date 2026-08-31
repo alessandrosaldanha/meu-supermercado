@@ -11,24 +11,27 @@ src/
 │
 ├── components/           # Peças de UI reutilizáveis (uma pasta por componente, .tsx + .css)
 │   ├── Buttons/           # Button genérico (variant: primary|secondary|danger|icon)
-│   ├── Checkout/          # Wizard de checkout de 3 passos — nota: fica em components/, não pages/
 │   ├── CommentItems/      # Item recursivo de review/resposta (usado no ProductDetail)
 │   ├── FeaturedSlider/    # Carrossel Swiper de produtos em destaque (Home)
 │   ├── Footer/
 │   ├── Navbar/            # Lê localStorage para estado de auth/role, badge do carrinho, logout
 │   ├── ProductCard/       # Card de produto (grid + slider)
 │   ├── ProtectedRoute/    # Guard de rota (baseado em token)
-│   └── Toasts/            # Toast puramente apresentacional (sem context — ver auth-e-estado.md)
+│   ├── Stamp/             # Selo/etiqueta decorativa (variant: tag, tone: papaya, ...)
+│   └── Toasts/            # Toast apresentacional, renderizado pelo ToastProvider
 │
 ├── context/
-│   └── CartContext.tsx    # Único context da aplicação — estado do carrinho
+│   ├── CartContext.tsx    # Estado do carrinho (useCart)
+│   └── ToastContext.tsx   # Notificações globais (useToast) — ver auth-e-estado.md
 │
 ├── pages/                 # Views de rota (uma pasta por página, .tsx + .css)
 │   ├── Cart/
-│   ├── Home/               # Lista produtos + paginação (única paginação do app)
+│   ├── Checkout/           # Wizard de checkout de 3 passos
+│   ├── Home/               # Hero + FeaturedSlider (destaques), sem paginação
 │   ├── Login/
 │   ├── Orders/
 │   ├── ProductDetail/
+│   ├── Products/           # Lista produtos + paginação (única paginação do app)
 │   ├── Profile/
 │   └── Signup/
 │
@@ -40,22 +43,23 @@ Não existem pastas `hooks/`, `types/`, `utils/` ou `assets/`. Todos os tipos co
 
 ## Roteamento (`src/App.tsx`)
 
-`react-router-dom` v7. `BrowserRouter` envolve tudo dentro de `CartProvider`. `Navbar` e `Footer` ficam fora de `<Routes>` (persistem em todas as páginas); o conteúdo roteado fica em `<div className="main-content">`.
+`react-router-dom` v7. A árvore de providers é `ToastProvider` > `CartProvider` > `BrowserRouter`. `Navbar` e `Footer` ficam fora de `<Routes>` (persistem em todas as páginas); o conteúdo roteado fica em `<div className="main-content">`.
 
 | Rota | Componente | Proteção |
 |---|---|---|
-| `/` | `Home` | pública |
+| `/` | `Home` (hero + `FeaturedSlider`) | pública |
+| `/products` | `Products` (grid completo + paginação) | pública |
 | `/login` | `Login` | pública |
 | `/signup` | `Signup` | pública |
 | `/cart` | `Cart` | pública |
 | `/product/:id` | `ProductDetail` | pública |
 | `/perfil` | `Profile` | protegida (`ProtectedRoute`) |
-| `/checkout` | `Checkout` (de `components/Checkout`) | protegida (`ProtectedRoute`) |
+| `/checkout` | `Checkout` (de `pages/Checkout`) | protegida (`ProtectedRoute`) |
 | `/orders` | `Orders` | protegida (`ProtectedRoute`) |
 | `/admin/users` | placeholder inline (`<h1>Gestão de Usuários</h1>`) | protegida, admin-only (`ProtectedAdminRoute`) |
 | `*` | redirect para `/` | — |
 
-> `Navbar` linka para `/products` (plural), rota que não existe — link morto. A listagem de produtos é em `/`.
+> `Home` (`/`) só mostra o hero e o `FeaturedSlider` de destaques; a listagem completa com paginação vive em `Products` (`/products`), que reaproveita `ProductCard`/`getProducts`. O CTA do hero ("Ver todos os produtos") e o item "Produtos" da `Navbar` levam pra `/products`.
 
 Dois mecanismos de guard distintos, sem hook/context compartilhado:
 
@@ -81,11 +85,11 @@ Ambos são leituras síncronas de `localStorage` — só reavaliam no mount/nave
 
 ## Paginação
 
-Não há componente de paginação dedicado — a lógica fica inline em `src/pages/Home/Home.tsx`, único lugar do app com paginação.
+Não há componente de paginação dedicado — a lógica fica inline em `src/pages/Products/Products.tsx`, único lugar do app com paginação.
 
 - `getProducts(page)` chama `GET products?page=&per_page=10`, retorna `PaginatedResponse` (`items`, `curPage`, `nextPage`, `prevPage`, `pageTotal`, ...).
 - Estado local: `page`, `products`, `hasNextPage`, `totalPages`.
-- Controles: primeira página (`<<`), "Anterior" (desabilitado na página 1), indicador `Página X de Y`, "Próxima" (desabilitado sem `hasNextPage`), última página (`>>` — **não desabilita** mesmo já estando na última página).
+- Controles: primeira página (`<<`), "Anterior" (desabilitado na página 1), indicador `Página X de Y`, "Próxima" (desabilitado sem `hasNextPage`), última página (`>>`, desabilitado quando `page === totalPages`).
 - `FeaturedSlider` busca todos os destaques de uma vez (`getFeaturedProducts`), sem paginação — apenas carrossel Swiper.
 
 ## Estilização

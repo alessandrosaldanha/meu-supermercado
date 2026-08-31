@@ -101,14 +101,14 @@
   }
 }
 
-/* Container principal que segura o Slider e a Grid */
+/* Container principal que segura o Slider de destaques */
 .product-section {
   max-width: 1640px;
   margin: 0 auto;
   padding: var(--space-6) 5%;
 }
 
-/* Título da seção — etiqueta de caixote */
+/* Título da seção — etiqueta de caixote (usado pelo h2 interno do FeaturedSlider) */
 .section-title {
   display: inline-block;
   font-size: 1.3rem;
@@ -122,81 +122,6 @@
   box-shadow: var(--shadow-sm);
 }
 
-/* A GRID: Responsável por organizar os cards na tela */
-.product-grid {
-  display: grid;
-  /* Cria colunas automáticas de no mínimo 240px */
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: var(--space-5);
-  margin-bottom: var(--space-7);
-}
-
-/* Feedback visual de carregamento */
-.loader {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 300px;
-  font-size: var(--text-lg);
-  color: var(--leaf);
-  font-weight: 600;
-  font-family: var(--font-mono);
-}
-
-/* --- CONTROLES DE PAGINAÇÃO: canhoto de ticket --- */
-
-.pagination-controls {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: var(--space-3);
-  margin: var(--space-8) 0;
-  padding-bottom: var(--space-6);
-  font-family: var(--font-mono);
-}
-
-.page-btn {
-  background: var(--card);
-  border: 1.5px solid var(--leaf);
-  color: var(--leaf);
-  padding: var(--space-3) var(--space-5);
-  border-radius: var(--radius-md);
-  font-weight: 700;
-  font-family: var(--font-mono);
-  cursor: pointer;
-  transition: all var(--duration-base) var(--ease-market);
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-
-.page-btn:hover:not(:disabled) {
-  background: var(--leaf);
-  color: var(--card);
-  box-shadow: var(--shadow-md);
-}
-
-.page-btn:disabled {
-  border-color: var(--line);
-  color: #b7b09a;
-  cursor: not-allowed;
-  background: var(--paper);
-}
-
-.page-indicator {
-  font-size: 0.95rem;
-  color: var(--ink);
-  background: var(--card);
-  border: 1px dashed var(--line);
-  padding: var(--space-2) var(--space-4);
-  border-radius: var(--radius-md);
-}
-
-.page-indicator strong {
-  color: var(--papaya);
-  font-size: 1.1rem;
-}
-
 /* AJUSTES RESPONSIVOS */
 @media (max-width: 768px) {
   .product-section {
@@ -206,15 +131,5 @@
   .section-title {
     font-size: 1.5rem;
     margin: var(--space-5) 0;
-  }
-
-  .pagination-controls {
-    flex-direction: row;
-    gap: var(--space-3);
-  }
-
-  .page-btn {
-    padding: var(--space-2) var(--space-4);
-    font-size: 0.9rem;
   }
 }

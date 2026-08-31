@@ -73,9 +73,9 @@ Não há framework de testes configurado neste projeto no momento.
 
 ```
 src/
-├── components/   # UI reutilizável (Navbar, Footer, ProductCard, Checkout, Toasts, ...)
-├── context/      # CartContext (carrinho de compras)
-├── pages/        # Páginas roteadas (Home, Login, Signup, Cart, Orders, Profile, ProductDetail)
+├── components/   # UI reutilizável (Navbar, Footer, ProductCard, Toasts, Stamp, ...)
+├── context/      # CartContext (carrinho) e ToastContext (notificações)
+├── pages/        # Páginas roteadas (Home, Login, Signup, Cart, Checkout, Orders, Profile, ProductDetail)
 └── services/     # Camada de API (axios + endpoints)
 ```
 

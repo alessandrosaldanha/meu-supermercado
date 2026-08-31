@@ -52,12 +52,12 @@ Ou seja: `VITE_API_URL` não governa universalmente todas as chamadas de rede do
 
 ## Checkout — fluxo de pedido
 
-`src/components/Checkout/Checkout.tsx` (nota: fica em `components/`, não `pages/`, quebrando a convenção do resto das views roteadas). Rota protegida `/checkout`.
+`src/pages/Checkout/Checkout.tsx`. Rota protegida `/checkout`.
 
 - Ao montar, lê `user` do localStorage; se ausente, redireciona para `/login`.
 - Wizard client-side de 3 passos (estado `step`, sem rota por passo):
   1. **Entrega** — endereço lido direto do objeto `user` (`logradouro`, `numero`, `bairro`, `cidade`, `cep`); link "Alterar Endereço" leva a `/perfil`.
-  2. **Pagamento** — `pix` (código copia-cola mockado, QR fake, "5% de desconto" citado mas **não aplicado** ao total), `cartao` (campos de cartão que não são enviados a lugar nenhum — texto explícito "Dados não serão salvos. Apenas para teste."), ou `entrega` (pagar na entrega).
+  2. **Pagamento** — `pix` (código copia-cola mockado, QR fake, "5% de desconto" citado no label mas **não aplicado** ao total — ver [known-issues.md](known-issues.md)), `cartao` (campos de cartão que não são enviados a lugar nenhum — texto explícito "Dados não serão salvos. Apenas para teste."), ou `entrega` (pagar na entrega).
   3. **Revisão** — quantidade de itens, forma de pagamento, `total` (via `useCart()` reduce).
-- `handleFinishOrder`: monta `orderData` (`user_id`, `items: cart`, `total`, `payment_method`, `status: "pendente"`, `address` aninhado) e `api.post("/orders", orderData)`. Sucesso → Toast, `clearCart()`, `navigate("/orders")` após 2.5s. Falha → Toast de erro, sem navegação.
+- `handleFinishOrder`: monta `orderData` (`user_id`, `items: cart`, `total`, `payment_method`, `status: "pendente"`, `address` aninhado) e `api.post("/orders", orderData)`. Sucesso → `showToast()` (via `useToast()`), `clearCart()`, `navigate("/orders")` após 2.5s. Falha → Toast de erro, sem navegação.
 - Só interage com o carrinho via `useCart()` (`cart`, `cartCount`, `clearCart`) — somente leitura, exceto limpar no sucesso.

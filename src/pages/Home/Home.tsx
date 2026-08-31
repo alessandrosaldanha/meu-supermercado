@@ -1,48 +1,9 @@
-import { ProductCard } from "../../components/ProductCard/ProductCard";
-import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { FeaturedSlider } from "../../components/FeaturedSlider/FeaturedSlider";
-import { getProducts, type Product } from "../../services/api";
-import { useCart } from "../../context/CartContext";
-import { useToast } from "../../context/ToastContext";
 import { Stamp } from "../../components/Stamp/Stamp";
 import "./Home.css";
 
 export default function Home() {
-  const { addToCart } = useCart();
-  const { showToast } = useToast();
-  const [page, setPage] = useState(1);
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [animatingId, setAnimatingId] = useState<number | null>(null);
-  const [hasNextPage, setHasNextPage] = useState(false);
-  const [totalPages, setTotalPages] = useState(1);
-
-  useEffect(() => {
-    const load = async () => {
-      setLoading(true);
-      const data = await getProducts(page);
-
-      if (data) {
-        setProducts(data.items || []);
-        setHasNextPage(page < data.pageTotal);
-        const total = data.pageTotal || 1;
-        setTotalPages(total);
-      }
-      setLoading(false);
-    };
-    load();
-  }, [page]);
-
-  const handleAddProduct = (product: Product) => {
-    addToCart(product);
-    setAnimatingId(product.id);
-    showToast("Produto adicionado ao carrinho!", "success");
-
-    setTimeout(() => {
-      setAnimatingId(null);
-    }, 300);
-  };
-
   const today = new Date().toLocaleDateString("pt-BR", {
     day: "2-digit",
     month: "short",
@@ -61,9 +22,9 @@ export default function Home() {
               Fruta, verdura e mercearia selecionadas nesta manhã. Peça até
               18h e receba ainda hoje.
             </p>
-            <a href="#colheita" className="hero-cta">
-              Ver o que chegou hoje
-            </a>
+            <Link to="/products" className="hero-cta">
+              Ver todos os produtos
+            </Link>
           </div>
           <div className="hero-stamp">
             <Stamp
@@ -77,67 +38,9 @@ export default function Home() {
         </div>
       </section>
 
-      <main className="product-section" id="colheita">
+      <section className="product-section">
         <FeaturedSlider />
-        <h2 className="section-title">Ofertas em destaque</h2>
-
-        {loading ? (
-          <div className="loader">Carregando...</div>
-        ) : (
-          <div className="product-grid">
-            {products.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                onAdd={handleAddProduct}
-                isAnimating={animatingId === product.id}
-              />
-            ))}
-          </div>
-        )}
-        <div className="pagination-controls">
-          {/* Pular para a Primeira Página */}
-          <button
-            className="page-btn"
-            disabled={page === 1}
-            onClick={() => setPage(1)}
-            title="Primeira página"
-          >
-            {"<<"}
-          </button>
-
-          <button
-            className="page-btn"
-            disabled={page === 1}
-            onClick={() => setPage((prev) => prev - 1)}
-          >
-            Anterior
-          </button>
-
-          <span className="page-indicator">
-            Página <strong>{page}</strong> de <strong>{totalPages}</strong>
-          </span>
-
-          <button
-            className="page-btn"
-            disabled={!hasNextPage}
-            onClick={() => setPage((prev) => prev + 1)}
-          >
-            Próxima
-          </button>
-
-          <button
-            className="page-btn"
-            disabled={page === totalPages}
-            onClick={() => {
-              setPage(totalPages);
-            }}
-            title="Última página"
-          >
-            {">>"}
-          </button>
-        </div>
-      </main>
+      </section>
     </div>
   );
 }

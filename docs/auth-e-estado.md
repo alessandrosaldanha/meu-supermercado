@@ -78,16 +78,18 @@ interface CartContextData {
 - `cartCount` é derivado (soma das quantidades).
 - Consumido via `useCart()`; `CartProvider` envolve o app inteiro, fora do `BrowserRouter`.
 
-## Toast não é um context
+## ToastContext — notificações globais
 
-Apesar da mensagem de commit "implementação Toast em todas as páginas" sugerir um sistema compartilhado, `Toast` (`src/components/Toasts/Toast.tsx`) é **puramente apresentacional**. Cada página/componente que precisa dele declara seu próprio par de `useState` local, copiado e colado ~7 vezes (`Navbar`, `Login`, `Signup`, `Cart`, `Checkout`, `Profile`, `ProductDetail`):
+`src/context/ToastContext.tsx`. Antes cada página declarava seu próprio par de `useState` (`showToast`/`toastConfig`), copiado ~7 vezes; hoje isso foi centralizado — não sobrou nenhum `setShowToast` local em `src/`.
 
 ```tsx
-const [showToast, setShowToast] = useState(false);
-const [toastConfig, setToastConfig] = useState<{
-  message: string;
-  type: "success" | "error" | "warning" | "info";
-}>({ message: "", type: "warning" });
+interface ToastContextData {
+  showToast: (message: string, type?: ToastType) => void;
+}
 ```
 
-Se for centralizar isso num `ToastContext`/hook `useToast`, esse é o padrão repetido a substituir em todos os 7 arquivos.
+- `ToastProvider` é o provider mais externo do app (`App.tsx`, envolve `CartProvider`), e renderiza **um único** `<Toast />` como irmão de `children`.
+- Estado interno: um `toast` (`{id, message, type}`) por vez — uma nova chamada substitui a anterior. O `id` (via `useRef` incremental) vira `key` do `<Toast />`, forçando remount para o timer de auto-close reiniciar em mensagens repetidas.
+- `showToast` é memoizado com `useCallback`, e o `type` default é `"success"`.
+- `Toast` (`src/components/Toasts/Toast.tsx`) continua puramente apresentacional — quem o renderiza é o provider, não as páginas.
+- Consumido via `useToast()` em `Navbar`, `Home`, `Login`, `Signup`, `Cart`, `Checkout`, `Profile` e `ProductDetail`.
